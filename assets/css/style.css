@@ -1,0 +1,36 @@
+body {
+  font-family: "Poppins", sans-serif;
+  scroll-behavior: smooth;
+}
+.navbar .nav-link.active {
+  color: #0d6efd;
+  font-weight: 600;
+}
+.hero {
+  background: url("assets/img/bg/logo.p.png") center/cover no-repeat;
+  min-height: 100vh;
+  position: relative;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.hero .container {
+  position: relative;
+  z-index: 2;
+}
+.text-outline {
+  -webkit-text-stroke: 2px #fff;
+}
+.stats h2 {
+  font-size: 2.5rem;
+}
+.card img {
+  height: 250px;
+  object-fit: cover;
+}
