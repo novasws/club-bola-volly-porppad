@@ -3,7 +3,7 @@
 session_start();
 
 // Hardcode Railway credentials for testing
-define('DB_HOST', 'hopper.proxy.rlwy.net');
+define('DB_HOST', 'mysql.railway.internal');
 define('DB_USER', 'root');
 define('DB_PASS', 'AQFgOeKpTuHbcosZwOahQtihWPtMccoZ');
 define('DB_NAME', 'railway');
