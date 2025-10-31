@@ -2,14 +2,15 @@
 // config.php - Database Configuration
 session_start();
 
-// Database credentials
-define('DB_HOST', 'localhost');
+// Hardcode Railway credentials for testing
+define('DB_HOST', 'hopper.proxy.rlwy.net');
 define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'volley_club');
+define('DB_PASS', 'AQFgOeKpTuHbcosZwOahQtihWPtMccoZ');
+define('DB_NAME', 'railway');
+define('DB_PORT', 3306);
 
 // Create connection
-$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 // Check connection
 if (!$conn) {
@@ -19,8 +20,23 @@ if (!$conn) {
 // Set charset to UTF8
 mysqli_set_charset($conn, "utf8mb4");
 
-// Base URL
-define('BASE_URL', 'http://localhost/volley_club/');
+// Create connection
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Set charset to UTF8
+mysqli_set_charset($conn, "utf8mb4");
+
+// Base URL - otomatis detect Railway atau localhost
+if (getenv('RAILWAY_PUBLIC_DOMAIN')) {
+    define('BASE_URL', 'https://' . getenv('RAILWAY_PUBLIC_DOMAIN') . '/');
+} else {
+    define('BASE_URL', 'http://localhost/volley_club/');
+}
 
 // Helper Functions
 function redirect($url) {
