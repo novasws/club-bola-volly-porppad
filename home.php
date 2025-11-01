@@ -30,7 +30,10 @@ if (isLoggedIn()) {
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
     
     <style>
-        /* DISABLE ZOOM ON MOBILE */
+/* ===== IMPORT FONTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ===== DISABLE ZOOM ON MOBILE ===== */
 html {
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
@@ -39,10 +42,14 @@ html {
 * {
     -webkit-tap-highlight-color: transparent;
 }
+
 /* ===== RESET & BASE ===== */
 :root {
-    --primary: #0b3d91;
-    --gold: #d4af37;
+    --primary: #2c5282;
+    --primary-dark: #1e3a5f;
+    --primary-light: #4a7ba7;
+    --gold: #c9a961;
+    --gold-light: #e0c488;
 }
 
 * { 
@@ -52,7 +59,7 @@ html {
 }
 
 body { 
-    font-family: 'Poppins', sans-serif; 
+    font-family: 'Inter', sans-serif; 
     padding-top: 80px;
     overflow-x: hidden;
 }
@@ -63,9 +70,9 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(163, 192, 219, 0.98);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
     z-index: 1000;
     padding: 1rem 0;
 }
@@ -80,7 +87,7 @@ body {
 .brand-title { 
     font-weight: 700; 
     font-size: 1.3rem; 
-    color: var(--primary); 
+    color: var(--primary-dark); 
     line-height: 1.2;
 }
 
@@ -99,7 +106,7 @@ body {
 
 .nav-link:hover, .nav-link.active { 
     color: var(--primary); 
-    background: rgba(11, 61, 145, 0.1);
+    background: rgba(44, 82, 130, 0.1);
     border-radius: 8px;
 }
 
@@ -111,25 +118,75 @@ body {
 }
 
 .btn-gold { 
-    background: linear-gradient(90deg, var(--gold), #f0c96b); 
+    background: linear-gradient(90deg, var(--gold), var(--gold-light)); 
     color: #111; 
     border: none;
 }
 
-/* ===== HERO SECTION ===== */
-/* ===== HERO SECTION - MOBILE FIXED ===== */
-/* ===== HERO SECTION ===== */
+/* ===== HERO SECTION - Professional Navy Blue ===== */
 .hero-section {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('assets/img/bg/bg22nya.png') no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed;
+    background: linear-gradient(135deg, 
+        #1e3a5f 0%,
+        #2c5282 35%,
+        #4a7ba7 70%,
+        #5a8bb8 100%
+    );
     position: relative;
     padding: 2rem 1rem;
     overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(201, 169, 97, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to top, #f8fafc, transparent);
+    pointer-events: none;
+}
+
+/* Hero Typography - Professional Fonts */
+.hero-section h1:first-of-type {
+    font-family: 'Inter', sans-serif !important;
+    font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+}
+
+.orbitron-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: clamp(3rem, 10vw, 7rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.08em !important;
+    background: linear-gradient(135deg, #c9a961 0%, #e0c488 50%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    text-shadow: none;
 }
 
 .hero-stats {
@@ -142,12 +199,18 @@ body {
 }
 
 .hero-stats .stat {
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
     padding: 1.25rem 0.75rem;
     border-radius: 12px;
-    border: 2px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.25);
     text-align: center;
+    transition: all 0.3s;
+}
+
+.hero-stats .stat:hover {
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-5px);
 }
 
 .hero-stats .stat h3 {
@@ -158,35 +221,13 @@ body {
     text-shadow: 0 3px 10px rgba(0,0,0,0.5);
 }
 
-.hero-stats .stat {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(15px);
-    padding: 1.5rem 1rem;
-    border-radius: 15px;
-    border: 2px solid rgba(255,255,255,0.3);
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.hero-stats .stat:hover {
-    background: rgba(255,255,255,0.3);
-    transform: translateY(-5px);
-}
-
-.hero-stats .stat h3 {
-    font-size: clamp(2rem, 6vw, 3rem);
-    margin: 0;
-    color: #fff;
-    font-weight: 900;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
 .hero-stats small {
     font-size: clamp(0.85rem, 2vw, 1rem);
     color: #fff;
     text-shadow: 0 2px 5px rgba(0,0,0,0.3);
     font-weight: 500;
 }
+
 /* ===== SECTIONS ===== */
 section { 
     padding: clamp(3rem, 6vw, 5rem) 0; 
@@ -200,7 +241,7 @@ section {
 .section-title h3 {
     font-size: clamp(1.75rem, 4vw, 2.25rem);
     font-weight: 700;
-    color: var(--primary);
+    color: var(--primary-dark);
     margin-bottom: 0.5rem;
 }
 
@@ -209,18 +250,32 @@ section {
     color: #6c757d;
 }
 
-/* ===== VISI MISI ===== */
-/* ===== VISI MISI - SIDE BY SIDE ===== */
+/* ===== ABOUT SECTION - Light Blue to White ===== */
+#about {
+    background: linear-gradient(180deg, 
+        #f8fafc 0%,
+        #ffffff 50%,
+        #fafbfc 100%
+    ) !important;
+}
+
+/* ===== VISI MISI - Pure White ===== */
+#visi-misi {
+    background: #ffffff !important;
+}
+
 #visi-misi .row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 }
+
 .visi-misi-card {
     background: white;
     padding: 2.5rem;
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border: 1px solid #e8eef5;
+    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.06);
     height: 100%;
     border-left: 5px solid var(--primary);
     transition: transform 0.3s;
@@ -228,7 +283,7 @@ section {
 
 .visi-misi-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 30px rgba(30, 58, 95, 0.12);
 }
 
 .vm-icon {
@@ -237,7 +292,7 @@ section {
 }
 
 .visi-misi-card h4 {
-    color: var(--primary);
+    color: var(--primary-dark);
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -273,18 +328,27 @@ section {
     font-size: 1.3rem;
 }
 
-/* ===== FACILITY CARDS ===== */
-/* ===== FASILITAS - 2 COLUMNS ===== */
+/* ===== FASILITAS - Soft Blue Background ===== */
+#fasilitas {
+    background: linear-gradient(180deg, 
+        #f0f4f8 0%,
+        #f5f8fa 50%,
+        #fafbfc 100%
+    ) !important;
+}
+
 #fasilitas .row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
 }
+
 .facility-card {
     background: white;
     padding: 2rem;
     border-radius: 15px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e8eef5;
+    box-shadow: 0 3px 15px rgba(30, 58, 95, 0.05);
     text-align: center;
     height: 100%;
     transition: all 0.3s;
@@ -292,16 +356,18 @@ section {
 
 .facility-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
+    border-color: rgba(201, 169, 97, 0.3);
 }
 
 .facility-icon {
     font-size: 3.5rem;
     margin-bottom: 1rem;
+    color: var(--primary-light);
 }
 
 .facility-card h5 {
-    color: var(--primary);
+    color: var(--primary-dark);
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
@@ -313,19 +379,27 @@ section {
     line-height: 1.6;
 }
 
-/* ===== TROPHY CARDS ===== */
+/* ===== TROPHY CARDS - Light Grey ===== */
+#prestasi {
+    background: linear-gradient(180deg,
+        #fafbfc 0%,
+        #f8f9fa 100%
+    ) !important;
+}
+
 .trophy-card {
     border-radius: 10px;
     overflow: hidden;
     background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1px solid #e8eef5;
+    box-shadow: 0 2px 12px rgba(30, 58, 95, 0.06);
     transition: all 0.3s;
     height: 100%;
 }
 
 .trophy-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
 }
 
 .trophy-img {
@@ -385,18 +459,24 @@ section {
     color: #95a5a6;
 }
 
-/* ===== TEAM CARDS ===== */
+/* ===== TEAM CARDS - White Background ===== */
+#team {
+    background: #ffffff !important;
+}
+
 .team-card {
     color: white;
     border-radius: 10px;
     overflow: hidden;
-    background: #9e93f2ff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
+    border: none;
+    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.15);
     transition: all 0.3s;
 }
 
 .team-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(30, 58, 95, 0.25);
 }
 
 .team-photo {
@@ -419,7 +499,14 @@ section {
     font-weight: 600;
 }
 
-/* ===== GALLERY - 3 COLUMNS ===== */
+/* ===== GALLERY - Soft Blue ===== */
+#galeri {
+    background: linear-gradient(180deg,
+        #f5f8fa 0%,
+        #f0f4f8 100%
+    ) !important;
+}
+
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -429,7 +516,8 @@ section {
 .gallery-item {
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1px solid #e8eef5;
+    box-shadow: 0 2px 12px rgba(30, 58, 95, 0.06);
     transition: all 0.3s;
     aspect-ratio: 1;
     cursor: pointer;
@@ -437,7 +525,8 @@ section {
 
 .gallery-item:hover {
     transform: scale(1.05);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.15);
+    border-color: rgba(201, 169, 97, 0.3);
 }
 
 .gallery-item img { 
@@ -446,10 +535,15 @@ section {
     object-fit: cover;
 }
 
-/* ===== SCHEDULE TABLE ===== */
+/* ===== SCHEDULE TABLE - White ===== */
+#jadwal {
+    background: #ffffff !important;
+}
+
 .schedule-table { 
     font-size: 0.95rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1px solid #e8eef5;
+    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
     border-radius: 10px;
     overflow: hidden;
 }
@@ -461,12 +555,17 @@ section {
 }
 
 .schedule-table thead {
-    background: var(--primary);
+    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
     color: white;
 }
 
 .schedule-table tbody tr:hover {
-    background: #f8f9fa;
+    background: #f8fafc;
+}
+
+/* ===== CTA SECTION - Blue Gradient ===== */
+.bg-primary {
+    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%) !important;
 }
 
 /* ===== FOOTER ===== */
@@ -523,13 +622,11 @@ footer {
         gap: 0.6rem;
     }
     
-    /* Visi Misi jadi 1 kolom di mobile */
     #visi-misi .row {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
     
-    /* Fasilitas TETAP 2 kolom di mobile */
     #fasilitas .row {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
@@ -550,7 +647,7 @@ footer {
         gap: 0.5rem;
     }
 }
-    </style>
+</style>
 </head>
 <body>
     <!-- NAVBAR -->
