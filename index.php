@@ -6,7 +6,7 @@ if (isLoggedIn()) {
     if (isAdmin()) {
         redirect('admin/dashboard.php');
     } else {
-        redirect('index.php');
+        redirect('home.php'); // CHANGED from index.php
     }
 }
 
@@ -27,15 +27,15 @@ if (isset($_POST['login'])) {
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
             
-            // Verify password - Support both MD5 (admin lama) and bcrypt (member baru)
+            // ✅ FIXED: Verify password - Support both MD5 and bcrypt
             $password_valid = false;
             
-            // Cek apakah password pakai MD5 (32 karakter) atau bcrypt (60 karakter)
-            if (strlen($user['password']) === 32) {
-                // Password pakai MD5 (admin lama)
+            // Cek format password yang tersimpan di database
+            if (strlen($user['password']) === 32 && ctype_xdigit($user['password'])) {
+                // Password pakai MD5 (32 karakter hexadecimal)
                 $password_valid = (md5($password) === $user['password']);
             } else {
-                // Password pakai bcrypt (member baru)
+                // Password pakai bcrypt (dimulai dengan $2y$)
                 $password_valid = password_verify($password, $user['password']);
             }
             
@@ -46,7 +46,13 @@ if (isset($_POST['login'])) {
                 $_SESSION['role'] = $user['role'];
                 
                 alert('Login berhasil! Selamat datang, ' . $user['username'], 'success');
-                redirect('home.php');
+                
+                // Redirect based on role
+                if ($user['role'] === 'admin') {
+                    redirect('admin/dashboard.php');
+                } else {
+                    redirect('home.php');
+                }
             } else {
                 $error = 'Password salah!';
             }
