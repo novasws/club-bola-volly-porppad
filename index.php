@@ -449,7 +449,7 @@ if (isset($_POST['register'])) {
                         </button>
                         <div class="alert alert-info mb-0" style="font-size: 0.85rem;">
                             <i class="fas fa-info-circle me-2"></i>
-                            <strong>WARNING!!!:</strong><strong><i>SELAIN ADMIN DILARANG LOGIN!</i></strong>                
+                            <strong>BURUANN!!!</strong><strong><i>Gabung sekarang!</i></strong>                
                         </div>
                     </form>
                 </div>

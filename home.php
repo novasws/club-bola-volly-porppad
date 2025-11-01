@@ -20,7 +20,7 @@ if (isLoggedIn()) {
 <html lang="id">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Volley Club – PORPPAD Surabaya</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -30,6 +30,15 @@ if (isLoggedIn()) {
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
     
     <style>
+        /* DISABLE ZOOM ON MOBILE */
+html {
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
 /* ===== RESET & BASE ===== */
 :root {
     --primary: #0b3d91;
@@ -109,6 +118,7 @@ body {
 
 /* ===== HERO SECTION ===== */
 /* ===== HERO SECTION - MOBILE FIXED ===== */
+/* ===== HERO SECTION ===== */
 .hero-section {
     min-height: 100vh;
     display: flex;
@@ -116,58 +126,36 @@ body {
     justify-content: center;
     background: url('assets/img/bg/bg22nya.png') no-repeat center center;
     background-size: cover;
-    background-attachment: scroll; /* Changed for mobile */
+    background-attachment: fixed;
     position: relative;
     padding: 2rem 1rem;
+    overflow: hidden;
 }
 
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.3));
-}
-
-.hero-section .container {
-    position: relative;
-    z-index: 2;
-    max-width: 100%;
-}
-
-.hero-section h1 {
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
-    color: #fff;
-    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    margin-bottom: 0.5rem;
-}
-
-.hero-section .orbitron-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    color: #fff;
-    text-shadow: 0 0 20px rgba(102, 126, 234, 0.8),
-                 0 0 40px rgba(102, 126, 234, 0.6);
-    -webkit-text-stroke: 1px #667eea;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
-}
-
-.hero-section .lead {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    color: #f6f6f6;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    margin-bottom: 1.5rem;
-}
-
-/* HERO STATS - GRID LAYOUT */
 .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 0.75rem;
     margin-top: 2rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 100%;
+    padding: 0 1rem;
+}
+
+.hero-stats .stat {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px);
+    padding: 1.25rem 0.75rem;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.4);
+    text-align: center;
+}
+
+.hero-stats .stat h3 {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    margin: 0 0 0.25rem 0;
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.5);
 }
 
 .hero-stats .stat {
@@ -222,6 +210,12 @@ section {
 }
 
 /* ===== VISI MISI ===== */
+/* ===== VISI MISI - SIDE BY SIDE ===== */
+#visi-misi .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
 .visi-misi-card {
     background: white;
     padding: 2.5rem;
@@ -280,6 +274,12 @@ section {
 }
 
 /* ===== FACILITY CARDS ===== */
+/* ===== FASILITAS - 2 COLUMNS ===== */
+#fasilitas .row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
 .facility-card {
     background: white;
     padding: 2rem;
@@ -514,58 +514,33 @@ footer {
 
 /* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 768px) {
-    body { padding-top: 70px; }
-    
-    .navbar { padding: 0.75rem 0; }
-    
-    .logo-img { width: 45px; height: 45px; }
-    
-    .brand-title { font-size: 1.1rem; }
-    
-    .nav-link { 
-        font-size: 1rem; 
-        padding: 0.75rem 1rem !important; 
+    .hero-section {
+        background-attachment: scroll;
     }
     
-    .hero-stats .stat { 
-        padding: 1rem 1.5rem; 
-        min-width: 100px; 
-    }
-    
-    .gallery-grid { 
+    .hero-stats {
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
+        gap: 0.6rem;
     }
     
-    .schedule-table {
-        font-size: 0.75rem;
+    /* Visi Misi jadi 1 kolom di mobile */
+    #visi-misi .row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
-    .schedule-table th,
-    .schedule-table td {
-        padding: 0.6rem 0.4rem;
-    }
-    
-    .visi-misi-card {
-        padding: 1.75rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .vm-icon {
-        font-size: 2.75rem;
-    }
-    
-    .visi-misi-card h4 {
-        font-size: 1.35rem;
+    /* Fasilitas TETAP 2 kolom di mobile */
+    #fasilitas .row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
     
     .facility-card {
-        padding: 1.75rem;
-        margin-bottom: 1rem;
+        padding: 1.5rem 1rem;
     }
     
     .facility-icon {
-        font-size: 2.75rem;
+        font-size: 2.5rem;
     }
 }
 
