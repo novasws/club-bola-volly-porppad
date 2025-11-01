@@ -104,7 +104,7 @@ if (isset($_POST['register'])) {
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to left, #363636ff, #fafafacc, #363636ff);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -119,13 +119,14 @@ if (isset($_POST['register'])) {
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ffffffff 0%, #272727ff 100% ,#white);
             color: white;
             padding: 30px;
             border-radius: 15px 15px 0 0;
             text-align: center;
         }
         .login-header h3 {
+            color: black;
             margin-bottom: 0.5rem;
         }
         .btn-primary {

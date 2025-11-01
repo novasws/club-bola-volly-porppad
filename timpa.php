@@ -266,7 +266,7 @@ function calculateAge($birthDate) {
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm py-3" style="background: white;">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="assets/img/logo/logofiks.png" alt="logo" class="me-2" style="width: 40px;" onerror="this.style.display='none'" />
+                <img src="assets/img/logo/logo.png" alt="logo" class="me-2" style="width: 40px;" onerror="this.style.display='none'" />
                 <div>
                     <div class="fw-bold">Volley Club</div>
                     <small class="text-muted">PORPPAD</small>

@@ -20,7 +20,7 @@ if (isLoggedIn()) {
 <html lang="id">
 <head>
     <meta charset="utf-8" />
- <meta name="viewport" content="width=1200">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Volley Club – PORPPAD Surabaya</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@ if (isLoggedIn()) {
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
     
     <style>
- /* ===== RESET & BASE ===== */
+/* ===== RESET & BASE ===== */
 :root {
     --primary: #0b3d91;
     --gold: #d4af37;
@@ -42,17 +42,13 @@ if (isLoggedIn()) {
     box-sizing: border-box; 
 }
 
-
 body { 
-    min-width: 1200px; /* Force desktop width */
-
     font-family: 'Poppins', sans-serif; 
-    padding-top: 70px;
+    padding-top: 80px;
     overflow-x: hidden;
-    min-width: 320px; /* Minimum width untuk prevent breaking */
 }
 
-/* ===== NAVBAR - RESPONSIVE ===== */
+/* ===== NAVBAR - MOBILE OPTIMIZED ===== */
 .navbar {
     position: fixed;
     top: 0;
@@ -62,59 +58,47 @@ body {
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 15px rgba(0,0,0,0.1);
     z-index: 1000;
-    padding: 0.6rem 0;
+    padding: 1rem 0;
 }
 
 .logo-img { 
-    width: 40px; 
-    height: 40px; 
+    width: 50px; 
+    height: 50px; 
     border-radius: 8px;
     object-fit: cover;
 }
 
 .brand-title { 
     font-weight: 700; 
-    font-size: 1.1rem; 
+    font-size: 1.3rem; 
     color: var(--primary); 
     line-height: 1.2;
 }
 
 .brand-sub { 
-    font-size: 0.75rem; 
+    font-size: 0.85rem; 
     color: #6c757d; 
-    line-height: 1;
 }
 
 .nav-link {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.8rem !important;
-    position: relative;
+    font-size: 1.05rem;
+    padding: 0.75rem 1rem !important;
     color: #333;
     font-weight: 500;
-    transition: color 0.3s;
-    white-space: nowrap; /* Prevent text wrap */
+    transition: all 0.3s;
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background: var(--primary);
-    transition: width 0.3s;
+.nav-link:hover, .nav-link.active { 
+    color: var(--primary); 
+    background: rgba(11, 61, 145, 0.1);
+    border-radius: 8px;
 }
-
-.nav-link:hover { color: var(--primary); }
-.nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
 .btn-rounded { 
     border-radius: 20px; 
-    padding: 0.4rem 1rem; 
-    font-size: 0.85rem;
+    padding: 0.5rem 1.2rem; 
+    font-size: 0.95rem;
     font-weight: 500;
-    white-space: nowrap;
 }
 
 .btn-gold { 
@@ -123,28 +107,16 @@ body {
     border: none;
 }
 
-/* ===== HERO SECTION - FULLY RESPONSIVE ===== */
-/* ===== HERO SECTION - FULLY RESPONSIVE ===== */
+/* ===== HERO SECTION ===== */
 .hero-section {
     min-height: 90vh;
     display: flex;
     align-items: center;
-    position: relative;
-    padding: 3rem 0 2rem;
-    width: 100%;
-    
-    /* Background DEFAULT (Desktop) */
     background: url('assets/img/bg/bg22nya.png') no-repeat center center;
     background-size: cover;
-    background-position: center center;
     background-attachment: fixed;
-}
-
-
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+    position: relative;
+    padding: 4rem 0 3rem;
 }
 
 .hero-overlay {
@@ -159,27 +131,23 @@ body {
 }
 
 .hero-section h1 { 
-    font-size: clamp(1.2rem, 4vw, 2rem); /* Responsive font size */
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
     color: #fff; 
     text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    margin-bottom: 0.5rem;
 }
 
 .hero-section .orbitron-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-size: clamp(2rem, 7vw, 4rem);
     color: #fff;
-    -webkit-text-stroke: 1.5px #667eea;
-    text-stroke: 1.5px #667eea;
+    -webkit-text-stroke: 2px #667eea;
     font-weight: 900;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
+    letter-spacing: 3px;
 }
 
 .hero-section .lead { 
-    font-size: clamp(0.85rem, 2.5vw, 1rem); 
+    font-size: clamp(1rem, 2.5vw, 1.2rem); 
     color: #f6f6f6;
-    margin-bottom: 1.5rem;
 }
 
 .hero-stats { 
@@ -187,65 +155,145 @@ body {
     display: flex;
     gap: 1rem;
     justify-content: center;
-    flex-wrap: wrap; /* Allow wrapping on very small screens */
+    flex-wrap: wrap;
 }
 
 .hero-stats .stat {
     background: rgba(255,255,255,0.15);
     backdrop-filter: blur(10px);
-    padding: 1rem 1.5rem;
+    padding: 1.2rem 2rem;
     border-radius: 12px;
-    min-width: 100px;
+    min-width: 120px;
     text-align: center;
 }
 
 .hero-stats .stat h3 { 
-    font-size: clamp(1.5rem, 4vw, 2rem); 
+    font-size: clamp(2rem, 5vw, 2.5rem); 
     margin: 0; 
     color: #fff;
     font-weight: 700;
 }
 
 .hero-stats small { 
-    font-size: 0.8rem; 
+    font-size: 0.95rem; 
     color: #f1f1f1;
 }
 
-/* ===== SECTIONS - RESPONSIVE PADDING ===== */
+/* ===== SECTIONS ===== */
 section { 
-    padding: clamp(2rem, 5vw, 4rem) 0; 
-}
-
-section h2, section h3 { 
-    font-size: clamp(1.3rem, 3.5vw, 1.8rem); 
-    color: var(--primary); 
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-}
-
-section p { 
-    font-size: clamp(0.85rem, 2vw, 1rem); 
-    line-height: 1.6; 
+    padding: clamp(3rem, 6vw, 5rem) 0; 
 }
 
 .section-title {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .section-title h3 {
-    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
     font-weight: 700;
     color: var(--primary);
     margin-bottom: 0.5rem;
 }
 
 .section-title p {
-    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
     color: #6c757d;
 }
 
-/* ===== TROPHY CARDS - RESPONSIVE GRID ===== */
+/* ===== VISI MISI ===== */
+.visi-misi-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    height: 100%;
+    border-left: 5px solid var(--primary);
+    transition: transform 0.3s;
+}
+
+.visi-misi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.vm-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.visi-misi-card h4 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.visi-misi-card p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+}
+
+.vm-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.vm-list li {
+    padding: 0.75rem 0;
+    padding-left: 2rem;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.vm-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+/* ===== FACILITY CARDS ===== */
+.facility-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.facility-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.facility-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.facility-card h5 {
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.facility-card p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ===== TROPHY CARDS ===== */
 .trophy-card {
     border-radius: 10px;
     overflow: hidden;
@@ -253,8 +301,6 @@ section p {
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     transition: all 0.3s;
     height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 .trophy-card:hover {
@@ -264,13 +310,13 @@ section p {
 
 .trophy-img {
     width: 100%;
-    height: clamp(150px, 30vw, 200px); /* Responsive height */
+    height: 220px;
     object-fit: cover;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: 4rem;
     color: white;
 }
 
@@ -281,21 +327,17 @@ section p {
 }
 
 .trophy-content {
-    padding: 1rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    padding: 1.5rem;
 }
 
 .trophy-badge {
     display: inline-block;
-    padding: 0.25rem 0.7rem;
+    padding: 0.3rem 0.8rem;
     border-radius: 15px;
-    font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+    font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
-    align-self: flex-start;
 }
 
 .badge-prestasi { background: #ffeaa7; color: #d63031; }
@@ -304,7 +346,7 @@ section p {
 .badge-penghargaan { background: #fd79a8; color: #e84393; }
 
 .trophy-title {
-    font-size: clamp(0.9rem, 2.2vw, 1rem);
+    font-size: 1.05rem;
     font-weight: 600;
     color: #2c3e50;
     margin-bottom: 0.5rem;
@@ -312,19 +354,18 @@ section p {
 }
 
 .trophy-desc {
-    font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+    font-size: 0.9rem;
     color: #7f8c8d;
     margin-bottom: 0.5rem;
     line-height: 1.5;
-    flex: 1;
 }
 
 .trophy-date {
-    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+    font-size: 0.85rem;
     color: #95a5a6;
 }
 
-/* ===== TEAM CARDS - RESPONSIVE ===== */
+/* ===== TEAM CARDS ===== */
 .team-card {
     color: white;
     border-radius: 10px;
@@ -336,11 +377,10 @@ section p {
 
 .team-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
 }
 
 .team-photo {
-    height: clamp(140px, 30vw, 180px);
+    height: 200px;
     overflow: hidden;
     background: linear-gradient(180deg, #e9f0ff, #fff);
     display: flex;
@@ -355,20 +395,15 @@ section p {
 }
 
 .team-card h5 { 
-    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 0.3rem;
 }
 
-.team-card small { 
-    font-size: clamp(0.7rem, 1.5vw, 0.85rem); 
-}
-
-/* ===== GALLERY - RESPONSIVE GRID ===== */
+/* ===== GALLERY - 3 COLUMNS ===== */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 40vw, 200px), 1fr));
-    gap: clamp(0.5rem, 2vw, 1rem);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
 }
 
 .gallery-item {
@@ -377,6 +412,7 @@ section p {
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     transition: all 0.3s;
     aspect-ratio: 1;
+    cursor: pointer;
 }
 
 .gallery-item:hover {
@@ -388,21 +424,19 @@ section p {
     width: 100%; 
     height: 100%;
     object-fit: cover;
-    display: block;
 }
 
-/* ===== SCHEDULE TABLE - RESPONSIVE ===== */
+/* ===== SCHEDULE TABLE ===== */
 .schedule-table { 
-    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+    font-size: 0.95rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     border-radius: 10px;
     overflow: hidden;
-    width: 100%;
 }
 
 .schedule-table th, 
 .schedule-table td { 
-    padding: clamp(0.5rem, 2vw, 0.8rem);
+    padding: 1rem;
     vertical-align: middle;
 }
 
@@ -415,27 +449,34 @@ section p {
     background: #f8f9fa;
 }
 
-/* ===== SOCIAL MEDIA - RESPONSIVE ===== */
+/* ===== FOOTER ===== */
+footer { 
+    background: #1a1a2e;
+    color: #cfe0ff; 
+    padding: 3rem 0;
+    font-size: 0.95rem;
+}
+
+/* ===== SOCIAL MEDIA ===== */
 .social-media {
     display: flex;
-    gap: 0.8rem;
+    gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 1rem;
 }
 
 .social-media a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(40px, 10vw, 50px);
-    height: clamp(40px, 10vw, 50px);
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: #34495e;
     color: white;
     text-decoration: none;
     transition: all 0.3s;
-    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    font-size: 1.3rem;
 }
 
 .social-media a:hover {
@@ -451,168 +492,69 @@ section p {
 .social-whatsapp:hover { background: #25D366; }
 .social-twitter:hover { background: #1DA1F2; }
 
-/* ===== FOOTER - RESPONSIVE ===== */
-footer { 
-    background: #1a1a2e;
-    color: #cfe0ff; 
-    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
-    font-size: clamp(0.75rem, 1.8vw, 0.9rem);
-}
-
-footer h5 {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    margin-bottom: 0.8rem;
-}
-
-/* ===== MODAL - RESPONSIVE ===== */
-.modal-content {
-    border-radius: 15px;
-}
-
-.modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 15px 15px 0 0;
-}
-
-.form-label {
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.form-control, .form-select {
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
-    border-radius: 8px;
-}
-
-/* ===== RESPONSIVE BREAKPOINTS ===== */
-
-/* Extra Small Devices (phones, less than 576px) */
-@media (max-width: 575.98px) {
-    body { padding-top: 60px; }
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    body { padding-top: 70px; }
     
-    .navbar { padding: 0.4rem 0; }
+    .navbar { padding: 0.75rem 0; }
     
-    .navbar-brand .logo-img { width: 32px; height: 32px; }
+    .logo-img { width: 45px; height: 45px; }
     
-    .brand-title { font-size: 0.9rem; }
-    .brand-sub { font-size: 0.65rem; }
+    .brand-title { font-size: 1.1rem; }
     
     .nav-link { 
-        font-size: 0.85rem; 
-        padding: 0.4rem 0.6rem !important; 
-    }
-    
-    .btn-rounded { 
-        font-size: 0.75rem; 
-        padding: 0.35rem 0.8rem; 
-    }
-    
-    .hero-section { 
-        min-height: 85vh; 
-        padding: 3rem 0 2rem; 
-    }
-    
-    .hero-stats { 
-        gap: 0.6rem; 
-        margin-top: 1.5rem;
+        font-size: 1rem; 
+        padding: 0.75rem 1rem !important; 
     }
     
     .hero-stats .stat { 
-        padding: 0.7rem 1rem; 
-        min-width: 80px; 
+        padding: 1rem 1.5rem; 
+        min-width: 100px; 
     }
     
     .gallery-grid { 
-        grid-template-columns: repeat(2, 1fr); /* 2 kolom di mobile */
-        gap: 0.5rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
     }
     
     .schedule-table {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
     }
     
     .schedule-table th,
     .schedule-table td {
-        padding: 0.4rem 0.3rem;
+        padding: 0.6rem 0.4rem;
     }
     
-    /* Stack buttons vertically on very small screens */
-    .hero-section .d-flex.gap-2 {
-        flex-direction: column;
-        width: 100%;
-        max-width: 300px;
-        margin: 0 auto;
+    .visi-misi-card {
+        padding: 1.75rem;
+        margin-bottom: 1.5rem;
     }
     
-    .hero-section .btn {
-        width: 100%;
-    }
-}
-
-/* Small Devices (landscape phones, 576px and up) */
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .gallery-grid { 
-        grid-template-columns: repeat(3, 1fr); /* 3 kolom di tablet portrait */
-    }
-}
-
-/* Medium Devices (tablets, 768px and up) */
-@media (min-width: 768px) and (max-width: 991.98px) {
-    .gallery-grid { 
-        grid-template-columns: repeat(4, 1fr); /* 4 kolom di tablet landscape */
+    .vm-icon {
+        font-size: 2.75rem;
     }
     
-    .hero-stats .stat {
-        min-width: 110px;
+    .visi-misi-card h4 {
+        font-size: 1.35rem;
+    }
+    
+    .facility-card {
+        padding: 1.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .facility-icon {
+        font-size: 2.75rem;
     }
 }
 
-/* Large Devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-    .gallery-grid { 
-        grid-template-columns: repeat(5, 1fr); /* 5 kolom di desktop */
+@media (max-width: 576px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
     }
 }
-
-/* ===== PREVENT HORIZONTAL SCROLL ===== */
-.container,
-.container-fluid {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/* ===== SMOOTH SCROLL ===== */
-html {
-    scroll-behavior: smooth;
-}
-
-/* ===== LOADING OPTIMIZATION ===== */
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* ===== ACCESSIBILITY ===== */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-
-
     </style>
 </head>
 <body>
@@ -635,6 +577,7 @@ img {
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link active" href="#home">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#visi-misi">Visi & Misi</a></li>
                     <li class="nav-item"><a class="nav-link" href="#prestasi">Prestasi</a></li>
                     <li class="nav-item"><a class="nav-link" href="#team">Pelatih</a></li>
                     <li class="nav-item"><a class="nav-link" href="timpa.php">Tim</a></li>
@@ -677,7 +620,7 @@ img {
                 <p class="lead">Bergabunglah dengan klub voli terbaik di Surabaya</p>
             <?php endif; ?>
             
-            <div class="d-flex justify-content-center gap-2 mb-3">
+            <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap">
                 <a href="#about" class="btn btn-outline-light btn-rounded">Pelajari Lebih</a>
                 
                 <?php if (isLoggedIn()): ?>
@@ -715,14 +658,14 @@ img {
     <!-- ABOUT -->
     <section id="about" style="background: linear-gradient(135deg, rgba(240, 248, 255, 0.8) 0%, rgba(230, 240, 250, 0.9) 100%);">
         <div class="container" data-aos="fade-up">
-            <div class="row align-items-center g-3">
+            <div class="row align-items-center g-4">
                 <div class="col-lg-6">
-                    <img src="assets/img/logo/logo.png" class="img-fluid rounded shadow" alt="latihan" style="border-radius: 8px;" width="50%" />
+                    <img src="assets/img/logo/logo.png" class="img-fluid rounded shadow" alt="latihan" style="max-width: 300px; display: block; margin: 0 auto;" />
                 </div>
                 <div class="col-lg-6">
-                    <h2>Tentang Klub</h2>
-                    <p class="text-muted">Wadah pengembangan bakat voli dengan fokus pelatihan berkala, turnamen, dan pembentukan karakter atlet muda.</p>
-                    <ul class="list-unstyled" style="font-size: 0.85rem;">
+                    <h2 class="mb-3">Tentang Klub</h2>
+                    <p class="text-muted" style="font-size: 1.05rem; line-height: 1.8;">Wadah pengembangan bakat voli dengan fokus pelatihan berkala, turnamen, dan pembentukan karakter atlet muda.</p>
+                    <ul class="list-unstyled mt-3" style="font-size: 1rem;">
                         <li class="mb-2"><i class="fa fa-check-circle text-primary me-2"></i>Latihan 5x/minggu dengan pelatih bersertifikat</li>
                         <li class="mb-2"><i class="fa fa-check-circle text-primary me-2"></i>Pendaftaran & manajemen digital</li>
                         <li><i class="fa fa-check-circle text-primary me-2"></i>Program pembinaan usia junior</li>
@@ -732,8 +675,99 @@ img {
         </div>
     </section>
 
-    <!-- PRESTASI -->
-    <section id="prestasi" style="background: linear-gradient(to bottom, #f8f9fa 0%, #e3f2fd 100%);">
+    <!-- VISI & MISI -->
+    <section id="visi-misi" style="background: white;">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h3>🎯 Visi & Misi</h3>
+                <p>Arah dan tujuan Club Bola Voli PORPPAD</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="visi-misi-card">
+                        <div class="vm-icon">🔭</div>
+                        <h4>Visi</h4>
+                        <p>Menjadi klub bola voli terkemuka di Surabaya yang menghasilkan atlet berprestasi, berkarakter, dan profesional dengan mengedepankan sportivitas, disiplin, dan kerja sama tim.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="visi-misi-card">
+                        <div class="vm-icon">🎯</div>
+                        <h4>Misi</h4>
+                        <ul class="vm-list">
+                            <li>Menyelenggarakan pelatihan rutin dengan standar profesional</li>
+                            <li>Mengikuti berbagai kompetisi tingkat lokal hingga nasional</li>
+                            <li>Membentuk karakter atlet yang disiplin dan sportif</li>
+                            <li>Membangun komunitas pecinta bola voli yang solid</li>
+                            <li>Mengembangkan bakat atlet muda sejak dini</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FASILITAS -->
+    <section id="fasilitas" style="background: linear-gradient(to bottom, #f8f9fa 0%, #e3f2fd 100%);">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h3>⚡ Fasilitas & Program</h3>
+                <p>Apa yang kami tawarkan untuk anggota</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="0">
+                    <div class="facility-card">
+                        <div class="facility-icon">🏐</div>
+                        <h5>Peralatan Lengkap</h5>
+                        <p>Bola, net, dan equipment standar internasional untuk latihan optimal</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="facility-card">
+                        <div class="facility-icon">👨‍🏫</div>
+                        <h5>Pelatih Bersertifikat</h5>
+                        <p>Tim pelatih berpengalaman dengan sertifikasi nasional dan internasional</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="facility-card">
+                        <div class="facility-icon">📅</div>
+                        <h5>Jadwal Teratur</h5>
+                        <p>Latihan 5x seminggu dengan program terstruktur dan terukur</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="facility-card">
+                        <div class="facility-icon">🏆</div>
+                        <h5>Program Kompetisi</h5>
+                        <p>Kesempatan mengikuti turnamen lokal hingga nasional</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="facility-card">
+                        <div class="facility-icon">💪</div>
+                        <h5>Physical Training</h5>
+                        <p>Program latihan fisik dan conditioning untuk performa maksimal</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="facility-card">
+                        <div class="facility-icon">👥</div>
+                        <h5>Komunitas Solid</h5>
+                        <p>Bergabung dengan keluarga besar pecinta voli yang suportif</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- PRESTASI -->
     <section id="prestasi" class="bg-light">
@@ -743,7 +777,7 @@ img {
                 <p>Pencapaian gemilang klub kami</p>
             </div>
             
-            <div class="row g-3">
+            <div class="row g-4">
                 <?php if ($trophies_list->num_rows > 0):
                     $delay = 0;
                     while ($trophy = $trophies_list->fetch_assoc()): ?>
@@ -778,7 +812,7 @@ img {
         </div>
     </section>
 
-    <!-- PELATIH-->
+    <!-- PELATIH -->
     <section id="team">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
@@ -786,15 +820,15 @@ img {
                 <p>Tim pelatih profesional kami</p>
             </div>
             
-            <div class="row g-3">
-                <div class="col-6 col-md-4" data-aos="zoom-in" >
-                    <div class="team-card" >
+            <div class="row g-4 justify-content-center">
+                <div class="col-6 col-md-4" data-aos="zoom-in">
+                    <div class="team-card">
                         <div class="team-photo">
                             <img src="assets/img/pelatih/pelatih2.png" alt="Om Agus" onerror="this.style.display='none'" />
                         </div>
-                        <div class="card-body text-center py-2">
+                        <div class="card-body text-center py-3">
                             <h5>Om Agus</h5>
-                            <small class="text-muted">Ketua & Pelatih</small>
+                            <small class="text-light">Ketua & Pelatih</small>
                         </div>
                     </div>
                 </div>
@@ -804,9 +838,9 @@ img {
                         <div class="team-photo">
                             <img src="assets/img/pelatih/pelatih2.png" alt="Om Nasir" onerror="this.style.display='none'" />
                         </div>
-                        <div class="card-body text-center py-2">
+                        <div class="card-body text-center py-3">
                             <h5>Om Nasir</h5>
-                            <small class="text-muted">Pelatih</small>
+                            <small class="text-light">Pelatih</small>
                         </div>
                     </div>
                 </div>
@@ -816,9 +850,9 @@ img {
                         <div class="team-photo">
                             <img src="assets/img/pelatih/pelatih2.png" alt="Anton" onerror="this.style.display='none'" />
                         </div>
-                        <div class="card-body text-center py-2">
+                        <div class="card-body text-center py-3">
                             <h5>Anton Wijaya</h5>
-                            <small class="text-muted">Libero</small>
+                            <small class="text-light">Asisten Pelatih</small>
                         </div>
                     </div>
                 </div>
@@ -826,175 +860,30 @@ img {
         </div>
     </section>
 
-   <!-- GALLERY SECTION - UPDATE BAGIAN INI DI index.php -->
-<section id="galeri" class="bg-light">
-    <div class="container">
-        <div class="section-title" data-aos="fade-up">
-            <h3>📸 Galeri</h3>
-            <p>Momen latihan & pertandingan</p>
-        </div>
-        
-        <!-- Gallery Grid -->
-        <div class="gallery-grid" data-aos="fade-up" id="galleryGrid">
-            <!-- 5 foto pertama akan ditampilkan -->
-        </div>
-        
-        <!-- Load More Button -->
-        <div class="text-center mt-4" id="loadMoreContainer" style="display: none;">
-            <button class="btn btn-primary btn-rounded" id="loadMoreBtn" onclick="loadMorePhotos()">
-                <i class="fa fa-images me-2"></i>Lihat Lebih Banyak
-            </button>
-        </div>
-        
-        <!-- Loading Indicator -->
-        <div class="text-center mt-4" id="loadingIndicator" style="display: none;">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+    <!-- GALLERY -->
+    <section id="galeri" class="bg-light">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h3>📸 Galeri</h3>
+                <p>Momen latihan & pertandingan</p>
+            </div>
+            
+            <div class="gallery-grid" data-aos="fade-up" id="galleryGrid"></div>
+            
+            <div class="text-center mt-4" id="loadMoreContainer" style="display: none;">
+                <button class="btn btn-primary btn-rounded" id="loadMoreBtn" onclick="loadMorePhotos()">
+                    <i class="fa fa-images me-2"></i>Lihat Lebih Banyak
+                </button>
+            </div>
+            
+            <div class="text-center mt-4" id="loadingIndicator" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<script>
-// Gallery Load More System
-let currentPhotoIndex = 5; // Mulai dari foto ke-6
-let allPhotos = [];
-let isLoading = false;
-
-// Fetch all photos dari database
-async function fetchGalleryPhotos() {
-    try {
-        const response = await fetch('get_gallery.php');
-        const data = await response.json();
-        
-        if (data.success) {
-            allPhotos = data.photos;
-            renderInitialPhotos();
-            
-            // Show/hide load more button
-            if (allPhotos.length > 5) {
-                document.getElementById('loadMoreContainer').style.display = 'block';
-            }
-        }
-    } catch (error) {
-        console.error('Error fetching photos:', error);
-    }
-}
-
-// Render 5 foto pertama
-function renderInitialPhotos() {
-    const grid = document.getElementById('galleryGrid');
-    grid.innerHTML = '';
-    
-    const initialPhotos = allPhotos.slice(0, 5);
-    initialPhotos.forEach(photo => {
-        grid.appendChild(createPhotoElement(photo));
-    });
-}
-
-// Load more photos (5 foto setiap kali klik)
-function loadMorePhotos() {
-    if (isLoading) return;
-    
-    isLoading = true;
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    
-    // Show loading
-    loadingIndicator.style.display = 'block';
-    loadMoreBtn.style.display = 'none';
-    
-    // Simulate loading delay (optional)
-    setTimeout(() => {
-        const grid = document.getElementById('galleryGrid');
-        const nextPhotos = allPhotos.slice(currentPhotoIndex, currentPhotoIndex + 5);
-        
-        // Add new photos with animation
-        nextPhotos.forEach((photo, index) => {
-            setTimeout(() => {
-                const photoElement = createPhotoElement(photo);
-                photoElement.style.opacity = '0';
-                grid.appendChild(photoElement);
-                
-                // Fade in animation
-                setTimeout(() => {
-                    photoElement.style.transition = 'opacity 0.5s';
-                    photoElement.style.opacity = '1';
-                }, 50);
-            }, index * 100); // Staggered animation
-        });
-        
-        currentPhotoIndex += 5;
-        
-        // Hide loading
-        loadingIndicator.style.display = 'none';
-        
-        // Show/hide load more button
-        if (currentPhotoIndex < allPhotos.length) {
-            loadMoreBtn.style.display = 'inline-block';
-        } else {
-            document.getElementById('loadMoreContainer').innerHTML = 
-                '<p class="text-muted">Semua foto sudah ditampilkan 🎉</p>';
-        }
-        
-        isLoading = false;
-    }, 500);
-}
-
-// Create photo element
-function createPhotoElement(photo) {
-    const div = document.createElement('div');
-    div.className = 'gallery-item';
-    div.innerHTML = `
-        <img src="uploads/gallery/${photo.filename}" 
-             alt="${photo.caption || 'Gallery'}" 
-             onerror="this.src='https://via.placeholder.com/300'" 
-             onclick="openPhotoModal('${photo.filename}', '${photo.caption || ''}')" 
-             style="cursor: pointer;" />
-    `;
-    return div;
-}
-
-// Open photo in modal
-function openPhotoModal(filename, caption) {
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        padding: 2rem;
-    `;
-    
-    modal.innerHTML = `
-        <div style="max-width: 90%; max-height: 90%; text-align: center;">
-            <img src="uploads/gallery/${filename}" 
-                 style="max-width: 100%; max-height: 80vh; border-radius: 10px;" 
-                 alt="${caption}" />
-            ${caption ? `<p style="color: white; margin-top: 1rem; font-size: 1.1rem;">${caption}</p>` : ''}
-            <button onclick="this.parentElement.parentElement.remove()" 
-                    style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: white; border: none; border-radius: 5px; cursor: pointer;">
-                Tutup
-            </button>
-        </div>
-    `;
-    
-    modal.onclick = (e) => {
-        if (e.target === modal) modal.remove();
-    };
-    
-    document.body.appendChild(modal);
-}
-
-// Initialize gallery on page load
-document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
-</script>
     <!-- JADWAL -->
     <section id="jadwal">
         <div class="container">
@@ -1004,7 +893,7 @@ document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
             </div>
             
             <div class="row justify-content-center">
-                <div class="col-lg-8" data-aos="fade-up">
+                <div class="col-lg-10" data-aos="fade-up">
                     <div class="table-responsive">
                         <table class="schedule-table table table-bordered mb-0 text-center">
                             <thead>
@@ -1019,37 +908,37 @@ document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
                                 <tr>
                                     <td><strong>Selasa</strong></td>
                                     <td>19:00-22:00</td>
-                                    <td>Fisik</td>
+                                    <td>Fisik & Teknik</td>
                                     <td>Rumah-Pucang</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Rabu</strong></td>
                                     <td>18:00-22:00</td>
-                                    <td>Teknik</td>
+                                    <td>Drill & Game</td>
                                     <td>GOR FASHA</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Kamis</strong></td>
                                     <td>19:00-22:00</td>
-                                    <td>Fisik</td>
+                                    <td>Fisik & Teknik</td>
                                     <td>Rumah-Pucang</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Jumat</strong></td>
                                     <td>18:00-22:00</td>
-                                    <td>Teknik</td>
+                                    <td>Drill & Game</td>
                                     <td>GOR FASHA</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Sabtu</strong></td>
-                                    <td><table>Tentatif</table></td>
-                                    <td>Fisik</td>
+                                    <td>14:30-Selesai</td>
+                                    <td>Drill & Game</td>
                                     <td>Lap.Al-Irsyad</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Minggu</strong></td>
-                                    <td>08:00-Selesai</td>
-                                    <td>Fisik</td>
+                                    <td>Tentatif</td>
+                                    <td>Fisik & Teknik</td>
                                     <td>Rumah-Pucang</td>
                                 </tr>
                             </tbody>
@@ -1061,14 +950,14 @@ document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
     </section>
 
     <!-- CTA -->
-    <section class="py-4 bg-primary text-light">
+    <section class="py-5 bg-primary text-light">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-8" data-aos="fade-right">
-                    <h4 style="font-size: 1.2rem; margin-bottom: 0.3rem;">Gabung dengan kami!</h4>
-                    <p class="mb-0" style="font-size: 0.8rem;">Hubungi admin untuk info latihan dan event</p>
+                <div class="col-md-8 text-center text-md-start" data-aos="fade-right">
+                    <h4 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Gabung dengan kami!</h4>
+                    <p class="mb-0" style="font-size: 1rem;">Hubungi admin untuk info latihan dan event</p>
                 </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0" data-aos="fade-left">
+                <div class="col-md-4 text-center text-md-end mt-3 mt-md-0" data-aos="fade-left">
                     <?php if (isLoggedIn() && !$is_member): ?>
                         <button class="btn btn-outline-light btn-rounded" data-bs-toggle="modal" data-bs-target="#daftarModal">
                             <i class="fa fa-user-plus me-1"></i> Daftar Anggota
@@ -1089,14 +978,14 @@ document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
             <div class="row">
                 <div class="col-md-6 mb-3 mb-md-0">
                     <h5 class="fw-bold">Volley Club PORPPAD</h5>
-                    <p class="mb-2" style="font-size: 0.75rem; line-height: 1.6;">
+                    <p class="mb-2" style="font-size: 0.9rem; line-height: 1.6;">
                         GOR FASHA – Surabaya<br>
                         📞 Telp: 0812-3456-7890<br>
                         📧 Email: clubvolley@gmail.com
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <h6 class="fw-bold mb-2" style="font-size: 0.9rem;">Ikuti Kami</h6>
+                    <h6 class="fw-bold mb-3">Ikuti Kami</h6>
                     <div class="social-media">
                         <a href="https://instagram.com" target="_blank" class="social-instagram" title="Instagram">
                             <i class="fab fa-instagram"></i>
@@ -1118,7 +1007,7 @@ document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
             </div>
             <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
             <div class="text-center">
-                <small style="font-size: 0.7rem; color: #95a5a6;">
+                <small style="font-size: 0.85rem; color: #95a5a6;">
                     © 2025 Volley Club PORPPAD. All rights reserved.
                 </small>
             </div>
@@ -1126,198 +1015,133 @@ document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
     </footer>
 
     <!-- MODAL DAFTAR ANGGOTA -->
- <!-- MODAL DAFTAR ANGGOTA - WITH PHOTO UPLOAD -->
-<div class="modal fade" id="daftarModal" tabindex="-1" aria-labelledby="daftarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="daftarModalLabel">
-                    <i class="fa fa-user-plus me-2"></i>Form Pendaftaran Anggota
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            
-            <!-- PENTING: Tambahkan enctype untuk upload -->
-            <form id="formDaftar" action="proses_daftar.php" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="alert alert-info" style="font-size: 0.85rem;">
-                        <i class="fa fa-info-circle me-2"></i>
-                        <strong>Informasi:</strong> Setelah submit, data Anda akan dikirim ke admin via Telegram untuk diverifikasi.
-                    </div>
-
-                    <!-- FOTO UPLOAD - BARU! -->
-                    <div class="mb-4 text-center">
-                        <label class="form-label fw-bold">Foto Profil <span class="text-danger">*</span></label>
-                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border: 2px dashed #dee2e6;">
-                            <!-- Preview -->
-                            <div class="mb-3">
-                                <img id="photoPreview" 
-                                     src="assets/img/default-profile.jpg" 
-                                     alt="Preview" 
-                                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;"
-                                     onerror="this.src='https://via.placeholder.com/150'">
-                            </div>
-                            
-                            <!-- Input File -->
-                            <input type="file" 
-                                   name="foto" 
-                                   id="fotoInput" 
-                                   class="form-control" 
-                                   accept="image/jpeg,image/jpg,image/png,image/gif"
-                                   required
-                                   style="max-width: 400px; margin: 0 auto;">
-                            
-                            <small class="text-muted d-block mt-2">
-                                <i class="fa fa-info-circle"></i> Format: JPG, PNG, GIF (Max: 2MB)
-                            </small>
-                        </div>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" name="nama" class="form-control" placeholder="Nama lengkap sesuai KTP" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Tempat Lahir <span class="text-danger">*</span></label>
-                            <input type="text" name="tempat_lahir" class="form-control" placeholder="Surabaya" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Tanggal Lahir <span class="text-danger">*</span></label>
-                            <input type="date" name="tanggal_lahir" class="form-control" id="tanggal_lahir_modal" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Umur <span class="text-danger">*</span></label>
-                            <input type="number" name="umur" class="form-control" id="umur_modal" min="10" max="60" placeholder="25" required readonly>
-                            <small class="text-muted">Otomatis dari tanggal lahir</small>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Gender <span class="text-danger">*</span></label>
-                            <select name="gender" class="form-select" required>
-                                <option value="">Pilih Gender</option>
-                                <option value="Putra">Putra</option>
-                                <option value="Putri">Putri</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Posisi <span class="text-danger">*</span></label>
-                            <select name="posisi" class="form-select" required>
-                                <option value="">Pilih Posisi</option>
-                                <option value="Spiker">Spiker</option>
-                                <option value="Setter">Setter</option>
-                                <option value="Libero">Libero</option>
-                                <option value="Blocker">Blocker</option>
-                                <option value="Server">Server</option>
-                                <option value="All-rounder">All-rounder</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">No. WhatsApp <span class="text-danger">*</span></label>
-                            <input type="text" name="wa" class="form-control" placeholder="08xxxxxxxxxx" pattern="[0-9]{10,13}" required>
-                            <small class="text-muted">Format: 08xxxxxxxxxx</small>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Alamat <span class="text-danger">*</span></label>
-                            <input type="text" name="alamat" class="form-control" placeholder="Kota, Kecamatan" required>
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Alasan Ingin Bergabung <span class="text-danger">*</span></label>
-                            <textarea name="alasan" class="form-control" rows="3" placeholder="Ceritakan alasan Anda..." required></textarea>
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Pengalaman Bermain Voli</label>
-                            <textarea name="pengalaman" class="form-control" rows="2" placeholder="Ceritakan pengalaman Anda (opsional)"></textarea>
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Riwayat Cedera (Opsional)</label>
-                            <textarea name="riwayat_cedera" class="form-control" rows="2" placeholder="Riwayat cedera yang perlu kami ketahui?"></textarea>
-                        </div>
-                    </div>
+    <div class="modal fade" id="daftarModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa fa-user-plus me-2"></i>Form Pendaftaran Anggota
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fa fa-times me-1"></i> Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-paper-plane me-1"></i> Kirim Pendaftaran
-                    </button>
-                </div>
-            </form>
+                <form id="formDaftar" action="proses_daftar.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="alert alert-info" style="font-size: 0.9rem;">
+                            <i class="fa fa-info-circle me-2"></i>
+                            <strong>Informasi:</strong> Setelah submit, data Anda akan dikirim ke admin via Telegram untuk diverifikasi.
+                        </div>
+
+                        <div class="mb-4 text-center">
+                            <label class="form-label fw-bold">Foto Profil <span class="text-danger">*</span></label>
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border: 2px dashed #dee2e6;">
+                                <div class="mb-3">
+                                    <img id="photoPreview" 
+                                         src="assets/img/default-profile.jpg" 
+                                         alt="Preview" 
+                                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;"
+                                         onerror="this.src='https://via.placeholder.com/150'">
+                                </div>
+                                
+                                <input type="file" 
+                                       name="foto" 
+                                       id="fotoInput" 
+                                       class="form-control" 
+                                       accept="image/jpeg,image/jpg,image/png,image/gif"
+                                       required
+                                       style="max-width: 400px; margin: 0 auto;">
+                                
+                                <small class="text-muted d-block mt-2">
+                                    <i class="fa fa-info-circle"></i> Format: JPG, PNG, GIF (Max: 2MB)
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                                <input type="text" name="nama" class="form-control" placeholder="Nama lengkap sesuai KTP" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tempat Lahir <span class="text-danger">*</span></label>
+                                <input type="text" name="tempat_lahir" class="form-control" placeholder="Surabaya" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal Lahir <span class="text-danger">*</span></label>
+                                <input type="date" name="tanggal_lahir" class="form-control" id="tanggal_lahir_modal" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Umur <span class="text-danger">*</span></label>
+                                <input type="number" name="umur" class="form-control" id="umur_modal" min="10" max="60" placeholder="25" required readonly>
+                                <small class="text-muted">Otomatis dari tanggal lahir</small>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                <select name="gender" class="form-select" required>
+                                    <option value="">Pilih Gender</option>
+                                    <option value="Putra">Putra</option>
+                                    <option value="Putri">Putri</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Posisi <span class="text-danger">*</span></label>
+                                <select name="posisi" class="form-select" required>
+                                    <option value="">Pilih Posisi</option>
+                                    <option value="Spiker">Spiker</option>
+                                    <option value="Setter">Setter</option>
+                                    <option value="Libero">Libero</option>
+                                    <option value="Blocker">Blocker</option>
+                                    <option value="Server">Server</option>
+                                    <option value="All-rounder">All-rounder</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">No. WhatsApp <span class="text-danger">*</span></label>
+                                <input type="text" name="wa" class="form-control" placeholder="08xxxxxxxxxx" pattern="[0-9]{10,13}" required>
+                                <small class="text-muted">Format: 08xxxxxxxxxx</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Alamat <span class="text-danger">*</span></label>
+                                <input type="text" name="alamat" class="form-control" placeholder="Kota, Kecamatan" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Alasan Ingin Bergabung <span class="text-danger">*</span></label>
+                                <textarea name="alasan" class="form-control" rows="3" placeholder="Ceritakan alasan Anda..." required></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Pengalaman Bermain Voli</label>
+                                <textarea name="pengalaman" class="form-control" rows="2" placeholder="Ceritakan pengalaman Anda (opsional)"></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Riwayat Cedera (Opsional)</label>
+                                <textarea name="riwayat_cedera" class="form-control" rows="2" placeholder="Riwayat cedera yang perlu kami ketahui?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa fa-times me-1"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-paper-plane me-1"></i> Kirim Pendaftaran
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-
-<script>
-// Auto calculate age
-document.getElementById('tanggal_lahir_modal')?.addEventListener('change', function() {
-    const birthDate = new Date(this.value);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    
-    document.getElementById('umur_modal').value = age;
-});
-
-// Preview Photo
-document.getElementById('fotoInput')?.addEventListener('change', function() {
-    const file = this.files[0];
-    const preview = document.getElementById('photoPreview');
-    
-    if (file) {
-        // Validasi ukuran (max 2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            alert('⚠️ Ukuran foto terlalu besar! Maksimal 2MB');
-            this.value = '';
-            preview.src = 'assets/img/default-profile.jpg';
-            return;
-        }
-        
-        // Validasi tipe
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-        if (!allowedTypes.includes(file.type)) {
-            alert('⚠️ Format tidak valid! Gunakan JPG, PNG, atau GIF');
-            this.value = '';
-            preview.src = 'assets/img/default-profile.jpg';
-            return;
-        }
-        
-        // Show preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-// Validasi sebelum submit
-document.getElementById('formDaftar')?.addEventListener('submit', function(e) {
-    const fotoInput = document.getElementById('fotoInput');
-    
-    if (!fotoInput.files || fotoInput.files.length === 0) {
-        e.preventDefault();
-        alert('⚠️ Foto profil wajib diupload!');
-        fotoInput.focus();
-        return false;
-    }
-});
-</script>
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
@@ -1330,13 +1154,13 @@ document.getElementById('formDaftar')?.addEventListener('submit', function(e) {
             easing: 'ease-out'
         });
 
-        // Smooth scroll for anchor links
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     e.preventDefault();
-                    const offsetTop = target.offsetTop - 60;
+                    const offsetTop = target.offsetTop - 70;
                     window.scrollTo({
                         top: offsetTop,
                         behavior: 'smooth'
@@ -1345,29 +1169,8 @@ document.getElementById('formDaftar')?.addEventListener('submit', function(e) {
             });
         });
 
-        // Navbar active state on scroll
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const scrollY = window.pageYOffset + 100;
-
-            sections.forEach(section => {
-                const sectionHeight = section.offsetHeight;
-                const sectionTop = section.offsetTop;
-                const sectionId = section.getAttribute('id');
-                
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${sectionId}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        });
-
-        // Auto calculate age from date of birth
-        document.querySelector('input[name="tanggal_lahir"]')?.addEventListener('change', function() {
+        // Auto calculate age
+        document.getElementById('tanggal_lahir_modal')?.addEventListener('change', function() {
             const birthDate = new Date(this.value);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
@@ -1377,11 +1180,162 @@ document.getElementById('formDaftar')?.addEventListener('submit', function(e) {
                 age--;
             }
             
-            document.querySelector('input[name="umur"]').value = age;
+            document.getElementById('umur_modal').value = age;
         });
-    </script>
-    <script>
-// Auto calculate age
 
+        // Preview Photo
+        document.getElementById('fotoInput')?.addEventListener('change', function() {
+            const file = this.files[0];
+            const preview = document.getElementById('photoPreview');
+            
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('⚠️ Ukuran foto terlalu besar! Maksimal 2MB');
+                    this.value = '';
+                    preview.src = 'assets/img/default-profile.jpg';
+                    return;
+                }
+                
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('⚠️ Format tidak valid! Gunakan JPG, PNG, atau GIF');
+                    this.value = '';
+                    preview.src = 'assets/img/default-profile.jpg';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Gallery System
+        let currentPhotoIndex = 5;
+        let allPhotos = [];
+        let isLoading = false;
+
+        async function fetchGalleryPhotos() {
+            try {
+                const response = await fetch('get_gallery.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allPhotos = data.photos;
+                    renderInitialPhotos();
+                    
+                    if (allPhotos.length > 5) {
+                        document.getElementById('loadMoreContainer').style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching photos:', error);
+            }
+        }
+
+        function renderInitialPhotos() {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+            
+            const initialPhotos = allPhotos.slice(0, 5);
+            initialPhotos.forEach(photo => {
+                grid.appendChild(createPhotoElement(photo));
+            });
+        }
+
+        function loadMorePhotos() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            
+            loadingIndicator.style.display = 'block';
+            loadMoreBtn.style.display = 'none';
+            
+            setTimeout(() => {
+                const grid = document.getElementById('galleryGrid');
+                const nextPhotos = allPhotos.slice(currentPhotoIndex, currentPhotoIndex + 5);
+                
+                nextPhotos.forEach((photo, index) => {
+                    setTimeout(() => {
+                        const photoElement = createPhotoElement(photo);
+                        photoElement.style.opacity = '0';
+                        grid.appendChild(photoElement);
+                        
+                        setTimeout(() => {
+                            photoElement.style.transition = 'opacity 0.5s';
+                            photoElement.style.opacity = '1';
+                        }, 50);
+                    }, index * 100);
+                });
+                
+                currentPhotoIndex += 5;
+                
+                loadingIndicator.style.display = 'none';
+                
+                if (currentPhotoIndex < allPhotos.length) {
+                    loadMoreBtn.style.display = 'inline-block';
+                } else {
+                    document.getElementById('loadMoreContainer').innerHTML = 
+                        '<p class="text-muted">Semua foto sudah ditampilkan 🎉</p>';
+                }
+                
+                isLoading = false;
+            }, 500);
+        }
+
+        function createPhotoElement(photo) {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = `
+                <img src="uploads/gallery/${photo.filename}" 
+                     alt="${photo.caption || 'Gallery'}" 
+                     onerror="this.src='https://via.placeholder.com/300'" 
+                     onclick="openPhotoModal('${photo.filename}', '${photo.caption || ''}')" />
+            `;
+            return div;
+        }
+
+        function openPhotoModal(filename, caption) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                padding: 2rem;
+            `;
+            
+            modal.innerHTML = `
+                <div style="max-width: 90%; max-height: 90%; text-align: center;">
+                    <img src="uploads/gallery/${filename}" 
+                         style="max-width: 100%; max-height: 80vh; border-radius: 10px;" 
+                         alt="${caption}" />
+                    ${caption ? `<p style="color: white; margin-top: 1rem; font-size: 1.1rem;">${caption}</p>` : ''}
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                        Tutup
+                    </button>
+                </div>
+            `;
+            
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.remove();
+            };
+            
+            document.body.appendChild(modal);
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
+    </script>
 </body>
 </html>
