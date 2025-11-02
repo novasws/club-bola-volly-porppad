@@ -39,14 +39,16 @@ if (isset($_POST['login'])) {
                 $password_valid = password_verify($password, $user['password']);
             }
             
-            if ($password_valid) {
+          if ($password_valid) {
+             // Clear old session data
+             session_regenerate_id(true);
+    
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['role'] = $user['role'];
-                
-                alert('Login berhasil! Selamat datang, ' . $user['username'], 'success');
-                
+    
+    alert('Login berhasil! Selamat datang, ' . $user['username'], 'success');
                 // Redirect based on role
                 if ($user['role'] === 'admin') {
                     redirect('admin/dashboard.php');
@@ -487,7 +489,7 @@ if (isset($_POST['register'])) {
             </div>
 
             <hr class="my-4">
-            
+             
             <div class="text-center">
                 <p class="mb-2 text-muted small">Belum punya akun? Daftar dulu untuk akses penuh!</p>
                
