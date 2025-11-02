@@ -33,7 +33,6 @@ if (isLoggedIn()) {
 /* ===== IMPORT FONTS ===== */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 
-/* ===== DISABLE ZOOM ON MOBILE ===== */
 html {
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
@@ -41,9 +40,11 @@ html {
 
 * {
     -webkit-tap-highlight-color: transparent;
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
 }
 
-/* ===== RESET & BASE ===== */
 :root {
     --primary: #2c5282;
     --primary-dark: #1e3a5f;
@@ -52,19 +53,13 @@ html {
     --gold-light: #e0c488;
 }
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-}
-
 body { 
     font-family: 'Inter', sans-serif; 
     padding-top: 80px;
     overflow-x: hidden;
 }
 
-/* ===== NAVBAR - MOBILE OPTIMIZED ===== */
+/* ===== NAVBAR ===== */
 .navbar {
     position: fixed;
     top: 0;
@@ -96,7 +91,6 @@ body {
     color: #6c757d; 
 }
 
-/* NAVBAR LINK - DENGAN HOVER EFFECT */
 .nav-link {
     font-size: 1.05rem;
     padding: 0.75rem 1rem !important;
@@ -104,7 +98,6 @@ body {
     font-weight: 500;
     transition: all 0.3s ease;
     border-radius: 8px;
-    position: relative;
 }
 
 .nav-link:hover {
@@ -117,26 +110,6 @@ body {
     color: white !important;
     background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
     box-shadow: 0 3px 10px rgba(44, 82, 130, 0.3);
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: var(--primary);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover::after {
-    width: 60%;
-}
-
-.nav-link.active::after {
-    width: 0;
 }
 
 .btn-rounded { 
@@ -158,39 +131,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, 
-        #1e3a5f 0%,
-        #2c5282 35%,
-        #4a7ba7 70%,
-        #5a8bb8 100%
-    );
+    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 35%, #4a7ba7 70%, #5a8bb8 100%);
     position: relative;
     padding: 2rem 1rem;
     overflow: hidden;
-}
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(201, 169, 97, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-    pointer-events: none;
-}
-
-.hero-section::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(to top, #f8fafc, transparent);
-    pointer-events: none;
 }
 
 .hero-section h1:first-of-type {
@@ -214,7 +158,6 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 1.5rem;
-    text-shadow: none;
 }
 
 .hero-stats {
@@ -236,11 +179,6 @@ body {
     transition: all 0.3s;
 }
 
-.hero-stats .stat:hover {
-    background: rgba(255,255,255,0.22);
-    transform: translateY(-5px);
-}
-
 .hero-stats .stat h3 {
     font-size: clamp(1.75rem, 5vw, 3rem);
     margin: 0 0 0.25rem 0;
@@ -252,7 +190,6 @@ body {
 .hero-stats small {
     font-size: clamp(0.85rem, 2vw, 1rem);
     color: #fff;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
     font-weight: 500;
 }
 
@@ -278,23 +215,10 @@ section {
     color: #6c757d;
 }
 
-/* ===== ABOUT SECTION ===== */
-#about {
-    background: linear-gradient(180deg, 
-        #f8fafc 0%,
-        #ffffff 50%,
-        #fafbfc 100%
-    ) !important;
-}
-
 /* ===== VISI MISI ===== */
-#visi-misi {
-    background: #ffffff !important;
-}
-
 #visi-misi .row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
 }
 
@@ -326,12 +250,6 @@ section {
     margin-bottom: 1rem;
 }
 
-.visi-misi-card p {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: #555;
-}
-
 .vm-list {
     list-style: none;
     padding: 0;
@@ -356,15 +274,7 @@ section {
     font-size: 1.3rem;
 }
 
-/* ===== FASILITAS - 3 KOLOM DI LAPTOP ===== */
-#fasilitas {
-    background: linear-gradient(180deg, 
-        #f0f4f8 0%,
-        #f5f8fa 50%,
-        #fafbfc 100%
-    ) !important;
-}
-
+/* ===== FASILITAS ===== */
 #fasilitas .row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -387,7 +297,6 @@ section {
 .facility-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
-    border-color: rgba(201, 169, 97, 0.3);
 }
 
 .facility-icon {
@@ -410,13 +319,6 @@ section {
 }
 
 /* ===== TROPHY CARDS ===== */
-#prestasi {
-    background: linear-gradient(180deg,
-        #fafbfc 0%,
-        #f8f9fa 100%
-    ) !important;
-}
-
 .trophy-card {
     border-radius: 10px;
     overflow: hidden;
@@ -435,7 +337,6 @@ section {
 .trophy-img {
     width: 100%;
     height: 220px;
-    object-fit: cover;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
@@ -474,22 +375,9 @@ section {
     font-weight: 600;
     color: #2c3e50;
     margin-bottom: 0.5rem;
-    line-height: 1.4;
 }
 
-.trophy-desc {
-    font-size: 0.9rem;
-    color: #7f8c8d;
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-}
-
-.trophy-date {
-    font-size: 0.85rem;
-    color: #95a5a6;
-}
-
-/* ===== TEAM CARDS - LAYOUT 1 ATAS 2 BAWAH ===== */
+/* ===== PELATIH SECTION - LAYOUT 1 ATAS 2 BAWAH RAPI ===== */
 #team {
     background: #ffffff !important;
 }
@@ -497,36 +385,37 @@ section {
 #team .row {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 2rem;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
+}
+
+/* BARIS 1: Om Agus - 1 kotak besar di tengah */
+#team .row > div:nth-child(1) {
+    flex: 0 0 100%;
+    display: flex;
     justify-content: center;
 }
 
-/* Pelatih pertama (Om Agus) - 1 kotak di atas, centered */
-#team .row > .col-6:nth-child(1) {
-    flex: 0 0 100%;
-    max-width: 350px;
+#team .row > div:nth-child(1) .team-card {
+    width: 100%;
+    max-width: 400px;
 }
 
-/* Pelatih kedua dan ketiga - 2 kotak di bawah */
-#team .row > .col-6:nth-child(2),
-#team .row > .col-6:nth-child(3) {
+/* BARIS 2: Om Nasir & Om Yit - 2 kotak berdampingan */
+#team .row > div:nth-child(2),
+#team .row > div:nth-child(3) {
     flex: 0 0 calc(50% - 1rem);
-    max-width: 350px;
+    max-width: 400px;
 }
 
 .team-card {
-    color: white;
+    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
     border-radius: 15px;
     overflow: hidden;
-    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
-    border: none;
     box-shadow: 0 4px 20px rgba(30, 58, 95, 0.15);
     transition: all 0.3s;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 .team-card:hover {
@@ -536,46 +425,38 @@ section {
 
 .team-photo {
     width: 100%;
-    height: 350px;
+    height: 400px;
     overflow: hidden;
     background: #f8f9fa;
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
 }
 
 .team-photo img { 
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 10%;
+    object-position: center top;
 }
 
 .team-card .card-body {
     padding: 1.5rem;
     text-align: center;
+    color: white;
 }
 
 .team-card h5 { 
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
+    color: white;
 }
 
 .team-card small {
     font-size: 1rem;
-    opacity: 0.9;
+    opacity: 0.95;
+    color: rgba(255,255,255,0.9);
 }
 
 /* ===== GALLERY ===== */
-#galeri {
-    background: linear-gradient(180deg,
-        #f5f8fa 0%,
-        #f0f4f8 100%
-    ) !important;
-}
-
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -595,7 +476,6 @@ section {
 .gallery-item:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 25px rgba(30, 58, 95, 0.15);
-    border-color: rgba(201, 169, 97, 0.3);
 }
 
 .gallery-item img { 
@@ -605,10 +485,6 @@ section {
 }
 
 /* ===== SCHEDULE TABLE ===== */
-#jadwal {
-    background: #ffffff !important;
-}
-
 .schedule-table { 
     font-size: 0.95rem;
     border: 1px solid #e8eef5;
@@ -632,11 +508,6 @@ section {
     background: #f8fafc;
 }
 
-/* ===== CTA SECTION ===== */
-.bg-primary {
-    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%) !important;
-}
-
 /* ===== FOOTER ===== */
 footer { 
     background: #1a1a2e;
@@ -645,7 +516,6 @@ footer {
     font-size: 0.95rem;
 }
 
-/* ===== SOCIAL MEDIA ===== */
 .social-media {
     display: flex;
     gap: 1rem;
@@ -680,7 +550,7 @@ footer {
 .social-whatsapp:hover { background: #25D366; }
 .social-twitter:hover { background: #1DA1F2; }
 
-/* ===== MOBILE RESPONSIVE ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 991px) {
     #fasilitas .row {
         grid-template-columns: repeat(2, 1fr);
@@ -689,15 +559,6 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .hero-section {
-        background-attachment: scroll;
-    }
-    
-    .hero-stats {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.6rem;
-    }
-    
     #visi-misi .row {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -708,24 +569,31 @@ footer {
         gap: 1rem;
     }
     
-    .facility-card {
-        padding: 1.5rem 1rem;
-    }
-    
     .facility-icon {
         font-size: 2.5rem;
     }
     
-    /* Mobile: semua pelatih jadi 1 kolom penuh */
-    #team .row {
-        gap: 1rem;
-    }
-    
-    #team .row > .col-6:nth-child(1),
-    #team .row > .col-6:nth-child(2),
-    #team .row > .col-6:nth-child(3) {
+    /* Mobile: semua pelatih jadi 1 kolom */
+    #team .row > div:nth-child(1),
+    #team .row > div:nth-child(2),
+    #team .row > div:nth-child(3) {
         flex: 0 0 100%;
         max-width: 100%;
+    }
+    
+    .team-photo {
+        height: 250px;
+    }
+    
+    .team-card h5 {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
     }
     
     .team-photo {
@@ -742,34 +610,6 @@ footer {
     
     .team-card small {
         font-size: 0.875rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
-    }
-    
-    #team .row {
-        gap: 0.75rem;
-    }
-    
-    .team-photo {
-        height: 160px;
-    }
-    
-    .team-card .card-body {
-        padding: 0.75rem 0.5rem;
-    }
-    
-    .team-card h5 {
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .team-card small {
-        font-size: 0.75rem;
     }
 }
 </style>
