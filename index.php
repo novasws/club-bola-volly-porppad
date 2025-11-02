@@ -6,7 +6,7 @@ if (isLoggedIn()) {
     if (isAdmin()) {
         redirect('admin/dashboard.php');
     } else {
-        redirect('home.php'); // CHANGED from index.php
+        redirect('home.php');
     }
 }
 
@@ -27,28 +27,46 @@ if (isset($_POST['login'])) {
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
             
+            // 🐛 DEBUG: Print info (akan muncul di Railway logs)
+            error_log("=== LOGIN DEBUG ===");
+            error_log("Username: " . $username);
+            error_log("Password Input: " . $password);
+            error_log("Password Hash dari DB: " . $user['password']);
+            error_log("Password Length: " . strlen($user['password']));
+            error_log("Is Hex? " . (ctype_xdigit($user['password']) ? 'YES' : 'NO'));
+            error_log("Role dari DB: " . $user['role']);
+            
             // ✅ FIXED: Verify password - Support both MD5 and bcrypt
             $password_valid = false;
             
             // Cek format password yang tersimpan di database
             if (strlen($user['password']) === 32 && ctype_xdigit($user['password'])) {
                 // Password pakai MD5 (32 karakter hexadecimal)
+                error_log("Detection: Using MD5 verification");
                 $password_valid = (md5($password) === $user['password']);
+                error_log("MD5 Match: " . ($password_valid ? 'TRUE' : 'FALSE'));
             } else {
                 // Password pakai bcrypt (dimulai dengan $2y$)
+                error_log("Detection: Using bcrypt verification");
+                error_log("Bcrypt hash: " . $user['password']);
                 $password_valid = password_verify($password, $user['password']);
+                error_log("Bcrypt result: " . ($password_valid ? 'TRUE' : 'FALSE'));
             }
             
-          if ($password_valid) {
-             // Clear old session data
-             session_regenerate_id(true);
+            error_log("Final password_valid: " . ($password_valid ? 'TRUE' : 'FALSE'));
+            error_log("===================");
+            
+            if ($password_valid) {
+                // Clear old session data
+                session_regenerate_id(true);
     
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['role'] = $user['role'];
     
-    alert('Login berhasil! Selamat datang, ' . $user['username'], 'success');
+                alert('Login berhasil! Selamat datang, ' . $user['username'], 'success');
+                
                 // Redirect based on role
                 if ($user['role'] === 'admin') {
                     redirect('admin/dashboard.php');
@@ -85,6 +103,12 @@ if (isset($_POST['register'])) {
         } else {
             // Pakai bcrypt untuk member baru (lebih aman)
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            
+            error_log("=== REGISTER DEBUG ===");
+            error_log("Username: " . $username);
+            error_log("Password: " . $password);
+            error_log("Hashed: " . $hashed_password);
+            error_log("=====================");
             
             $insert = "INSERT INTO users (username, password, nama, role) 
                       VALUES ('$username', '$hashed_password', '$nama', 'member')";
@@ -489,7 +513,7 @@ if (isset($_POST['register'])) {
             </div>
 
             <hr class="my-4">
-             
+            
             <div class="text-center">
                 <p class="mb-2 text-muted small">Belum punya akun? Daftar dulu untuk akses penuh!</p>
                
