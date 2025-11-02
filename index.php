@@ -27,18 +27,17 @@ if (isset($_POST['login'])) {
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
             
-            // ✅ SMART PASSWORD VERIFICATION - Support MD5 & Bcrypt
+            // Smart password verification
             $password_valid = false;
             
-            // Deteksi format password
             if (strlen($user['password']) === 32 && ctype_xdigit($user['password'])) {
-                // MD5 format (32 hex characters)
+                // MD5 format
                 $password_valid = (md5($password) === $user['password']);
             } elseif (substr($user['password'], 0, 4) === '$2y$' || substr($user['password'], 0, 4) === '$2a$') {
-                // Bcrypt format (starts with $2y$ or $2a$)
+                // Bcrypt format
                 $password_valid = password_verify($password, $user['password']);
             } else {
-                // Fallback: Try both methods
+                // Fallback
                 if (md5($password) === $user['password']) {
                     $password_valid = true;
                 } else {
@@ -82,21 +81,13 @@ if (isset($_POST['register'])) {
     } elseif ($password !== $confirm_password) {
         $error = 'Password tidak cocok!';
     } else {
-        // Check if username exists
         $check = "SELECT * FROM users WHERE username = '$username'";
         $result = mysqli_query($conn, $check);
 
         if (mysqli_num_rows($result) > 0) {
             $error = 'Username sudah terdaftar!';
         } else {
-            // Pakai bcrypt untuk member baru (lebih aman)
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            
-            error_log("=== REGISTER DEBUG ===");
-            error_log("Username: " . $username);
-            error_log("Password: " . $password);
-            error_log("Hashed: " . $hashed_password);
-            error_log("=====================");
             
             $insert = "INSERT INTO users (username, password, nama, role) 
                       VALUES ('$username', '$hashed_password', '$nama', 'member')";
