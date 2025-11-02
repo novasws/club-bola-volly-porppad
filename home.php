@@ -65,49 +65,46 @@ body {
 }
 
 /* ===== NAVBAR - MOBILE OPTIMIZED ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-    z-index: 1000;
-    padding: 1rem 0;
-}
-
-.logo-img { 
-    width: 50px; 
-    height: 50px; 
-    border-radius: 8px;
-    object-fit: cover;
-}
-
-.brand-title { 
-    font-weight: 700; 
-    font-size: 1.3rem; 
-    color: var(--primary-dark); 
-    line-height: 1.2;
-}
-
-.brand-sub { 
-    font-size: 0.85rem; 
-    color: #6c757d; 
-}
-
 .nav-link {
     font-size: 1.05rem;
     padding: 0.75rem 1rem !important;
     color: #333;
     font-weight: 500;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    position: relative;
 }
 
-.nav-link:hover, .nav-link.active { 
-    color: var(--primary); 
-    background: rgba(44, 82, 130, 0.1);
-    border-radius: 8px;
+.nav-link:hover {
+    color: var(--primary);
+    background: linear-gradient(135deg, rgba(44, 82, 130, 0.08), rgba(74, 123, 167, 0.12));
+    transform: translateY(-2px);
+}
+
+.nav-link.active { 
+    color: white !important;
+    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
+    box-shadow: 0 3px 10px rgba(44, 82, 130, 0.3);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 60%;
+}
+
+.nav-link.active::after {
+    width: 0; /* Hilangkan underline saat active */
 }
 
 .btn-rounded { 
@@ -329,7 +326,7 @@ section {
 }
 
 /* ===== FASILITAS - Soft Blue Background ===== */
-/* ===== FASILITAS - Soft Blue Background ===== */
+/* ===== FASILITAS - 3 KOLOM DI LAPTOP ===== */
 #fasilitas {
     background: linear-gradient(180deg, 
         #f0f4f8 0%,
@@ -340,8 +337,10 @@ section {
 
 #fasilitas .row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 kolom di laptop */
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom default (laptop) */
     gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
 }
 
 .facility-card {
@@ -380,54 +379,17 @@ section {
     line-height: 1.6;
 }
 
-/* ===== RESPONSIVE FASILITAS ===== */
-
-/* LAPTOP BESAR (1200px+) - 3 kolom rapi */
-@media (min-width: 1200px) {
+/* Responsive Fasilitas */
+@media (max-width: 991px) {
     #fasilitas .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2.5rem;
-        max-width: 1300px;
-        margin: 0 auto;
-    }
-    
-    .facility-card {
-        padding: 2.5rem;
-    }
-    
-    .facility-icon {
-        font-size: 4rem;
-    }
-}
-
-/* LAPTOP SEDANG (992px - 1199px) - 3 kolom */
-@media (max-width: 1199px) and (min-width: 992px) {
-    #fasilitas .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
-}
-
-/* TABLET (768px - 991px) - 2 kolom */
-@media (max-width: 991px) and (min-width: 768px) {
-    #fasilitas .row {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* 2 kolom di tablet */
         gap: 1.5rem;
     }
-    
-    .facility-card {
-        padding: 1.75rem;
-    }
-    
-    .facility-icon {
-        font-size: 3rem;
-    }
 }
 
-/* MOBILE (≤ 767px) - 2 kolom tetap */
 @media (max-width: 767px) {
     #fasilitas .row {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* Tetap 2 kolom di mobile */
         gap: 1rem;
     }
     
@@ -437,14 +399,6 @@ section {
     
     .facility-icon {
         font-size: 2.5rem;
-    }
-    
-    .facility-card h5 {
-        font-size: 1.1rem;
-    }
-    
-    .facility-card p {
-        font-size: 0.95rem;
     }
 }
 
@@ -565,7 +519,7 @@ section {
 }
 
 /* ===== TEAM CARDS - White Background ===== */
-/* ===== TEAM CARDS - Full Photo Visible ===== */
+/* ===== TEAM CARDS - FOTO FULL TANPA POTONG ===== */
 #team {
     background: #ffffff !important;
 }
@@ -597,17 +551,21 @@ section {
 }
 
 .team-photo {
-    aspect-ratio: 3 / 4; /* Ikuti rasio foto 3:4 */
+    width: 100%;
+    min-height: 380px; /* Fixed height untuk laptop */
     overflow: hidden;
     background: #f8f9fa;
     position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .team-photo img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain; /* FOTO FULL KELIATAN SEMUA */
-    object-position: center;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover supaya foto fill penuh */
+    object-position: center 15%; /* Fokus ke wajah (15% dari atas) */
 }
 
 .team-card .card-body {
@@ -624,6 +582,76 @@ section {
 .team-card small {
     font-size: 1rem;
     opacity: 0.9;
+}
+
+/* ===== RESPONSIVE PELATIH ===== */
+@media (min-width: 992px) {
+    #team .row {
+        gap: 2.5rem;
+    }
+    
+    .team-photo {
+        min-height: 420px; /* Lebih tinggi di laptop besar */
+    }
+    
+    .team-card h5 {
+        font-size: 1.35rem;
+    }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+    #team .row {
+        gap: 1.5rem;
+    }
+    
+    .team-photo {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 767px) {
+    #team .row {
+        gap: 1rem;
+    }
+    
+    .team-photo {
+        min-height: 200px;
+    }
+    
+    .team-card .card-body {
+        padding: 1rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1rem;
+    }
+    
+    .team-card small {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #team .row {
+        gap: 0.75rem;
+    }
+    
+    .team-photo {
+        min-height: 160px;
+    }
+    
+    .team-card .card-body {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .team-card h5 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .team-card small {
+        font-size: 0.75rem;
+    }
 }
 
 /* ===== LAPTOP/DESKTOP ===== */
