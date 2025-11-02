@@ -565,7 +565,7 @@ section {
 }
 
 /* ===== TEAM CARDS - White Background ===== */
-/* ===== TEAM CARDS - Full Photo & Responsive ===== */
+/* ===== TEAM CARDS - Full Photo Visible ===== */
 #team {
     background: #ffffff !important;
 }
@@ -597,17 +597,17 @@ section {
 }
 
 .team-photo {
-    height: 320px; /* Lebih tinggi untuk foto full */
+    aspect-ratio: 3 / 4; /* Ikuti rasio foto 3:4 */
     overflow: hidden;
-    background: #f0f4f8;
+    background: #f8f9fa;
     position: relative;
 }
 
 .team-photo img { 
     width: 100%; 
     height: 100%; 
-    object-fit: cover; /* Memastikan foto penuh tanpa terpotong aneh */
-    object-position: center 20%; /* Fokus ke bagian atas (wajah) */
+    object-fit: contain; /* FOTO FULL KELIATAN SEMUA */
+    object-position: center;
 }
 
 .team-card .card-body {
@@ -624,6 +624,68 @@ section {
 .team-card small {
     font-size: 1rem;
     opacity: 0.9;
+}
+
+/* ===== LAPTOP/DESKTOP ===== */
+@media (min-width: 992px) {
+    #team .row {
+        gap: 2.5rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1.35rem;
+    }
+}
+
+/* ===== TABLET ===== */
+@media (max-width: 991px) and (min-width: 768px) {
+    #team .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1.15rem;
+    }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 767px) {
+    #team .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    .team-card .card-body {
+        padding: 1rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1rem;
+    }
+    
+    .team-card small {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #team .row {
+        gap: 0.75rem;
+    }
+    
+    .team-card .card-body {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .team-card h5 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .team-card small {
+        font-size: 0.75rem;
+    }
 }
 
 /* ===== LAPTOP/DESKTOP (992px ke atas) ===== */
@@ -1123,7 +1185,7 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/pelatih1.jpg" alt="Om Agus" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/pelatih1.png" alt="Om Agus" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
                             <h5>Om Agus</h5>
@@ -1135,7 +1197,7 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in" data-aos-delay="100">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/pelatih2.jpg" alt="Om Nasir" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/pelatih2.png" alt="Om Nasir" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
                             <h5>Om Nasir</h5>
@@ -1147,7 +1209,7 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in" data-aos-delay="200">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/pelatihh3.jpg" alt="Anton" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/pelatih3.png" alt="Anton" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
                             <h5>Om Yit</h5>
