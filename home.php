@@ -29,7 +29,7 @@ if (isLoggedIn()) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
     
-<style>
+    <style>
 /* ===== IMPORT FONTS ===== */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -489,17 +489,31 @@ section {
     color: #95a5a6;
 }
 
-/* ===== TEAM CARDS - FOTO FULL ===== */
+/* ===== TEAM CARDS - LAYOUT 1 ATAS 2 BAWAH ===== */
 #team {
     background: #ffffff !important;
 }
 
 #team .row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
-    max-width: 1100px;
+    max-width: 900px;
     margin: 0 auto;
+    justify-content: center;
+}
+
+/* Pelatih pertama (Om Agus) - 1 kotak di atas, centered */
+#team .row > .col-6:nth-child(1) {
+    flex: 0 0 100%;
+    max-width: 350px;
+}
+
+/* Pelatih kedua dan ketiga - 2 kotak di bawah */
+#team .row > .col-6:nth-child(2),
+#team .row > .col-6:nth-child(3) {
+    flex: 0 0 calc(50% - 1rem);
+    max-width: 350px;
 }
 
 .team-card {
@@ -522,7 +536,7 @@ section {
 
 .team-photo {
     width: 100%;
-    height: 420px;
+    height: 350px;
     overflow: hidden;
     background: #f8f9fa;
     position: relative;
@@ -702,8 +716,16 @@ footer {
         font-size: 2.5rem;
     }
     
+    /* Mobile: semua pelatih jadi 1 kolom penuh */
     #team .row {
         gap: 1rem;
+    }
+    
+    #team .row > .col-6:nth-child(1),
+    #team .row > .col-6:nth-child(2),
+    #team .row > .col-6:nth-child(3) {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
     
     .team-photo {
