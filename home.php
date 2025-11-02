@@ -29,7 +29,7 @@ if (isLoggedIn()) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
     
-    <style>
+<style>
 /* ===== IMPORT FONTS ===== */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -65,6 +65,38 @@ body {
 }
 
 /* ===== NAVBAR - MOBILE OPTIMIZED ===== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.logo-img { 
+    width: 50px; 
+    height: 50px; 
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.brand-title { 
+    font-weight: 700; 
+    font-size: 1.3rem; 
+    color: var(--primary-dark); 
+    line-height: 1.2;
+}
+
+.brand-sub { 
+    font-size: 0.85rem; 
+    color: #6c757d; 
+}
+
+/* NAVBAR LINK - DENGAN HOVER EFFECT */
 .nav-link {
     font-size: 1.05rem;
     padding: 0.75rem 1rem !important;
@@ -77,7 +109,7 @@ body {
 
 .nav-link:hover {
     color: var(--primary);
-    background: linear-gradient(135deg, rgba(44, 82, 130, 0.08), rgba(74, 123, 167, 0.12));
+    background: linear-gradient(135deg, rgba(44, 82, 130, 0.1), rgba(74, 123, 167, 0.15));
     transform: translateY(-2px);
 }
 
@@ -104,7 +136,7 @@ body {
 }
 
 .nav-link.active::after {
-    width: 0; /* Hilangkan underline saat active */
+    width: 0;
 }
 
 .btn-rounded { 
@@ -120,7 +152,7 @@ body {
     border: none;
 }
 
-/* ===== HERO SECTION - Professional Navy Blue ===== */
+/* ===== HERO SECTION ===== */
 .hero-section {
     min-height: 100vh;
     display: flex;
@@ -161,7 +193,6 @@ body {
     pointer-events: none;
 }
 
-/* Hero Typography - Professional Fonts */
 .hero-section h1:first-of-type {
     font-family: 'Inter', sans-serif !important;
     font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
@@ -247,7 +278,7 @@ section {
     color: #6c757d;
 }
 
-/* ===== ABOUT SECTION - Light Blue to White ===== */
+/* ===== ABOUT SECTION ===== */
 #about {
     background: linear-gradient(180deg, 
         #f8fafc 0%,
@@ -256,7 +287,7 @@ section {
     ) !important;
 }
 
-/* ===== VISI MISI - Pure White ===== */
+/* ===== VISI MISI ===== */
 #visi-misi {
     background: #ffffff !important;
 }
@@ -325,7 +356,6 @@ section {
     font-size: 1.3rem;
 }
 
-/* ===== FASILITAS - Soft Blue Background ===== */
 /* ===== FASILITAS - 3 KOLOM DI LAPTOP ===== */
 #fasilitas {
     background: linear-gradient(180deg, 
@@ -337,7 +367,7 @@ section {
 
 #fasilitas .row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 kolom default (laptop) */
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     max-width: 1300px;
     margin: 0 auto;
@@ -379,66 +409,7 @@ section {
     line-height: 1.6;
 }
 
-/* Responsive Fasilitas */
-@media (max-width: 991px) {
-    #fasilitas .row {
-        grid-template-columns: repeat(2, 1fr); /* 2 kolom di tablet */
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 767px) {
-    #fasilitas .row {
-        grid-template-columns: repeat(2, 1fr); /* Tetap 2 kolom di mobile */
-        gap: 1rem;
-    }
-    
-    .facility-card {
-        padding: 1.5rem 1rem;
-    }
-    
-    .facility-icon {
-        font-size: 2.5rem;
-    }
-}
-
-.facility-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    border: 1px solid #e8eef5;
-    box-shadow: 0 3px 15px rgba(30, 58, 95, 0.05);
-    text-align: center;
-    height: 100%;
-    transition: all 0.3s;
-}
-
-.facility-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
-    border-color: rgba(201, 169, 97, 0.3);
-}
-
-.facility-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    color: var(--primary-light);
-}
-
-.facility-card h5 {
-    color: var(--primary-dark);
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.facility-card p {
-    font-size: 1rem;
-    color: #666;
-    line-height: 1.6;
-}
-
-/* ===== TROPHY CARDS - Light Grey ===== */
+/* ===== TROPHY CARDS ===== */
 #prestasi {
     background: linear-gradient(180deg,
         #fafbfc 0%,
@@ -518,8 +489,7 @@ section {
     color: #95a5a6;
 }
 
-/* ===== TEAM CARDS - White Background ===== */
-/* ===== TEAM CARDS - FOTO FULL TANPA POTONG ===== */
+/* ===== TEAM CARDS - FOTO FULL ===== */
 #team {
     background: #ffffff !important;
 }
@@ -552,7 +522,7 @@ section {
 
 .team-photo {
     width: 100%;
-    min-height: 380px; /* Fixed height untuk laptop */
+    height: 420px;
     overflow: hidden;
     background: #f8f9fa;
     position: relative;
@@ -564,8 +534,8 @@ section {
 .team-photo img { 
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cover supaya foto fill penuh */
-    object-position: center 15%; /* Fokus ke wajah (15% dari atas) */
+    object-fit: cover;
+    object-position: center 10%;
 }
 
 .team-card .card-body {
@@ -584,219 +554,7 @@ section {
     opacity: 0.9;
 }
 
-/* ===== RESPONSIVE PELATIH ===== */
-@media (min-width: 992px) {
-    #team .row {
-        gap: 2.5rem;
-    }
-    
-    .team-photo {
-        min-height: 420px; /* Lebih tinggi di laptop besar */
-    }
-    
-    .team-card h5 {
-        font-size: 1.35rem;
-    }
-}
-
-@media (max-width: 991px) and (min-width: 768px) {
-    #team .row {
-        gap: 1.5rem;
-    }
-    
-    .team-photo {
-        min-height: 300px;
-    }
-}
-
-@media (max-width: 767px) {
-    #team .row {
-        gap: 1rem;
-    }
-    
-    .team-photo {
-        min-height: 200px;
-    }
-    
-    .team-card .card-body {
-        padding: 1rem;
-    }
-    
-    .team-card h5 {
-        font-size: 1rem;
-    }
-    
-    .team-card small {
-        font-size: 0.875rem;
-    }
-}
-
-@media (max-width: 576px) {
-    #team .row {
-        gap: 0.75rem;
-    }
-    
-    .team-photo {
-        min-height: 160px;
-    }
-    
-    .team-card .card-body {
-        padding: 0.75rem 0.5rem;
-    }
-    
-    .team-card h5 {
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .team-card small {
-        font-size: 0.75rem;
-    }
-}
-
-/* ===== LAPTOP/DESKTOP ===== */
-@media (min-width: 992px) {
-    #team .row {
-        gap: 2.5rem;
-    }
-    
-    .team-card h5 {
-        font-size: 1.35rem;
-    }
-}
-
-/* ===== TABLET ===== */
-@media (max-width: 991px) and (min-width: 768px) {
-    #team .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
-    
-    .team-card h5 {
-        font-size: 1.15rem;
-    }
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 767px) {
-    #team .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-    }
-    
-    .team-card .card-body {
-        padding: 1rem;
-    }
-    
-    .team-card h5 {
-        font-size: 1rem;
-    }
-    
-    .team-card small {
-        font-size: 0.875rem;
-    }
-}
-
-@media (max-width: 576px) {
-    #team .row {
-        gap: 0.75rem;
-    }
-    
-    .team-card .card-body {
-        padding: 0.75rem 0.5rem;
-    }
-    
-    .team-card h5 {
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .team-card small {
-        font-size: 0.75rem;
-    }
-}
-
-/* ===== LAPTOP/DESKTOP (992px ke atas) ===== */
-@media (min-width: 992px) {
-    #team .row {
-        gap: 2.5rem;
-    }
-    
-    .team-photo {
-        height: 350px; /* Lebih tinggi di laptop */
-    }
-    
-    .team-card h5 {
-        font-size: 1.35rem;
-    }
-}
-
-/* ===== TABLET (768px - 991px) ===== */
-@media (max-width: 991px) and (min-width: 768px) {
-    #team .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
-    
-    .team-photo {
-        height: 280px;
-    }
-    
-    .team-card h5 {
-        font-size: 1.15rem;
-    }
-}
-
-/* ===== MOBILE BESAR (577px - 767px) ===== */
-@media (max-width: 767px) and (min-width: 577px) {
-    #team .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-    }
-    
-    .team-photo {
-        height: 200px;
-    }
-    
-    .team-card .card-body {
-        padding: 1rem;
-    }
-    
-    .team-card h5 {
-        font-size: 1rem;
-    }
-    
-    .team-card small {
-        font-size: 0.875rem;
-    }
-}
-
-/* ===== MOBILE KECIL (≤ 576px) - TETAP RAPI ===== */
-@media (max-width: 576px) {
-    #team .row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
-    }
-    
-    .team-photo {
-        height: 160px; /* Proporsional di HP kecil */
-    }
-    
-    .team-card .card-body {
-        padding: 0.75rem 0.5rem;
-    }
-    
-    .team-card h5 {
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .team-card small {
-        font-size: 0.75rem;
-    }
-}
-
-/* ===== GALLERY - Soft Blue ===== */
+/* ===== GALLERY ===== */
 #galeri {
     background: linear-gradient(180deg,
         #f5f8fa 0%,
@@ -832,7 +590,7 @@ section {
     object-fit: cover;
 }
 
-/* ===== SCHEDULE TABLE - White ===== */
+/* ===== SCHEDULE TABLE ===== */
 #jadwal {
     background: #ffffff !important;
 }
@@ -860,7 +618,7 @@ section {
     background: #f8fafc;
 }
 
-/* ===== CTA SECTION - Blue Gradient ===== */
+/* ===== CTA SECTION ===== */
 .bg-primary {
     background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%) !important;
 }
@@ -909,6 +667,13 @@ footer {
 .social-twitter:hover { background: #1DA1F2; }
 
 /* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 991px) {
+    #fasilitas .row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hero-section {
         background-attachment: scroll;
@@ -936,12 +701,53 @@ footer {
     .facility-icon {
         font-size: 2.5rem;
     }
+    
+    #team .row {
+        gap: 1rem;
+    }
+    
+    .team-photo {
+        height: 200px;
+    }
+    
+    .team-card .card-body {
+        padding: 1rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1rem;
+    }
+    
+    .team-card small {
+        font-size: 0.875rem;
+    }
 }
 
 @media (max-width: 576px) {
     .gallery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.5rem;
+    }
+    
+    #team .row {
+        gap: 0.75rem;
+    }
+    
+    .team-photo {
+        height: 160px;
+    }
+    
+    .team-card .card-body {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .team-card h5 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .team-card small {
+        font-size: 0.75rem;
     }
 }
 </style>
