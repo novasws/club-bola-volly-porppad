@@ -329,6 +329,7 @@ section {
 }
 
 /* ===== FASILITAS - Soft Blue Background ===== */
+/* ===== FASILITAS - Soft Blue Background ===== */
 #fasilitas {
     background: linear-gradient(180deg, 
         #f0f4f8 0%,
@@ -339,8 +340,112 @@ section {
 
 #fasilitas .row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom di laptop */
+    gap: 2rem;
+}
+
+.facility-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    border: 1px solid #e8eef5;
+    box-shadow: 0 3px 15px rgba(30, 58, 95, 0.05);
+    text-align: center;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.facility-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
+    border-color: rgba(201, 169, 97, 0.3);
+}
+
+.facility-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-light);
+}
+
+.facility-card h5 {
+    color: var(--primary-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.facility-card p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ===== RESPONSIVE FASILITAS ===== */
+
+/* LAPTOP BESAR (1200px+) - 3 kolom rapi */
+@media (min-width: 1200px) {
+    #fasilitas .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+    
+    .facility-card {
+        padding: 2.5rem;
+    }
+    
+    .facility-icon {
+        font-size: 4rem;
+    }
+}
+
+/* LAPTOP SEDANG (992px - 1199px) - 3 kolom */
+@media (max-width: 1199px) and (min-width: 992px) {
+    #fasilitas .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* TABLET (768px - 991px) - 2 kolom */
+@media (max-width: 991px) and (min-width: 768px) {
+    #fasilitas .row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .facility-card {
+        padding: 1.75rem;
+    }
+    
+    .facility-icon {
+        font-size: 3rem;
+    }
+}
+
+/* MOBILE (≤ 767px) - 2 kolom tetap */
+@media (max-width: 767px) {
+    #fasilitas .row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .facility-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .facility-icon {
+        font-size: 2.5rem;
+    }
+    
+    .facility-card h5 {
+        font-size: 1.1rem;
+    }
+    
+    .facility-card p {
+        font-size: 0.95rem;
+    }
 }
 
 .facility-card {
@@ -460,18 +565,30 @@ section {
 }
 
 /* ===== TEAM CARDS - White Background ===== */
+/* ===== TEAM CARDS - Full Photo & Responsive ===== */
 #team {
     background: #ffffff !important;
 }
 
+#team .row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
 .team-card {
     color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     overflow: hidden;
     background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
     border: none;
     box-shadow: 0 4px 20px rgba(30, 58, 95, 0.15);
     transition: all 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .team-card:hover {
@@ -480,23 +597,113 @@ section {
 }
 
 .team-photo {
-    height: 200px;
+    height: 320px; /* Lebih tinggi untuk foto full */
     overflow: hidden;
-    background: linear-gradient(180deg, #e9f0ff, #fff);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #f0f4f8;
+    position: relative;
 }
 
 .team-photo img { 
     width: 100%; 
     height: 100%; 
-    object-fit: cover;
+    object-fit: cover; /* Memastikan foto penuh tanpa terpotong aneh */
+    object-position: center 20%; /* Fokus ke bagian atas (wajah) */
+}
+
+.team-card .card-body {
+    padding: 1.5rem;
+    text-align: center;
 }
 
 .team-card h5 { 
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.team-card small {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ===== LAPTOP/DESKTOP (992px ke atas) ===== */
+@media (min-width: 992px) {
+    #team .row {
+        gap: 2.5rem;
+    }
+    
+    .team-photo {
+        height: 350px; /* Lebih tinggi di laptop */
+    }
+    
+    .team-card h5 {
+        font-size: 1.35rem;
+    }
+}
+
+/* ===== TABLET (768px - 991px) ===== */
+@media (max-width: 991px) and (min-width: 768px) {
+    #team .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .team-photo {
+        height: 280px;
+    }
+    
+    .team-card h5 {
+        font-size: 1.15rem;
+    }
+}
+
+/* ===== MOBILE BESAR (577px - 767px) ===== */
+@media (max-width: 767px) and (min-width: 577px) {
+    #team .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    .team-photo {
+        height: 200px;
+    }
+    
+    .team-card .card-body {
+        padding: 1rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1rem;
+    }
+    
+    .team-card small {
+        font-size: 0.875rem;
+    }
+}
+
+/* ===== MOBILE KECIL (≤ 576px) - TETAP RAPI ===== */
+@media (max-width: 576px) {
+    #team .row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .team-photo {
+        height: 160px; /* Proporsional di HP kecil */
+    }
+    
+    .team-card .card-body {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .team-card h5 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .team-card small {
+        font-size: 0.75rem;
+    }
 }
 
 /* ===== GALLERY - Soft Blue ===== */
@@ -940,11 +1147,11 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in" data-aos-delay="200">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/default-profile.jpg" alt="Anton" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/pelatihh3.jpg" alt="Anton" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
-                            <h5>Anton Wijaya</h5>
-                            <small class="text-light">Asisten Pelatih</small>
+                            <h5>Om Yit</h5>
+                            <small class="text-light"> Pelatih</small>
                         </div>
                     </div>
                 </div>
