@@ -916,7 +916,7 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/pelatih2.png" alt="Om Agus" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/pelatih1.jpg" alt="Om Agus" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
                             <h5>Om Agus</h5>
@@ -928,7 +928,7 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in" data-aos-delay="100">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/pelatih2.png" alt="Om Nasir" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/pelatih2.jpg" alt="Om Nasir" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
                             <h5>Om Nasir</h5>
@@ -940,7 +940,7 @@ footer {
                 <div class="col-6 col-md-4" data-aos="zoom-in" data-aos-delay="200">
                     <div class="team-card">
                         <div class="team-photo">
-                            <img src="assets/img/pelatih/pelatih2.png" alt="Anton" onerror="this.style.display='none'" />
+                            <img src="assets/img/pelatih/default-profile.jpg" alt="Anton" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
                             <h5>Anton Wijaya</h5>

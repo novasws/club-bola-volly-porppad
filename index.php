@@ -27,37 +27,26 @@ if (isset($_POST['login'])) {
         if (mysqli_num_rows($result) > 0) {
             $user = mysqli_fetch_assoc($result);
             
-            // 🐛 DEBUG: Print info (akan muncul di Railway logs)
-            error_log("=== LOGIN DEBUG ===");
-            error_log("Username: " . $username);
-            error_log("Password Input: " . $password);
-            error_log("Password Hash dari DB: " . $user['password']);
-            error_log("Password Length: " . strlen($user['password']));
-            error_log("Is Hex? " . (ctype_xdigit($user['password']) ? 'YES' : 'NO'));
-            error_log("Role dari DB: " . $user['role']);
-            
-            // ✅ FIXED: Verify password - Support both MD5 and bcrypt
+            // ✅ SMART PASSWORD VERIFICATION - Support MD5 & Bcrypt
             $password_valid = false;
             
-            // Cek format password yang tersimpan di database
+            // Deteksi format password
             if (strlen($user['password']) === 32 && ctype_xdigit($user['password'])) {
-                // Password pakai MD5 (32 karakter hexadecimal)
-                error_log("Detection: Using MD5 verification");
+                // MD5 format (32 hex characters)
                 $password_valid = (md5($password) === $user['password']);
-                error_log("MD5 Match: " . ($password_valid ? 'TRUE' : 'FALSE'));
-            } else {
-                // Password pakai bcrypt (dimulai dengan $2y$)
-                error_log("Detection: Using bcrypt verification");
-                error_log("Bcrypt hash: " . $user['password']);
+            } elseif (substr($user['password'], 0, 4) === '$2y$' || substr($user['password'], 0, 4) === '$2a$') {
+                // Bcrypt format (starts with $2y$ or $2a$)
                 $password_valid = password_verify($password, $user['password']);
-                error_log("Bcrypt result: " . ($password_valid ? 'TRUE' : 'FALSE'));
+            } else {
+                // Fallback: Try both methods
+                if (md5($password) === $user['password']) {
+                    $password_valid = true;
+                } else {
+                    $password_valid = password_verify($password, $user['password']);
+                }
             }
             
-            error_log("Final password_valid: " . ($password_valid ? 'TRUE' : 'FALSE'));
-            error_log("===================");
-            
             if ($password_valid) {
-                // Clear old session data
                 session_regenerate_id(true);
     
                 $_SESSION['user_id'] = $user['id'];
@@ -67,7 +56,6 @@ if (isset($_POST['login'])) {
     
                 alert('Login berhasil! Selamat datang, ' . $user['username'], 'success');
                 
-                // Redirect based on role
                 if ($user['role'] === 'admin') {
                     redirect('admin/dashboard.php');
                 } else {
