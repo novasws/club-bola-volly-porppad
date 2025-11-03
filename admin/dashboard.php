@@ -492,33 +492,53 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
         }
     }
     
-    @media (max-width: 768px) {
-        .navbar {
-            padding: 1rem 0;
-        }
-        
-        .navbar-container {
-            flex-direction: column;
-            align-items: stretch;
-            padding: 0 1rem;
-        }
-        
-        .navbar h2 {
-            font-size: 1.4rem;
-            text-align: center;
-        }
-        
-        .navbar nav {
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .navbar nav a {
-            font-size: 0.9rem;
-            padding: 0.65rem 1rem;
-            width: 100%;
-            text-align: center;
-        }
+   /* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.75rem 0;
+    }
+    
+    .navbar-container {
+        flex-direction: row;           /* UBAH: tetap horizontal */
+        align-items: center;           /* UBAH: rata tengah vertikal */
+        padding: 0 1rem;
+        overflow-x: auto;              /* TAMBAH: bisa scroll horizontal */
+        white-space: nowrap;
+    }
+    
+    .navbar h2 {
+        font-size: 1.2rem;
+        text-align: left;              /* UBAH: rata kiri */
+        margin-right: 1rem;            /* TAMBAH: kasih jarak */
+        flex-shrink: 0;                /* TAMBAH: jangan mengecil */
+    }
+    
+    .navbar nav {
+        display: flex;
+        flex-wrap: nowrap;             /* UBAH: jangan wrap */
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;        /* TAMBAH: space untuk scroll */
+    }
+    
+    .navbar nav a {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+        width: auto;                   /* UBAH: lebar sesuai konten */
+        text-align: center;
+        flex-shrink: 0;                /* TAMBAH: jangan mengecil */
+        white-space: nowrap;
+    }
+    
+    /* Sembunyikan scrollbar untuk tampilan bersih */
+    .navbar-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .navbar-container {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
         
         .container {
             padding: 0 1rem;
