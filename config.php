@@ -1,47 +1,38 @@
 <?php
-// config.php - Database Configuration
 session_start();
 
-// Hardcode Railway credentials for testing
-define('DB_HOST', 'mysql.railway.internal');
-define('DB_USER', 'root');
-define('DB_PASS', 'AQFgOeKpTuHbcosZwOahQtihWPtMccoZ');
-define('DB_NAME', 'railway');
-define('DB_PORT', 3306);
+// Database configuration for Railway
+$db_host = getenv('MYSQLHOST') ?: 'localhost';
+$db_port = getenv('MYSQLPORT') ?: '3306';
+$db_name = getenv('MYSQLDATABASE') ?: 'porppad';
+$db_user = getenv('MYSQLUSER') ?: 'root';
+$db_pass = getenv('MYSQLPASSWORD') ?: '';
 
-// Create connection
-$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-// Set charset to UTF8
-mysqli_set_charset($conn, "utf8mb4");
-
-// Create connection
-$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-// Set charset to UTF8
-mysqli_set_charset($conn, "utf8mb4");
-
-// Base URL - otomatis detect Railway atau localhost
-if (getenv('RAILWAY_PUBLIC_DOMAIN')) {
-    define('BASE_URL', 'https://' . getenv('RAILWAY_PUBLIC_DOMAIN') . '/');
-} else {
-    define('BASE_URL', 'http://localhost/volley_club/');
-}
-
-// Helper Functions
-function redirect($url) {
-    header("Location: " . $url);
-    exit();
+// Create connection dengan error handling
+try {
+    $conn = new mysqli($db_host, $db_user, $db_pass, $db_name, $db_port);
+    
+    // Check connection
+    if ($conn->connect_error) {
+        throw new Exception("Connection failed: " . $conn->connect_error);
+    }
+    
+    // Set charset
+    $conn->set_charset("utf8mb4");
+    
+} catch (Exception $e) {
+    // Fallback untuk development
+    error_log("Database error: " . $e->getMessage());
+    
+    // Jika di local development, gunakan local connection
+    if ($_SERVER['HTTP_HOST'] === 'localhost' || $_SERVER['HTTP_HOST'] === '127.0.0.1') {
+        $conn = new mysqli('localhost', 'root', '', 'porppad', 3306);
+        if ($conn->connect_error) {
+            die("Local connection failed: " . $conn->connect_error);
+        }
+    } else {
+        die("Database connection error. Please try again later.");
+    }
 }
 
 function isLoggedIn() {
@@ -50,41 +41,5 @@ function isLoggedIn() {
 
 function isAdmin() {
     return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
-}
-
-function requireLogin() {
-    if (!isLoggedIn()) {
-        redirect('login.php');
-    }
-}
-
-function requireAdmin() {
-    if (!isAdmin()) {
-        redirect('index.php');
-    }
-}
-
-function alert($message, $type = 'success') {
-    $_SESSION['alert'] = [
-        'message' => $message,
-        'type' => $type
-    ];
-}
-
-function showAlert() {
-    if (isset($_SESSION['alert'])) {
-        $alert = $_SESSION['alert'];
-        echo '<div class="alert alert-' . $alert['type'] . ' alert-dismissible fade show" role="alert">
-                ' . htmlspecialchars($alert['message']) . '
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-              </div>';
-        unset($_SESSION['alert']);
-    }
-}
-
-// Sanitize input
-function clean($data) {
-    global $conn;
-    return mysqli_real_escape_string($conn, trim($data));
 }
 ?>
