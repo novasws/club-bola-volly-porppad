@@ -296,31 +296,44 @@ $rejected = $conn->query("SELECT m.*, u.username
     }
     
     /* RESPONSIVE IMPROVEMENTS */
-    @media (max-width: 768px) {
-        .container {
-            padding: 0 0.5rem;
-            margin: 1rem auto;
-        }
-        
-        .navbar {
-            flex-direction: column;
-            text-align: center;
-            padding: 0.75rem;
-        }
-        
-        .navbar nav {
-            width: 100%;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-        
-        .navbar nav a {
-            width: 100%;
-            text-align: center;
-            padding: 0.75rem;
-            font-size: 1rem;
-        }
-        
+   @media (max-width: 768px) {
+    .navbar {
+        flex-direction: row;           /* Horizontal, bukan vertikal */
+        align-items: center;
+        padding: 0.75rem;
+        overflow-x: auto;              /* Bisa scroll horizontal */
+        white-space: nowrap;
+    }
+    
+    .navbar h2 {
+        font-size: 1.2rem;
+        margin-right: 1rem;
+        flex-shrink: 0;                /* Jangan mengecil */
+    }
+    
+    .navbar nav {
+        display: flex;
+        flex-wrap: nowrap;             /* Jangan wrap ke bawah */
+        gap: 0.5rem;
+    }
+    
+    .navbar nav a {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+        width: auto;                   /* Lebar sesuai konten */
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+    
+    /* Sembunyikan scrollbar */
+    .navbar::-webkit-scrollbar {
+        display: none;
+    }
+    .navbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
         .card {
             padding: 1.5rem 1rem;
             margin-bottom: 1.5rem;
