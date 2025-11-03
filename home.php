@@ -215,12 +215,12 @@ section {
     color: #6c757d;
 }
 
-/* ===== VISI MISI - RAPI DI LAPTOP & MOBILE ===== */
+/* ===== VISI MISI - LANDSCAPE LAPTOP (KIRI-KANAN) ===== */
 #visi-misi .row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -232,12 +232,13 @@ section {
     box-shadow: 0 4px 20px rgba(30, 58, 95, 0.06);
     height: 100%;
     border-left: 5px solid var(--primary);
-    transition: transform 0.3s;
+    transition: all 0.4s ease;
 }
 
 .visi-misi-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(30, 58, 95, 0.12);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(30, 58, 95, 0.15);
+    border-left-width: 8px;
 }
 
 .vm-icon {
@@ -282,35 +283,42 @@ section {
     font-size: 1.3rem;
 }
 
-/* ===== FASILITAS - RAPI DI LAPTOP & MOBILE ===== */
+/* ===== FASILITAS - 2 BARIS x 3 KOTAK LAPTOP ===== */
 #fasilitas .row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 .facility-card {
     background: white;
-    padding: 2rem;
+    padding: 2.5rem 2rem;
     border-radius: 15px;
     border: 1px solid #e8eef5;
     box-shadow: 0 3px 15px rgba(30, 58, 95, 0.05);
     text-align: center;
     height: 100%;
-    transition: all 0.3s;
+    transition: all 0.4s ease;
 }
 
 .facility-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 15px 45px rgba(30, 58, 95, 0.2);
+    border-color: var(--primary-light);
 }
 
 .facility-icon {
     font-size: 3.5rem;
     margin-bottom: 1rem;
     color: var(--primary-light);
+    transition: all 0.4s ease;
+}
+
+.facility-card:hover .facility-icon {
+    transform: scale(1.2) rotate(5deg);
+    color: var(--primary);
 }
 
 .facility-card h5 {
@@ -338,8 +346,8 @@ section {
 }
 
 .trophy-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.12);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(30, 58, 95, 0.18);
 }
 
 .trophy-img {
@@ -395,7 +403,6 @@ section {
     margin: 0 auto;
 }
 
-/* LAPTOP: Baris 1 = 1 kotak, Baris 2 = 2 kotak */
 #team .row > div:nth-child(1) {
     flex: 0 0 100%;
     display: flex;
@@ -422,8 +429,8 @@ section {
 }
 
 .team-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(30, 58, 95, 0.25);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 45px rgba(30, 58, 95, 0.3);
 }
 
 .team-photo {
@@ -579,26 +586,23 @@ footer {
         font-size: 2.5rem;
     }
     
-    /* PELATIH MOBILE: Baris 1 = 2 foto, Baris 2 = 1 foto PORTRAIT */
+    /* PELATIH MOBILE: 2-1 layout */
     #team .row {
         gap: 1rem;
     }
     
-    /* Baris 1: Om Agus & Om Nasir - 2 foto berdampingan */
     #team .row > div:nth-child(1),
     #team .row > div:nth-child(2) {
         flex: 0 0 calc(50% - 0.5rem);
         max-width: calc(50% - 0.5rem);
     }
     
-    /* Baris 2: Om Yit - 1 foto centered */
     #team .row > div:nth-child(3) {
         flex: 0 0 calc(50% - 0.5rem);
         max-width: calc(50% - 0.5rem);
         margin: 0 auto;
     }
     
-    /* Foto PORTRAIT di mobile - tinggi lebih besar */
     .team-photo {
         height: 280px;
     }
@@ -622,7 +626,6 @@ footer {
         gap: 0.5rem;
     }
     
-    /* PELATIH SUPER MOBILE: tetap 2-1 layout */
     .team-photo {
         height: 250px;
     }
