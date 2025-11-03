@@ -106,46 +106,10 @@ body {
     transform: translateY(-2px);
 }
 
-/* ===== NAVBAR ACTIVE STATES - YANG BARU ===== */
-.navbar-nav .nav-link.active {
+.nav-link.active { 
     color: white !important;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
-    border-radius: 8px;
-    transform: translateY(-2px);
-}
-
-/* Smooth transition untuk semua nav link */
-.navbar-nav .nav-link {
-    transition: all 0.3s ease;
-    position: relative;
-    border-radius: 8px;
-    padding: 0.5rem 1rem !important;
-    margin: 0.1rem 0.1rem;
-}
-
-/* Hover effect */
-.navbar-nav .nav-link:hover {
-    background: rgba(255,255,255,0.15);
-    transform: translateY(-2px);
-}
-
-/* Optional: Tambah garis indicator bawah */
-.navbar-nav .nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 20%;
-    width: 60%;
-    height: 3px;
-    background: white;
-    border-radius: 2px;
-    animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-    from { width: 0%; }
-    to { width: 60%; }
+    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
+    box-shadow: 0 3px 10px rgba(44, 82, 130, 0.3);
 }
 
 .btn-rounded { 
@@ -314,6 +278,7 @@ section {
 }
 
 /* ===== FASILITAS - 2 BARIS x 3 KOTAK LAPTOP ===== */
+
 .facility-card {
     background: white;
     padding: 2.5rem 2rem;
@@ -1085,7 +1050,7 @@ footer {
                     <h5 class="fw-bold">Volley Club PORPPAD</h5>
                     <p class="mb-2" style="font-size: 0.9rem; line-height: 1.6;">
                         GOR FASHA – Surabaya<br>
-                        📞 Telp: 082141186468<br>
+                        📞 Telp: 0812-3456-7890<br>
                         📧 Email: clubvolley@gmail.com
                     </p>
                 </div>
@@ -1134,7 +1099,7 @@ footer {
                     <div class="modal-body">
                         <div class="alert alert-info" style="font-size: 0.9rem;">
                             <i class="fa fa-info-circle me-2"></i>
-                            <strong>Informasi:</strong> Setelah submit, data Anda akan dikirim kepada admin dan anda akan dihubungi.dan jika sudah di approve maka data anda akan otomatis masuk ke dalam anggota tim..Semangat!!!
+                            <strong>Informasi:</strong> Setelah submit, data Anda akan dikirim ke admin via Telegram untuk diverifikasi.
                         </div>
 
                         <div class="mb-4 text-center">
@@ -1442,34 +1407,5 @@ footer {
 
         document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
     </script>
-
-    <script>
-// Simple active state untuk navbar
-document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    
-    // Set active berdasarkan URL hash
-    function setActiveNav() {
-        const currentHash = window.location.hash || '#home';
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === currentHash) {
-                link.classList.add('active');
-            }
-        });
-    }
-    
-    // Update active state on click
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-    
-    // Set initial active state
-    setActiveNav();
-});
-</script>
 </body>
 </html>
