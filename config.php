@@ -2,30 +2,36 @@
 // config.php - Database Configuration
 session_start();
 
-// Hardcode Railway credentials for testing
-define('DB_HOST', 'mysql.railway.internal');
-define('DB_USER', 'root');
-define('DB_PASS', 'AQFgOeKpTuHbcosZwOahQtihWPtMccoZ');
-define('DB_NAME', 'railway');
-define('DB_PORT', 3306);
-
-// Create connection
-$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+// Auto-detect environment
+if (getenv('RAILWAY_ENVIRONMENT') || getenv('MYSQLHOST')) {
+    // Railway Environment
+    define('DB_HOST', getenv('MYSQLHOST') ?: 'mysql.railway.internal');
+    define('DB_USER', getenv('MYSQLUSER') ?: 'root');
+    define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
+    define('DB_NAME', getenv('MYSQLDATABASE') ?: 'railway');
+    define('DB_PORT', getenv('MYSQLPORT') ?: 3306);
+} else {
+    // Local XAMPP Environment
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_NAME', 'porppad');
+    define('DB_PORT', 3306);
 }
 
-// Set charset to UTF8
-mysqli_set_charset($conn, "utf8mb4");
-
 // Create connection
 $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 // Check connection
 if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+    // Fallback untuk local development
+    if (!getenv('RAILWAY_ENVIRONMENT')) {
+        $conn = mysqli_connect('localhost', 'root', '', 'porppad');
+    }
+    
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
 }
 
 // Set charset to UTF8
@@ -35,7 +41,7 @@ mysqli_set_charset($conn, "utf8mb4");
 if (getenv('RAILWAY_PUBLIC_DOMAIN')) {
     define('BASE_URL', 'https://' . getenv('RAILWAY_PUBLIC_DOMAIN') . '/');
 } else {
-    define('BASE_URL', 'http://localhost/volley_club/');
+    define('BASE_URL', 'http://localhost/porppad/');
 }
 
 // Helper Functions
@@ -49,7 +55,7 @@ function isLoggedIn() {
 }
 
 function isAdmin() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
 }
 
 function requireLogin() {
