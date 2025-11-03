@@ -112,371 +112,437 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Prestasi - Admin Panel</title>
+
     <link rel="stylesheet" href="../assets/css/admin.css">
-          <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        line-height: 1.6;
+    }
+    
+    /* NAVBAR IMPROVED */
+    .navbar {
+        background: #2c3e50;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .navbar h2 {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+    
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .navbar nav a {
+        color: white;
+        text-decoration: none;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        transition: background 0.3s;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .navbar nav a:hover {
+        background: #34495e;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+    }
+    
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .card h3 {
+        margin-bottom: 1.5rem;
+        color: #2c3e50;
+        font-size: 1.4rem;
+    }
+    
+    /* FORM IMPROVED */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 500;
+    }
+    
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background: #f39c12;
+        color: white;
+    }
+    
+    .btn-warning:hover {
+        background: #e67e22;
+        transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #7f8c8d;
+        transform: translateY(-2px);
+    }
+    
+    /* TROPHY GRID IMPROVED */
+    .trophy-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .trophy-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    
+    .trophy-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+    
+    .trophy-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+    }
+    
+    .trophy-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .trophy-content {
+        padding: 1.5rem;
+    }
+    
+    .trophy-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .badge-prestasi {
+        background: #ffeaa7;
+        color: #d63031;
+    }
+    
+    .badge-turnamen {
+        background: #74b9ff;
+        color: #0984e3;
+    }
+    
+    .badge-kejuaraan {
+        background: #a29bfe;
+        color: #6c5ce7;
+    }
+    
+    .badge-penghargaan {
+        background: #fd79a8;
+        color: #e84393;
+    }
+    
+    .trophy-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }
+    
+    .trophy-date {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .trophy-description {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .trophy-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .trophy-actions a {
+        flex: 1;
+        text-align: center;
+        padding: 0.6rem;
+        font-size: 0.875rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* RESPONSIVE IMPROVEMENTS */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 0.5rem;
+            margin: 1rem auto;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            line-height: 1.6;
-        }
-        
-        /* NAVBAR IMPROVED */
         .navbar {
-            background: #2c3e50;
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .navbar h2 {
-            font-size: 1.3rem;
-            white-space: nowrap;
+            flex-direction: column;
+            text-align: center;
+            padding: 0.75rem;
         }
         
         .navbar nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+            width: 100%;
+            flex-direction: column;
+            gap: 0.25rem;
         }
         
         .navbar nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            transition: background 0.3s;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        
-        .navbar nav a:hover {
-            background: #34495e;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem;
+            font-size: 1rem;
         }
         
         .card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .card h3 {
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         
-        /* FORM IMPROVED */
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
         .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 500;
-            font-size: 1rem;
+            margin-bottom: 1rem;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            font-size: 16px;
+            padding: 0.75rem;
         }
         
         .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 0.75rem 1rem;
             font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 500;
+            width: 100%;
+            text-align: center;
         }
         
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background: #e67e22;
-            transform: translateY(-2px);
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #7f8c8d;
-            transform: translateY(-2px);
-        }
-        
-        /* TROPHY GRID IMPROVED */
         .trophy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .trophy-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .trophy-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
         
         .trophy-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-        }
-        
-        .trophy-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: 180px;
         }
         
         .trophy-content {
-            padding: 1.5rem;
-        }
-        
-        .trophy-badge {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .badge-prestasi {
-            background: #ffeaa7;
-            color: #d63031;
-        }
-        
-        .badge-turnamen {
-            background: #74b9ff;
-            color: #0984e3;
-        }
-        
-        .badge-kejuaraan {
-            background: #a29bfe;
-            color: #6c5ce7;
-        }
-        
-        .badge-penghargaan {
-            background: #fd79a8;
-            color: #e84393;
-        }
-        
-        .trophy-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-        
-        .trophy-date {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .trophy-description {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            padding: 1.25rem;
         }
         
         .trophy-actions {
-            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
         }
         
         .trophy-actions a {
-            flex: 1;
-            text-align: center;
-            padding: 0.6rem;
-            font-size: 0.875rem;
+            width: 100%;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .navbar h2 {
+            font-size: 1.1rem;
+        }
+        
+        .navbar nav a {
+            font-size: 0.9rem;
+            padding: 0.75rem;
+        }
+        
+        .container {
+            padding: 0 0.75rem;
+        }
+        
+        .card {
+            padding: 1.25rem 0.75rem;
+        }
+        
+        .card h3 {
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            padding: 0.7rem 1.2rem;
+            font-size: 0.9rem;
+        }
+        
+        .trophy-title {
+            font-size: 1.1rem;
+        }
+        
+        .trophy-image {
+            height: 150px;
         }
         
         .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #999;
+            padding: 2rem 1rem;
         }
         
         .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 3rem;
         }
-        
-        /* RESPONSIVE IMPROVEMENTS */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 0.5rem;
-            }
-            
-            .card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .navbar nav {
-                width: 100%;
-            }
-            
-            .trophy-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .trophy-image {
-                height: 180px;
-            }
-            
-            .trophy-content {
-                padding: 1.25rem;
-            }
-            
-            .trophy-actions {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .navbar nav a {
-                font-size: 0.8rem;
-                padding: 0.5rem 0.8rem;
-            }
-            
-            .btn {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            
-            .card h3 {
-                font-size: 1.2rem;
-            }
-            
-            .trophy-title {
-                font-size: 1.1rem;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <div class="navbar">

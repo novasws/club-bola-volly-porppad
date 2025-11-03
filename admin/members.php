@@ -130,375 +130,438 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-     <meta name="viewport" content="width=1200">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Anggota - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
 <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        line-height: 1.6;
+    }
+    
+    /* NAVBAR IMPROVED */
+    .navbar {
+        background: #2c3e50;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .navbar h2 {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+    
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .navbar nav a {
+        color: white;
+        text-decoration: none;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        transition: background 0.3s;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .navbar nav a:hover {
+        background: #34495e;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+    }
+    
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    
+    /* GENDER FILTER IMPROVED */
+    .gender-filter {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+    
+    .gender-tab {
+        padding: 1rem 0.5rem;
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        color: #555;
+        transition: all 0.3s;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .gender-tab:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .gender-tab.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .gender-tab .icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .gender-tab .count {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .card h3 {
+        margin-bottom: 1.5rem;
+        color: #2c3e50;
+        font-size: 1.4rem;
+    }
+    
+    /* FORM IMPROVED */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .form-row-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 500;
+    }
+    
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background: #f39c12;
+        color: white;
+    }
+    
+    .btn-warning:hover {
+        background: #e67e22;
+        transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #7f8c8d;
+        transform: translateY(-2px);
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    
+    table thead {
+        background: #34495e;
+        color: white;
+    }
+    
+    table th,
+    table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    table tbody tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .member-photo {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ddd;
+    }
+    
+    .actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .actions a,
+    .actions button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .badge-gender {
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .badge-putra {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+    
+    .badge-putri {
+        background: #fce4ec;
+        color: #c2185b;
+    }
+    
+    /* RESPONSIVE IMPROVEMENTS */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 0.5rem;
+            margin: 1rem auto;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            line-height: 1.6;
-        }
-        
-        /* NAVBAR IMPROVED */
         .navbar {
-            background: #2c3e50;
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .navbar h2 {
-            font-size: 1.3rem;
-            white-space: nowrap;
+            flex-direction: column;
+            text-align: center;
+            padding: 0.75rem;
         }
         
         .navbar nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+            width: 100%;
+            flex-direction: column;
+            gap: 0.25rem;
         }
         
         .navbar nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            transition: background 0.3s;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        
-        .navbar nav a:hover {
-            background: #34495e;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        /* GENDER FILTER IMPROVED */
-        .gender-filter {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-        
-        .gender-tab {
-            padding: 1rem 0.5rem;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            width: 100%;
             text-align: center;
-            text-decoration: none;
-            color: #555;
-            transition: all 0.3s;
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .gender-tab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        
-        .gender-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-        }
-        
-        .gender-tab .icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .gender-tab .count {
-            font-size: 1.5rem;
-            font-weight: bold;
+            padding: 0.75rem;
+            font-size: 1rem;
         }
         
         .card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .card h3 {
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         
-        /* FORM IMPROVED */
+        .gender-filter {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .gender-tab {
+            min-height: 70px;
+            padding: 0.75rem;
+        }
+        
+        .gender-tab .icon {
+            font-size: 1.5rem;
+        }
+        
+        .gender-tab .count {
+            font-size: 1.25rem;
+        }
+        
+        .form-row, .form-row-3 {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
         .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 500;
-            font-size: 1rem;
+            margin-bottom: 1rem;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .form-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
+            font-size: 16px;
+            padding: 0.75rem;
         }
         
         .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 0.75rem 1rem;
             font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 500;
-        }
-        
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background: #e67e22;
-            transform: translateY(-2px);
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #7f8c8d;
-            transform: translateY(-2px);
+            width: 100%;
+            text-align: center;
         }
         
         table {
-            width: 100%;
-            border-collapse: collapse;
+            font-size: 0.8rem;
+            display: block;
+            overflow-x: auto;
+        }
+        
+        .member-photo {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .actions {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .actions a {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .navbar h2 {
+            font-size: 1.1rem;
+        }
+        
+        .navbar nav a {
+            font-size: 0.9rem;
+            padding: 0.75rem;
+        }
+        
+        .container {
+            padding: 0 0.75rem;
+        }
+        
+        .card {
+            padding: 1.25rem 0.75rem;
+        }
+        
+        .card h3 {
+            font-size: 1.1rem;
+        }
+        
+        .form-group label {
             font-size: 0.9rem;
         }
         
-        table thead {
-            background: #34495e;
-            color: white;
+        .gender-tab {
+            min-height: 60px;
         }
         
         table th,
         table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        table tbody tr:hover {
-            background: #f8f9fa;
+            padding: 0.5rem 0.25rem;
         }
         
         .member-photo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ddd;
+            width: 35px;
+            height: 35px;
         }
-        
-        .actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .actions a,
-        .actions button {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-        
-        .badge-gender {
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        
-        .badge-putra {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-        
-        .badge-putri {
-            background: #fce4ec;
-            color: #c2185b;
-        }
-        
-        /* RESPONSIVE IMPROVEMENTS */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 0.5rem;
-            }
-            
-            .card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .form-row, .form-row-3 {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .navbar nav {
-                width: 100%;
-            }
-            
-            table {
-                font-size: 0.8rem;
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .member-photo {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .actions {
-                flex-direction: column;
-            }
-            
-            .actions a {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
-                text-align: center;
-            }
-            
-            .gender-filter {
-                grid-template-columns: 1fr;
-            }
-            
-            .gender-tab {
-                min-height: 70px;
-            }
-            
-            .gender-tab .icon {
-                font-size: 1.5rem;
-            }
-            
-            .gender-tab .count {
-                font-size: 1.25rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .navbar nav a {
-                font-size: 0.8rem;
-                padding: 0.5rem 0.8rem;
-            }
-            
-            .btn {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            
-            .card h3 {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <div class="navbar">

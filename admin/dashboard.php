@@ -39,545 +39,637 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Admin Panel PORPPAD</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f7fa;
+        line-height: 1.6;
+    }
+    
+    /* ===== NAVBAR - PROFESSIONAL ===== */
+    .navbar {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 1.2rem 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .navbar-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .navbar h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .navbar nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .navbar nav a {
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-size: 1rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+    }
+    
+    .navbar nav a:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateY(-2px);
+    }
+    
+    .navbar nav a.active {
+        background: rgba(255,255,255,0.2);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .badge-notification {
+        background: #e74c3c;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.25rem;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+    
+    /* ===== WELCOME SECTION ===== */
+    .welcome {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .welcome h1 {
+        font-size: 2.25rem;
+        margin-bottom: 0.75rem;
+        font-weight: 700;
+    }
+    
+    .welcome p {
+        opacity: 0.95;
+        font-size: 1.1rem;
+    }
+    
+    /* ===== STATS GRID ===== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.75rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: all 0.3s;
+        border-left: 5px solid;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    
+    .stat-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.25rem;
+        flex-shrink: 0;
+    }
+    
+    .stat-card.members {
+        border-left-color: #667eea;
+    }
+    
+    .stat-card.members .stat-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .stat-card.kas {
+        border-left-color: #f093fb;
+    }
+    
+    .stat-card.kas .stat-icon {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    
+    .stat-card.trophies {
+        border-left-color: #4facfe;
+    }
+    
+    .stat-card.trophies .stat-icon {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+    
+    .stat-card.saldo {
+        border-left-color: #43e97b;
+    }
+    
+    .stat-card.saldo .stat-icon {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+    }
+    
+    .stat-info h3 {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stat-info .number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    /* ===== CONTENT GRID ===== */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .card-header h3 {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .card-header a {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s;
+        font-weight: 500;
+    }
+    
+    .card-header a:hover {
+        color: #2980b9;
+    }
+    
+    .export-btn {
+        background: #27ae60;
+        color: white !important;
+        padding: 0.65rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+        font-weight: 600;
+    }
+    
+    .export-btn:hover {
+        background: #229954;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    }
+    
+    /* ===== MEMBER LIST ===== */
+    .member-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .member-item {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1rem;
+        border-radius: 10px;
+        background: #f8f9fa;
+        transition: all 0.3s;
+    }
+    
+    .member-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .member-avatar {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .member-info {
+        flex: 1;
+    }
+    
+    .member-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+        font-size: 1.05rem;
+    }
+    
+    .member-position {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+    
+    /* ===== TRANSACTION ITEM ===== */
+    .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.3s;
+    }
+    
+    .transaction-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+    
+    .transaction-info .type {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+        font-size: 1.05rem;
+    }
+    
+    .transaction-info .date {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+    
+    .transaction-amount {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    
+    .transaction-amount.in {
+        color: #27ae60;
+    }
+    
+    .transaction-amount.out {
+        color: #e74c3c;
+    }
+    
+    /* ===== TROPHY SHOWCASE ===== */
+    .trophy-showcase {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .trophy-item {
+        display: flex;
+        gap: 1.25rem;
+        padding: 1.25rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        transition: transform 0.3s;
+    }
+    
+    .trophy-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .trophy-icon {
+        font-size: 3rem;
+        flex-shrink: 0;
+    }
+    
+    .trophy-details h4 {
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+    
+    .trophy-details p {
+        font-size: 0.9rem;
+        color: #555;
+    }
+    
+    /* ===== POSITION STATS ===== */
+    .position-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .position-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+    
+    .position-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .position-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1.05rem;
+    }
+    
+    .position-count {
+        background: #3498db;
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+    
+    .empty-state-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+        .content-grid {
+            grid-template-columns: 1fr;
         }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-        }
-        
-        /* ===== NAVBAR - PROFESSIONAL ===== */
+    }
+    
+    @media (max-width: 768px) {
         .navbar {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 1.2rem 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            padding: 1rem 0;
         }
         
         .navbar-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 0 1rem;
         }
         
         .navbar h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-size: 1.4rem;
+            text-align: center;
         }
         
         .navbar nav {
-            display: flex;
-            align-items: center;
+            justify-content: center;
             gap: 0.5rem;
-            flex-wrap: wrap;
         }
         
         .navbar nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-size: 1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-        }
-        
-        .navbar nav a:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-        }
-        
-        .navbar nav a.active {
-            background: rgba(255,255,255,0.2);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .badge-notification {
-            background: #e74c3c;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.25rem;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            font-size: 0.9rem;
+            padding: 0.65rem 1rem;
+            width: 100%;
+            text-align: center;
         }
         
         .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            padding: 0 1rem;
+            margin: 1rem auto;
         }
         
-        /* ===== WELCOME SECTION ===== */
         .welcome {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .welcome h1 {
-            font-size: 2.25rem;
-            margin-bottom: 0.75rem;
-            font-weight: 700;
+            font-size: 1.5rem;
         }
         
         .welcome p {
-            opacity: 0.95;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
         }
         
-        /* ===== STATS GRID ===== */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.75rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            transition: all 0.3s;
-            border-left: 5px solid;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            padding: 1.5rem;
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
         }
         
         .stat-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.25rem;
-            flex-shrink: 0;
-        }
-        
-        .stat-card.members {
-            border-left-color: #667eea;
-        }
-        
-        .stat-card.members .stat-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .stat-card.kas {
-            border-left-color: #f093fb;
-        }
-        
-        .stat-card.kas .stat-icon {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-        
-        .stat-card.trophies {
-            border-left-color: #4facfe;
-        }
-        
-        .stat-card.trophies .stat-icon {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-        
-        .stat-card.saldo {
-            border-left-color: #43e97b;
-        }
-        
-        .stat-card.saldo .stat-icon {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-        }
-        
-        .stat-info h3 {
-            color: #7f8c8d;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            width: 60px;
+            height: 60px;
+            font-size: 1.75rem;
         }
         
         .stat-info .number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 1.75rem;
         }
         
-        /* ===== CONTENT GRID ===== */
         .content-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
         
         .card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.75rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f0f0f0;
-            flex-wrap: wrap;
-            gap: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
         }
         
         .card-header h3 {
-            color: #2c3e50;
-            font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .card-header a {
-            color: #3498db;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: color 0.3s;
-            font-weight: 500;
-        }
-        
-        .card-header a:hover {
-            color: #2980b9;
+            font-size: 1.2rem;
         }
         
         .export-btn {
-            background: #27ae60;
-            color: white !important;
-            padding: 0.65rem 1.25rem;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-        
-        .export-btn:hover {
-            background: #229954;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-        }
-        
-        /* ===== MEMBER LIST ===== */
-        .member-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            width: 100%;
+            justify-content: center;
+            padding: 0.75rem;
         }
         
         .member-item {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-            padding: 1rem;
-            border-radius: 10px;
-            background: #f8f9fa;
-            transition: all 0.3s;
-        }
-        
-        .member-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
+            padding: 0.75rem;
+            gap: 1rem;
         }
         
         .member-avatar {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .member-info {
-            flex: 1;
+            width: 45px;
+            height: 45px;
         }
         
         .member-name {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 0.25rem;
-            font-size: 1.05rem;
-        }
-        
-        .member-position {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-        
-        /* ===== TRANSACTION ITEM ===== */
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.3s;
-        }
-        
-        .transaction-item:hover {
-            background: #f8f9fa;
-        }
-        
-        .transaction-item:last-child {
-            border-bottom: none;
-        }
-        
-        .transaction-info .type {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 0.25rem;
-            font-size: 1.05rem;
-        }
-        
-        .transaction-info .date {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-        
-        .transaction-amount {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        
-        .transaction-amount.in {
-            color: #27ae60;
-        }
-        
-        .transaction-amount.out {
-            color: #e74c3c;
-        }
-        
-        /* ===== TROPHY SHOWCASE ===== */
-        .trophy-showcase {
-            display: grid;
-            gap: 1rem;
-        }
-        
-        .trophy-item {
-            display: flex;
-            gap: 1.25rem;
-            padding: 1.25rem;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            transition: transform 0.3s;
-        }
-        
-        .trophy-item:hover {
-            transform: translateX(5px);
-        }
-        
-        .trophy-icon {
-            font-size: 3rem;
-            flex-shrink: 0;
-        }
-        
-        .trophy-details h4 {
-            color: #2c3e50;
-            margin-bottom: 0.25rem;
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
-        
-        .trophy-details p {
-            font-size: 0.9rem;
-            color: #555;
-        }
-        
-        /* ===== POSITION STATS ===== */
-        .position-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .position-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-        
-        .position-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-        
-        .position-name {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 1.05rem;
-        }
-        
-        .position-count {
-            background: #3498db;
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-weight: 700;
             font-size: 1rem;
         }
         
+        .transaction-item {
+            padding: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .trophy-item {
+            padding: 1rem;
+            gap: 1rem;
+        }
+        
+        .trophy-icon {
+            font-size: 2rem;
+        }
+        
+        .position-item {
+            padding: 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .navbar h2 {
+            font-size: 1.2rem;
+        }
+        
+        .navbar nav a {
+            font-size: 0.85rem;
+            padding: 0.75rem;
+        }
+        
+        .container {
+            padding: 0 0.75rem;
+        }
+        
+        .welcome {
+            padding: 1.25rem;
+        }
+        
+        .welcome h1 {
+            font-size: 1.3rem;
+        }
+        
+        .stat-card {
+            padding: 1.25rem;
+        }
+        
+        .stat-info .number {
+            font-size: 1.5rem;
+        }
+        
+        .card {
+            padding: 1.25rem;
+        }
+        
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
         .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #999;
+            padding: 2rem 1rem;
         }
         
         .empty-state-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
+            font-size: 2.5rem;
         }
-        
-        /* ===== MOBILE RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem 0;
-            }
-            
-            .navbar-container {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 0 1rem;
-            }
-            
-            .navbar h2 {
-                font-size: 1.4rem;
-                text-align: center;
-            }
-            
-            .navbar nav {
-                justify-content: center;
-                gap: 0.5rem;
-            }
-            
-            .navbar nav a {
-                font-size: 0.9rem;
-                padding: 0.65rem 1rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .welcome {
-                padding: 2rem 1.5rem;
-            }
-            
-            .welcome h1 {
-                font-size: 1.75rem;
-            }
-            
-            .welcome p {
-                font-size: 1rem;
-            }
-            
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .card {
-                padding: 1.5rem;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .export-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .navbar h2 {
-                font-size: 1.2rem;
-            }
-            
-            .navbar nav a {
-                font-size: 0.85rem;
-                padding: 0.6rem 0.85rem;
-            }
-            
-            .stat-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.75rem;
-            }
-            
-            .stat-info .number {
-                font-size: 1.75rem;
-            }
-            
-            .member-avatar {
-                width: 45px;
-                height: 45px;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <div class="navbar">

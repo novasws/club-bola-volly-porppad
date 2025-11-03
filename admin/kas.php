@@ -69,377 +69,434 @@ $saldo = $total_masuk - $total_keluar;
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-       <meta name="viewport" content="width=1200">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Kas - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        line-height: 1.6;
+    }
+    
+    /* NAVBAR IMPROVED */
+    .navbar {
+        background: #2c3e50;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .navbar h2 {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+    
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    
+    .navbar nav a {
+        color: white;
+        text-decoration: none;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        transition: background 0.3s;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .navbar nav a:hover {
+        background: #34495e;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+    }
+    
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    
+    /* STATS IMPROVED */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 1.5rem 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .stat-card h4 {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stat-card .amount {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+    }
+    
+    .stat-card.masuk .amount {
+        color: #27ae60;
+    }
+    
+    .stat-card.keluar .amount {
+        color: #e74c3c;
+    }
+    
+    .stat-card.saldo .amount {
+        color: #3498db;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .card h3 {
+        margin-bottom: 1.5rem;
+        color: #2c3e50;
+        font-size: 1.4rem;
+    }
+    
+    /* FORM IMPROVED */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 500;
+    }
+    
+    .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+    }
+    
+    .btn-warning {
+        background: #f39c12;
+        color: white;
+    }
+    
+    .btn-warning:hover {
+        background: #e67e22;
+        transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #7f8c8d;
+        transform: translateY(-2px);
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    table thead {
+        background: #34495e;
+        color: white;
+    }
+    
+    table th,
+    table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    table tbody tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .badge-masuk {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .badge-keluar {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .actions a,
+    .actions button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .amount-positive {
+        color: #27ae60;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .amount-negative {
+        color: #e74c3c;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    /* RESPONSIVE IMPROVEMENTS */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 0.5rem;
+            margin: 1rem auto;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            line-height: 1.6;
-        }
-        
-        /* NAVBAR IMPROVED */
         .navbar {
-            background: #2c3e50;
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .navbar h2 {
-            font-size: 1.3rem;
-            white-space: nowrap;
+            flex-direction: column;
+            text-align: center;
+            padding: 0.75rem;
         }
         
         .navbar nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+            width: 100%;
+            flex-direction: column;
+            gap: 0.25rem;
         }
         
         .navbar nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            transition: background 0.3s;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        
-        .navbar nav a:hover {
-            background: #34495e;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        /* STATS IMPROVED */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
             text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        .stat-card h4 {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .stat-card .amount {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.25rem;
-        }
-        
-        .stat-card.masuk .amount {
-            color: #27ae60;
-        }
-        
-        .stat-card.keluar .amount {
-            color: #e74c3c;
-        }
-        
-        .stat-card.saldo .amount {
-            color: #3498db;
+            padding: 0.75rem;
+            font-size: 1rem;
         }
         
         .card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .card h3 {
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         
-        /* FORM IMPROVED */
+        .stats {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .stat-card .amount {
+            font-size: 1.5rem;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
         .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 500;
-            font-size: 1rem;
+            margin-bottom: 1rem;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #3498db;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            font-size: 16px;
+            padding: 0.75rem;
         }
         
         .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 0.75rem 1rem;
             font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 500;
-        }
-        
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background: #e67e22;
-            transform: translateY(-2px);
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #7f8c8d;
-            transform: translateY(-2px);
+            width: 100%;
+            text-align: center;
         }
         
         table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        table thead {
-            background: #34495e;
-            color: white;
+            font-size: 0.875rem;
+            display: block;
+            overflow-x: auto;
         }
         
         table th,
         table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        table tbody tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .badge {
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .badge-masuk {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-keluar {
-            background: #f8d7da;
-            color: #721c24;
+            padding: 0.75rem 0.5rem;
         }
         
         .actions {
-            display: flex;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 0.25rem;
         }
         
-        .actions a,
-        .actions button {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
+        .actions a {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            text-align: center;
         }
-        
-        .amount-positive {
-            color: #27ae60;
-            font-weight: bold;
+    }
+    
+    @media (max-width: 480px) {
+        .navbar h2 {
             font-size: 1.1rem;
         }
         
-        .amount-negative {
-            color: #e74c3c;
-            font-weight: bold;
+        .navbar nav a {
+            font-size: 0.9rem;
+            padding: 0.75rem;
+        }
+        
+        .container {
+            padding: 0 0.75rem;
+        }
+        
+        .card {
+            padding: 1.25rem 0.75rem;
+        }
+        
+        .card h3 {
             font-size: 1.1rem;
         }
         
-        /* RESPONSIVE IMPROVEMENTS */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 0.5rem;
-            }
-            
-            .card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .navbar nav {
-                width: 100%;
-            }
-            
-            table {
-                font-size: 0.875rem;
-                display: block;
-                overflow-x: auto;
-            }
-            
-            table th,
-            table td {
-                padding: 0.75rem 0.5rem;
-            }
-            
-            .actions {
-                flex-direction: column;
-            }
-            
-            .actions a {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
-                text-align: center;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .stat-card .amount {
-                font-size: 1.5rem;
-            }
+        .stat-card {
+            padding: 0.75rem;
         }
         
-        @media (max-width: 480px) {
-            .navbar nav a {
-                font-size: 0.8rem;
-                padding: 0.5rem 0.8rem;
-            }
-            
-            .btn {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            
-            .card h3 {
-                font-size: 1.2rem;
-            }
-            
-            .stat-card {
-                padding: 1rem 0.5rem;
-            }
+        .stat-card .amount {
+            font-size: 1.25rem;
         }
- 
-    </style>
+        
+        table th,
+        table td {
+            padding: 0.5rem 0.25rem;
+            font-size: 0.8rem;
+        }
+    }
+</style>
 </head>
 <body>
     <div class="navbar">
