@@ -398,6 +398,35 @@ if (isset($_POST['register'])) {
             font-size: 0.95rem;
         }
     }
+
+    /* Style untuk tombol show/hide password */
+.btn-outline-secondary {
+    border: 2px solid #e9ecef;
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    color: #6c757d;
+    transition: all 0.3s;
+    width: 50px;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #e94560;
+    border-color: #e94560;
+    color: white;
+}
+
+.input-group:focus-within .btn-outline-secondary {
+    border-color: #e94560;
+}
+
+/* Pastikan form-control tetap konsisten */
+.input-group .form-control {
+    border-right: none;
+}
+
+.input-group:focus-within .form-control {
+    border-right: none;
+}
 </style>
 </head>
 <body>
@@ -448,13 +477,16 @@ if (isset($_POST['register'])) {
                                 <input type="text" name="username" class="form-control" placeholder="Masukkan username" required autofocus />
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" name="password" class="form-control" placeholder="Masukkan password" required />
-                            </div>
+                      <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Masukkan password" required />
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
+                    </div>
                         <button type="submit" name="login" class="btn btn-primary w-100 mb-3">
                             <i class="fa fa-sign-in-alt me-2"></i> Login Sekarang
                         </button>
@@ -476,13 +508,23 @@ if (isset($_POST['register'])) {
                             <label class="form-label">Username</label>
                             <input type="text" name="reg_username" class="form-control" placeholder="Pilih username untuk login" required />
                         </div>
-                        <div class="mb-3">
+                       <div class="mb-3">
                             <label class="form-label">Password</label>
-                            <input type="password" name="reg_password" class="form-control" placeholder="Buat password" required />
+                            <div class="input-group">
+                                <input type="password" name="reg_password" id="reg_password" class="form-control" placeholder="Buat password" required />
+                                <button type="button" class="btn btn-outline-secondary" id="toggleRegPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Konfirmasi Password</label>
-                            <input type="password" name="reg_confirm_password" class="form-control" placeholder="Ulangi password" required />
+                            <div class="input-group">
+                                <input type="password" name="reg_confirm_password" id="reg_confirm_password" class="form-control" placeholder="Ulangi password" required />
+                                <button type="button" class="btn btn-outline-secondary" id="toggleRegConfirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <button type="submit" name="register" class="btn btn-success w-100">
                             <i class="fa fa-user-plus me-2"></i> Daftar Akun Baru
@@ -501,5 +543,36 @@ if (isset($_POST['register'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+// Toggle Password Visibility
+document.addEventListener('DOMContentLoaded', function() {
+    // Function untuk toggle password
+    function togglePassword(inputId, buttonId) {
+        const input = document.getElementById(inputId);
+        const button = document.getElementById(buttonId);
+        
+        if (input && button) {
+            button.addEventListener('click', function() {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                
+                // Ganti icon
+                const icon = button.querySelector('i');
+                if (type === 'password') {
+                    icon.className = 'fas fa-eye';
+                } else {
+                    icon.className = 'fas fa-eye-slash';
+                }
+            });
+        }
+    }
+
+    // Apply untuk semua password field
+    togglePassword('password', 'togglePassword');
+    togglePassword('reg_password', 'toggleRegPassword');
+    togglePassword('reg_confirm_password', 'toggleRegConfirmPassword');
+});
+</script>
 </body>
 </html>
