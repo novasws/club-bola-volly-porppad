@@ -133,8 +133,6 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
      <meta name="viewport" content="width=1200">
     <title>Kelola Anggota - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <style>
-   <style>
 <style>
         * {
             margin: 0;
@@ -500,8 +498,6 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
                 font-size: 1.2rem;
             }
         }
-    </style>
-</style>
     </style>
 </head>
 <body>

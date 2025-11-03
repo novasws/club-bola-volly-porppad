@@ -61,7 +61,6 @@ $rejected = $conn->query("SELECT m.*, u.username
    <meta name="viewport" content="width=1200">
     <title>Persetujuan Anggota - Admin Panel</title>
     <style>
-          <style>
         * {
             margin: 0;
             padding: 0;
@@ -366,7 +365,6 @@ $rejected = $conn->query("SELECT m.*, u.username
                 font-size: 1.2rem;
             }
         }
-    </style>
     </style>
 </head>
 <body>

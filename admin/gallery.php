@@ -98,7 +98,6 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Galeri - Admin Panel</title>
     <style>
-        <style>
         * {
             margin: 0;
             padding: 0;
@@ -467,7 +466,6 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
                 font-size: 1.5rem;
             }
         }
-    </style>
     </style>
 </head>
 <body>

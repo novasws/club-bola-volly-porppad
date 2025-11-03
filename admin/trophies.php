@@ -115,7 +115,6 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
     <meta name="viewport" content="width=1200">
     <title>Kelola Prestasi - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <style>
           <style>
         * {
             margin: 0;
@@ -477,7 +476,6 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
                 font-size: 1.1rem;
             }
         }
-    </style>
     </style>
 </head>
 <body>

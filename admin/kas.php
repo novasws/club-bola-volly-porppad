@@ -73,7 +73,6 @@ $saldo = $total_masuk - $total_keluar;
     <title>Kelola Kas - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
-     <style>
         * {
             margin: 0;
             padding: 0;
@@ -439,7 +438,7 @@ $saldo = $total_masuk - $total_keluar;
                 padding: 1rem 0.5rem;
             }
         }
-    </style>
+ 
     </style>
 </head>
 <body>
