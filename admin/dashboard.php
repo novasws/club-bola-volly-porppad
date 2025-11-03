@@ -7,29 +7,81 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// Get statistics
-$total_members = $conn->query("SELECT COUNT(*) as total FROM members WHERE status='approved'")->fetch_assoc()['total'];
-$total_trophies = $conn->query("SELECT COUNT(*) as total FROM trophies")->fetch_assoc()['total'];
+// Get statistics dengan prepared statements
+$total_members = 0;
+$total_trophies = 0;
+$total_pemasukan = 0;
+$total_pengeluaran = 0;
+$pending_count = 0;
 
-// Kas statistics
-$total_pemasukan = $conn->query("SELECT SUM(jumlah) as total FROM kas WHERE jenis = 'Pemasukan'")->fetch_assoc()['total'] ?? 0;
-$total_pengeluaran = $conn->query("SELECT SUM(jumlah) as total FROM kas WHERE jenis = 'Pengeluaran'")->fetch_assoc()['total'] ?? 0;
+// Query total members
+if ($stmt = $conn->prepare("SELECT COUNT(*) as total FROM members WHERE status='approved'")) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $total_members = $result->fetch_assoc()['total'] ?? 0;
+    $stmt->close();
+}
+
+// Query total trophies
+if ($stmt = $conn->prepare("SELECT COUNT(*) as total FROM trophies")) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $total_trophies = $result->fetch_assoc()['total'] ?? 0;
+    $stmt->close();
+}
+
+// Query kas statistics
+if ($stmt = $conn->prepare("SELECT SUM(jumlah) as total FROM kas WHERE jenis = 'Pemasukan'")) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $total_pemasukan = $result->fetch_assoc()['total'] ?? 0;
+    $stmt->close();
+}
+
+if ($stmt = $conn->prepare("SELECT SUM(jumlah) as total FROM kas WHERE jenis = 'Pengeluaran'")) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $total_pengeluaran = $result->fetch_assoc()['total'] ?? 0;
+    $stmt->close();
+}
+
 $saldo = $total_pemasukan - $total_pengeluaran;
 
-// Recent members
-$recent_members = $conn->query("SELECT * FROM members WHERE status='approved' ORDER BY created_at DESC LIMIT 5");
+// Query pending count
+if ($stmt = $conn->prepare("SELECT COUNT(*) as total FROM members WHERE status = 'pending'")) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $pending_count = $result->fetch_assoc()['total'] ?? 0;
+    $stmt->close();
+}
+
+// Recent members dengan prepared statement
+$recent_members_result = null;
+if ($stmt = $conn->prepare("SELECT * FROM members WHERE status='approved' ORDER BY created_at DESC LIMIT 5")) {
+    $stmt->execute();
+    $recent_members_result = $stmt->get_result();
+}
 
 // Recent transactions
-$recent_kas = $conn->query("SELECT * FROM kas ORDER BY tanggal DESC LIMIT 5");
+$recent_kas_result = null;
+if ($stmt = $conn->prepare("SELECT * FROM kas ORDER BY tanggal DESC LIMIT 5")) {
+    $stmt->execute();
+    $recent_kas_result = $stmt->get_result();
+}
 
 // Recent trophies
-$recent_trophies = $conn->query("SELECT * FROM trophies ORDER BY id DESC LIMIT 3");
+$recent_trophies_result = null;
+if ($stmt = $conn->prepare("SELECT * FROM trophies ORDER BY id DESC LIMIT 3")) {
+    $stmt->execute();
+    $recent_trophies_result = $stmt->get_result();
+}
 
 // Position statistics
-$position_stats = $conn->query("SELECT posisi, COUNT(*) as jumlah FROM members WHERE status='approved' GROUP BY posisi");
-
-// Pending count for notification
-$pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE status = 'pending'")->fetch_assoc()['total'];
+$position_stats_result = null;
+if ($stmt = $conn->prepare("SELECT posisi, COUNT(*) as jumlah FROM members WHERE status='approved' GROUP BY posisi")) {
+    $stmt->execute();
+    $position_stats_result = $stmt->get_result();
+}
 ?>
 
 <!DOCTYPE html>
@@ -153,6 +205,45 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
         .welcome p {
             opacity: 0.95;
             font-size: 1.1rem;
+        }
+        
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions {
+            margin-bottom: 2rem;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        .quick-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s;
+            text-align: center;
+            gap: 0.5rem;
+            border: 2px solid transparent;
+        }
+        
+        .quick-action-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-3px);
+            border-color: #3498db;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .quick-action-btn i {
+            font-size: 1.5rem;
         }
         
         /* ===== STATS GRID ===== */
@@ -484,6 +575,54 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
             opacity: 0.5;
         }
         
+        /* ===== NOTIFICATION TOAST ===== */
+        .notification-toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .notification-toast.success {
+            background: #27ae60;
+        }
+        
+        .notification-toast.error {
+            background: #e74c3c;
+        }
+        
+        .notification-toast.warning {
+            background: #f39c12;
+        }
+        
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+        
+        /* ===== LOADING STATES ===== */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .skeleton-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
         /* ===== MOBILE RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .content-grid {
@@ -550,6 +689,10 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
                 width: 100%;
                 justify-content: center;
             }
+            
+            .quick-actions-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
         }
 
         @media (max-width: 480px) {
@@ -575,6 +718,10 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
             .member-avatar {
                 width: 45px;
                 height: 45px;
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -620,6 +767,33 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
         <div class="welcome">
             <h1>👋 Selamat Datang Admin PORPPAD</h1>
             <p>Kelola data club volley Anda dengan mudah. Berikut adalah ringkasan sistem.</p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fa fa-bolt"></i> Quick Actions</h3>
+                </div>
+                <div class="quick-actions-grid">
+                    <a href="add_member.php" class="quick-action-btn">
+                        <i class="fa fa-user-plus"></i>
+                        <span>Tambah Anggota</span>
+                    </a>
+                    <a href="add_kas.php" class="quick-action-btn">
+                        <i class="fa fa-plus-circle"></i>
+                        <span>Tambah Transaksi</span>
+                    </a>
+                    <a href="add_trophy.php" class="quick-action-btn">
+                        <i class="fa fa-trophy"></i>
+                        <span>Tambah Prestasi</span>
+                    </a>
+                    <a href="settings.php" class="quick-action-btn">
+                        <i class="fa fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- Statistics Cards -->
@@ -673,18 +847,21 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
                         </div>
                     </div>
                     
-                    <?php if ($recent_members->num_rows > 0): ?>
+                    <?php if ($recent_members_result && $recent_members_result->num_rows > 0): ?>
                         <div class="member-list">
-                            <?php while ($member = $recent_members->fetch_assoc()): ?>
+                            <?php while ($member = $recent_members_result->fetch_assoc()): ?>
                                 <div class="member-item">
-                                    <?php if ($member['foto']): ?>
-                                        <img src="../uploads/members/<?= $member['foto'] ?>" alt="<?= $member['nama'] ?>" class="member-avatar" onerror="this.src='../assets/img/default-profile.jpg'">
+                                    <?php if (!empty($member['foto'])): ?>
+                                        <img src="../uploads/members/<?= htmlspecialchars($member['foto']) ?>" 
+                                             alt="<?= htmlspecialchars($member['nama']) ?>" 
+                                             class="member-avatar" 
+                                             onerror="this.src='../assets/img/default-profile.jpg'">
                                     <?php else: ?>
                                         <img src="../assets/img/default-profile.jpg" alt="Default" class="member-avatar">
                                     <?php endif; ?>
                                     <div class="member-info">
-                                        <div class="member-name"><?= $member['nama'] ?></div>
-                                        <div class="member-position"><?= $member['posisi'] ?> • <?= $member['umur'] ?> tahun</div>
+                                        <div class="member-name"><?= htmlspecialchars($member['nama']) ?></div>
+                                        <div class="member-position"><?= htmlspecialchars($member['posisi']) ?> • <?= htmlspecialchars($member['umur']) ?> tahun</div>
                                     </div>
                                 </div>
                             <?php endwhile; ?>
@@ -709,11 +886,11 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
                         </div>
                     </div>
                     
-                    <?php if ($recent_kas->num_rows > 0): ?>
-                        <?php while ($kas = $recent_kas->fetch_assoc()): ?>
+                    <?php if ($recent_kas_result && $recent_kas_result->num_rows > 0): ?>
+                        <?php while ($kas = $recent_kas_result->fetch_assoc()): ?>
                             <div class="transaction-item">
                                 <div class="transaction-info">
-                                    <div class="type"><?= $kas['deskripsi'] ?></div>
+                                    <div class="type"><?= htmlspecialchars($kas['deskripsi']) ?></div>
                                     <div class="date">📅 <?= date('d M Y', strtotime($kas['tanggal'])) ?></div>
                                 </div>
                                 <div class="transaction-amount <?= $kas['jenis'] == 'Pemasukan' ? 'in' : 'out' ?>">
@@ -738,11 +915,11 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
                         <h3><i class="fa fa-chart-bar"></i> Statistik Posisi</h3>
                     </div>
                     
-                    <?php if ($position_stats->num_rows > 0): ?>
+                    <?php if ($position_stats_result && $position_stats_result->num_rows > 0): ?>
                         <div class="position-stats">
-                            <?php while ($pos = $position_stats->fetch_assoc()): ?>
+                            <?php while ($pos = $position_stats_result->fetch_assoc()): ?>
                                 <div class="position-item">
-                                    <span class="position-name"><?= $pos['posisi'] ?></span>
+                                    <span class="position-name"><?= htmlspecialchars($pos['posisi']) ?></span>
                                     <span class="position-count"><?= $pos['jumlah'] ?></span>
                                 </div>
                             <?php endwhile; ?>
@@ -762,14 +939,14 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
                         <a href="trophies.php">Lihat Semua →</a>
                     </div>
                     
-                    <?php if ($recent_trophies->num_rows > 0): ?>
+                    <?php if ($recent_trophies_result && $recent_trophies_result->num_rows > 0): ?>
                         <div class="trophy-showcase">
-                            <?php while ($trophy = $recent_trophies->fetch_assoc()): ?>
+                            <?php while ($trophy = $recent_trophies_result->fetch_assoc()): ?>
                                 <div class="trophy-item">
                                     <div class="trophy-icon">🏆</div>
                                     <div class="trophy-details">
-                                        <h4><?= $trophy['judul'] ?></h4>
-                                        <p>📅 <?= $trophy['tanggal'] ?></p>
+                                        <h4><?= htmlspecialchars($trophy['judul']) ?></h4>
+                                        <p>📅 <?= htmlspecialchars($trophy['tanggal']) ?></p>
                                     </div>
                                 </div>
                             <?php endwhile; ?>
@@ -785,7 +962,43 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
         </div>
     </div>
 
+    <!-- Notification Toast -->
+    <div id="notification" class="notification-toast"></div>
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script>
+    // Notification function
+    function showNotification(message, type = 'success') {
+        const toast = document.getElementById('notification');
+        toast.textContent = message;
+        toast.className = `notification-toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Auto refresh data every 5 minutes
+    setInterval(() => {
+        document.body.classList.add('loading');
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }, 300000);
+
+    // Error handling for images
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            img.addEventListener('error', function() {
+                this.src = '../assets/img/default-profile.jpg';
+            });
+        });
+    });
+
+    // Example: Show welcome notification
+    window.addEventListener('load', function() {
+        showNotification('Dashboard berhasil dimuat!', 'success');
+    });
+    </script>
 </body>
 </html>

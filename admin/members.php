@@ -1,138 +1,102 @@
 <?php
 require_once '../config.php';
 
-// Check if admin is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
-// Handle Delete
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
+// Handle delete member
+if (isset($_GET['delete_id'])) {
+    $delete_id = intval($_GET['delete_id']);
     
-    // Get photo filename before delete
+    // Get member data first to delete photo
     $stmt = $conn->prepare("SELECT foto FROM members WHERE id = ?");
-    $stmt->bind_param("i", $id);
+    $stmt->bind_param("i", $delete_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $member = $result->fetch_assoc();
     
-    // Delete photo file if exists
-    if ($member['foto'] && file_exists("../uploads/members/" . $member['foto'])) {
-        unlink("../uploads/members/" . $member['foto']);
-    }
-    
-    // Delete from database
-    $stmt = $conn->prepare("DELETE FROM members WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    
-    if ($stmt->execute()) {
-        $success = "Anggota berhasil dihapus!";
-    } else {
-        $error = "Gagal menghapus anggota!";
-    }
-}
-
-// Handle Add/Edit
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama = $_POST['nama'];
-    $tempat_lahir = $_POST['tempat_lahir'];
-    $tanggal_lahir = $_POST['tanggal_lahir'];
-    $umur = $_POST['umur'];
-    $posisi = $_POST['posisi'];
-    $gender = $_POST['gender'];
-    $wa = $_POST['wa'];
-    $alamat = $_POST['alamat'];
-    $id = $_POST['id'] ?? null;
-    
-    // Handle photo upload
-    $foto = null;
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-        $filename = $_FILES['foto']['name'];
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if ($member) {
+        // Delete photo file if exists
+        if (!empty($member['foto']) && file_exists("../uploads/members/" . $member['foto'])) {
+            unlink("../uploads/members/" . $member['foto']);
+        }
         
-        if (in_array($ext, $allowed)) {
-            $newname = uniqid() . '.' . $ext;
-            $destination = "../uploads/members/" . $newname;
-            
-            if (move_uploaded_file($_FILES['foto']['tmp_name'], $destination)) {
-                $foto = $newname;
-                
-                // Delete old photo if editing
-                if ($id) {
-                    $stmt = $conn->prepare("SELECT foto FROM members WHERE id = ?");
-                    $stmt->bind_param("i", $id);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $old = $result->fetch_assoc();
-                    
-                    if ($old['foto'] && file_exists("../uploads/members/" . $old['foto'])) {
-                        unlink("../uploads/members/" . $old['foto']);
-                    }
-                }
-            }
-        }
+        // Delete from database
+        $stmt = $conn->prepare("DELETE FROM members WHERE id = ?");
+        $stmt->bind_param("i", $delete_id);
+        $stmt->execute();
+        
+        $_SESSION['success'] = "Anggota berhasil dihapus!";
     }
-    
-    if ($id) {
-        // Update
-        if ($foto) {
-            $stmt = $conn->prepare("UPDATE members SET nama=?, tempat_lahir=?, tanggal_lahir=?, umur=?, posisi=?, gender=?, wa=?, alamat=?, foto=? WHERE id=?");
-            $stmt->bind_param("sssisssssi", $nama, $tempat_lahir, $tanggal_lahir, $umur, $posisi, $gender, $wa, $alamat, $foto, $id);
-        } else {
-            $stmt = $conn->prepare("UPDATE members SET nama=?, tempat_lahir=?, tanggal_lahir=?, umur=?, posisi=?, gender=?, wa=?, alamat=? WHERE id=?");
-            $stmt->bind_param("ssisssssi", $nama, $tempat_lahir, $tanggal_lahir, $umur, $posisi, $gender, $wa, $alamat, $id);
-        }
-    } else {
-        // Insert - LANGSUNG APPROVED karena ditambah admin
-        $stmt = $conn->prepare("INSERT INTO members (nama, tempat_lahir, tanggal_lahir, umur, posisi, gender, wa, alamat, foto, status, approved_by, approved_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, NOW())");
-        $admin_id = $_SESSION['user_id'];
-        $stmt->bind_param("sssisssssi", $nama, $tempat_lahir, $tanggal_lahir, $umur, $posisi, $gender, $wa, $alamat, $foto, $admin_id);
-    }
-    
-    if ($stmt->execute()) {
-        $success = $id ? "Anggota berhasil diupdate!" : "Anggota berhasil ditambahkan dan langsung approved!";
-    } else {
-        $error = "Gagal menyimpan data!";
-    }
+    header("Location: members.php");
+    exit();
 }
 
-// Get member for edit
-$edit_member = null;
-if (isset($_GET['edit'])) {
-    $id = $_GET['edit'];
-    $stmt = $conn->prepare("SELECT * FROM members WHERE id = ?");
-    $stmt->bind_param("i", $id);
+// Handle status update
+if (isset($_GET['update_status'])) {
+    $member_id = intval($_GET['id']);
+    $new_status = $_GET['update_status'];
+    
+    $stmt = $conn->prepare("UPDATE members SET status = ? WHERE id = ?");
+    $stmt->bind_param("si", $new_status, $member_id);
     $stmt->execute();
-    $edit_member = $stmt->get_result()->fetch_assoc();
+    
+    $_SESSION['success'] = "Status anggota berhasil diupdate!";
+    header("Location: members.php");
+    exit();
 }
 
-// Get filter
-$gender_filter = $_GET['gender'] ?? '';
+// Search and filter
+$search = $_GET['search'] ?? '';
+$status_filter = $_GET['status'] ?? '';
 
-// Build query - HANYA TAMPILKAN YANG APPROVED
-$query = "SELECT * FROM members WHERE status = 'approved'";
-if ($gender_filter) {
-    $query .= " AND gender = '$gender_filter'";
+$where_conditions = [];
+$params = [];
+$types = '';
+
+if (!empty($search)) {
+    $where_conditions[] = "(nama LIKE ? OR posisi LIKE ?)";
+    $params[] = "%$search%";
+    $params[] = "%$search%";
+    $types .= 'ss';
 }
-$query .= " ORDER BY created_at DESC";
 
-$members = $conn->query($query);
+if (!empty($status_filter)) {
+    $where_conditions[] = "status = ?";
+    $params[] = $status_filter;
+    $types .= 's';
+}
 
-// Count by gender - HANYA APPROVED
-$count_putra = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender = 'Putra' AND status = 'approved'")->fetch_assoc()['total'] ?? 0;
-$count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender = 'Putri' AND status = 'approved'")->fetch_assoc()['total'] ?? 0;
+$where_sql = '';
+if (!empty($where_conditions)) {
+    $where_sql = "WHERE " . implode(' AND ', $where_conditions);
+}
+
+// Get members
+$sql = "SELECT * FROM members $where_sql ORDER BY created_at DESC";
+$stmt = $conn->prepare($sql);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$members_result = $stmt->get_result();
+
+// Statistics
+$total_members = $conn->query("SELECT COUNT(*) as total FROM members")->fetch_assoc()['total'];
+$approved_members = $conn->query("SELECT COUNT(*) as total FROM members WHERE status='approved'")->fetch_assoc()['total'];
+$pending_members = $conn->query("SELECT COUNT(*) as total FROM members WHERE status='pending'")->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-     <meta name="viewport" content="width=1200">
-    <title>Kelola Anggota - Admin Panel</title>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Anggota - Admin PORPPAD</title>
     <style>
         * {
             margin: 0;
@@ -142,155 +106,101 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #f5f7fa;
         }
         
         .navbar {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .navbar h2 {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .navbar nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
         
         .navbar nav a {
             color: white;
             text-decoration: none;
-            margin-left: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: background 0.3s;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .navbar nav a:hover {
-            background: #34495e;
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .navbar nav a.active {
+            background: rgba(255,255,255,0.2);
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 2rem auto;
-            padding: 0 1rem;
+            padding: 0 1.5rem;
         }
         
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .gender-filter {
+        .page-header {
             display: flex;
-            gap: 1rem;
+            justify-content: between;
+            align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
-        .gender-tab {
-            flex: 1;
-            padding: 1rem;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            text-align: center;
-            text-decoration: none;
-            color: #555;
-            transition: all 0.3s;
-        }
-        
-        .gender-tab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        
-        .gender-tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-        }
-        
-        .gender-tab .icon {
+        .page-title {
             font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .gender-tab .count {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .card h3 {
-            margin-bottom: 1.5rem;
             color: #2c3e50;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .form-row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
+            font-weight: 700;
         }
         
         .btn {
             padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
+            border-radius: 8px;
             text-decoration: none;
-            display: inline-block;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
         }
         
         .btn-primary {
@@ -300,15 +210,16 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         
         .btn-primary:hover {
             background: #2980b9;
+            transform: translateY(-2px);
         }
         
-        .btn-warning {
-            background: #f39c12;
+        .btn-success {
+            background: #27ae60;
             color: white;
         }
         
-        .btn-warning:hover {
-            background: #e67e22;
+        .btn-success:hover {
+            background: #229954;
         }
         
         .btn-danger {
@@ -320,97 +231,198 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
             background: #c0392b;
         }
         
-        .btn-secondary {
-            background: #95a5a6;
+        .btn-warning {
+            background: #f39c12;
             color: white;
         }
         
-        .btn-secondary:hover {
-            background: #7f8c8d;
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
         }
         
-        table thead {
-            background: #34495e;
-            color: white;
-        }
-        
-        table th,
-        table td {
-            padding: 0.75rem;
+        th, td {
+            padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #f0f0f0;
         }
         
-        table tbody tr:hover {
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
             background: #f8f9fa;
         }
         
-        .member-photo {
+        .member-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
         }
         
-        .actions {
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .action-buttons {
             display: flex;
             gap: 0.5rem;
         }
         
-        .actions a,
-        .actions button {
+        .btn-sm {
             padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-        
-        .badge-gender {
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
             font-size: 0.85rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .notification-toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
             font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
         }
         
-        .badge-putra {
-            background: #e3f2fd;
-            color: #1565c0;
+        .notification-toast.success {
+            background: #27ae60;
         }
         
-        .badge-putri {
-            background: #fce4ec;
-            color: #c2185b;
+        .notification-toast.show {
+            transform: translateX(0);
         }
         
         @media (max-width: 768px) {
-            .form-row, .form-row-3 {
-                grid-template-columns: 1fr;
-            }
-            
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .navbar nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-            
-            table {
-                font-size: 0.75rem;
-            }
-            
-            .actions {
+            .navbar-container {
                 flex-direction: column;
             }
             
-            .gender-filter {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
                 flex-direction: column;
             }
         }
@@ -418,231 +430,165 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
 </head>
 <body>
     <div class="navbar">
-        <h2>🏐 Volley Club Admin</h2>
-        <nav>
-            <a href="dashboard.php">Dashboard</a>
-            <a href="approval.php">Persetujuan</a>
-            <a href="members.php">Anggota</a>
-            <a href="kas.php">Kas</a>
-            <a href="trophies.php">Prestasi</a>
-            <a href="../index.php" style="background: #27ae60;">🏠 Home</a>
-            <a href="logout.php">Logout</a>
-        </nav>
+        <div class="navbar-container">
+            <h2>🏐 PORPPAD Admin</h2>
+            <nav>
+                <a href="dashboard.php"><i class="fa fa-home"></i> Dashboard</a>
+                <a href="approval.php"><i class="fa fa-clock"></i> Persetujuan</a>
+                <a href="members.php" class="active"><i class="fa fa-users"></i> Anggota</a>
+                <a href="kas.php"><i class="fa fa-wallet"></i> Kas</a>
+                <a href="trophies.php"><i class="fa fa-trophy"></i> Prestasi</a>
+                <a href="gallery.php"><i class="fa fa-images"></i> Galeri</a>
+                <a href="../home.php" style="background: #27ae60;"><i class="fa fa-globe"></i> Home</a>
+                <a href="logout.php" style="background: #e74c3c;"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </div>
     </div>
 
     <div class="container">
-        <?php if (isset($success)): ?>
-            <div class="alert alert-success"><?= $success ?></div>
-        <?php endif; ?>
-        
-        <?php if (isset($error)): ?>
-            <div class="alert alert-error"><?= $error ?></div>
-        <?php endif; ?>
-
-        <!-- Gender Filter -->
-        <div class="gender-filter">
-            <a href="members.php" class="gender-tab <?= $gender_filter === '' ? 'active' : '' ?>">
-                <div class="icon">👥</div>
-                <div class="count"><?= $count_putra + $count_putri ?></div>
-                <div>Semua</div>
-            </a>
-            <a href="?gender=Putra" class="gender-tab <?= $gender_filter === 'Putra' ? 'active' : '' ?>">
-                <div class="icon">👨</div>
-                <div class="count"><?= $count_putra ?></div>
-                <div>Tim Putra</div>
-            </a>
-            <a href="?gender=Putri" class="gender-tab <?= $gender_filter === 'Putri' ? 'active' : '' ?>">
-                <div class="icon">👩</div>
-                <div class="count"><?= $count_putri ?></div>
-                <div>Tim Putri</div>
+        <div class="page-header">
+            <h1 class="page-title"><i class="fa fa-users"></i> Kelola Anggota</h1>
+            <a href="add_member.php" class="btn btn-primary">
+                <i class="fa fa-user-plus"></i> Tambah Anggota
             </a>
         </div>
 
-        <!-- Form Add/Edit -->
-        <div class="card">
-            <h3><?= $edit_member ? '✏️ Edit Anggota' : '➕ Tambah Anggota Baru' ?></h3>
-            <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id" value="<?= $edit_member['id'] ?? '' ?>">
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Nama Lengkap *</label>
-                        <input type="text" name="nama" required value="<?= $edit_member['nama'] ?? '' ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Gender *</label>
-                        <select name="gender" required>
-                            <option value="">-- Pilih Gender --</option>
-                            <option value="Putra" <?= ($edit_member['gender'] ?? '') == 'Putra' ? 'selected' : '' ?>>👨 Putra</option>
-                            <option value="Putri" <?= ($edit_member['gender'] ?? '') == 'Putri' ? 'selected' : '' ?>>👩 Putri</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row-3">
-                    <div class="form-group">
-                        <label>Tempat Lahir *</label>
-                        <input type="text" name="tempat_lahir" required placeholder="Surabaya" value="<?= $edit_member['tempat_lahir'] ?? '' ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Tanggal Lahir *</label>
-                        <input type="date" name="tanggal_lahir" id="tanggal_lahir" required value="<?= $edit_member['tanggal_lahir'] ?? '' ?>">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Umur *</label>
-                        <input type="number" name="umur" id="umur" required readonly value="<?= $edit_member['umur'] ?? '' ?>" style="background: #f0f0f0;">
-                        <small style="color: #666;">Otomatis dari tanggal lahir</small>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Posisi *</label>
-                        <select name="posisi" required>
-                            <option value="">-- Pilih Posisi --</option>
-                            <option value="Setter" <?= ($edit_member['posisi'] ?? '') == 'Setter' ? 'selected' : '' ?>>Setter</option>
-                            <option value="Spiker" <?= ($edit_member['posisi'] ?? '') == 'Spiker' ? 'selected' : '' ?>>Spiker</option>
-                            <option value="Libero" <?= ($edit_member['posisi'] ?? '') == 'Libero' ? 'selected' : '' ?>>Libero</option>
-                            <option value="Blocker" <?= ($edit_member['posisi'] ?? '') == 'Blocker' ? 'selected' : '' ?>>Blocker</option>
-                            <option value="Server" <?= ($edit_member['posisi'] ?? '') == 'Server' ? 'selected' : '' ?>>Server</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>WhatsApp</label>
-                        <input type="text" name="wa" placeholder="08xxxxxxxxxx" value="<?= $edit_member['wa'] ?? '' ?>">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Alamat</label>
-                    <input type="text" name="alamat" placeholder="Alamat lengkap" value="<?= $edit_member['alamat'] ?? '' ?>">
-                </div>
-                
-                <div class="form-group">
-                    <label>Foto Profil</label>
-                    <input type="file" name="foto" accept="image/*">
-                    <?php if ($edit_member && $edit_member['foto']): ?>
-                        <small style="color: #666;">Foto saat ini: <?= $edit_member['foto'] ?></small>
-                    <?php endif; ?>
-                </div>
-                
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-primary">
-                        <?= $edit_member ? '💾 Update' : '➕ Tambah & Auto Approve' ?>
-                    </button>
-                    <?php if ($edit_member): ?>
-                        <a href="members.php" class="btn btn-secondary">❌ Batal</a>
-                    <?php endif; ?>
-                </div>
-            </form>
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number"><?= $total_members ?></div>
+                <div class="stat-label">Total Anggota</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?= $approved_members ?></div>
+                <div class="stat-label">Disetujui</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?= $pending_members ?></div>
+                <div class="stat-label">Menunggu</div>
+            </div>
         </div>
 
-        <!-- Table Members -->
-        <div class="card">
-            <h3>📋 Daftar Anggota Approved (<?= $members->num_rows ?>)</h3>
-            
-            <?php if ($members->num_rows > 0): ?>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
+        <!-- Filters -->
+        <form method="GET" class="filters">
+            <div class="form-group">
+                <label for="search">Cari Anggota</label>
+                <input type="text" id="search" name="search" class="form-control" 
+                       placeholder="Nama atau posisi..." value="<?= htmlspecialchars($search) ?>">
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-control">
+                    <option value="">Semua Status</option>
+                    <option value="approved" <?= $status_filter == 'approved' ? 'selected' : '' ?>>Disetujui</option>
+                    <option value="pending" <?= $status_filter == 'pending' ? 'selected' : '' ?>>Menunggu</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="margin-bottom: 0;">
+                    <i class="fa fa-search"></i> Filter
+                </button>
+                <a href="members.php" class="btn" style="background: #95a5a6; color: white; margin-left: 0.5rem;">
+                    <i class="fa fa-refresh"></i> Reset
+                </a>
+            </div>
+        </form>
+
+        <!-- Members Table -->
+        <div class="table-container">
+            <?php if ($members_result->num_rows > 0): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nama</th>
+                            <th>Posisi</th>
+                            <th>Umur</th>
+                            <th>Status</th>
+                            <th>Tanggal Bergabung</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($member = $members_result->fetch_assoc()): ?>
                             <tr>
-                                <th>Foto</th>
-                                <th>Nama</th>
-                                <th>Gender</th>
-                                <th>Tempat, Tanggal Lahir</th>
-                                <th>Umur</th>
-                                <th>Posisi</th>
-                                <th>WhatsApp</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($member = $members->fetch_assoc()): ?>
-                                <tr>
-                                    <td>
-                                        <?php if ($member['foto']): ?>
-                                            <img src="../uploads/members/<?= $member['foto'] ?>" alt="<?= $member['nama'] ?>" class="member-photo" onerror="this.src='../assets/img/default-profile.jpg'">
-                                        <?php else: ?>
-                                            <img src="../assets/img/default-profile.jpg" alt="Default" class="member-photo">
+                                <td>
+                                    <?php if (!empty($member['foto'])): ?>
+                                        <img src="../uploads/members/<?= htmlspecialchars($member['foto']) ?>" 
+                                             alt="<?= htmlspecialchars($member['nama']) ?>" 
+                                             class="member-avatar"
+                                             onerror="this.src='../assets/img/default-profile.jpg'">
+                                    <?php else: ?>
+                                        <img src="../assets/img/default-profile.jpg" alt="Default" class="member-avatar">
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= htmlspecialchars($member['nama']) ?></td>
+                                <td><?= htmlspecialchars($member['posisi']) ?></td>
+                                <td><?= htmlspecialchars($member['umur']) ?> tahun</td>
+                                <td>
+                                    <span class="status-badge status-<?= $member['status'] ?>">
+                                        <?= $member['status'] == 'approved' ? 'Disetujui' : 'Menunggu' ?>
+                                    </span>
+                                </td>
+                                <td><?= date('d M Y', strtotime($member['created_at'])) ?></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="edit_member.php?id=<?= $member['id'] ?>" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <?php if ($member['status'] == 'pending'): ?>
+                                            <a href="members.php?update_status=approved&id=<?= $member['id'] ?>" 
+                                               class="btn btn-success btn-sm">
+                                                <i class="fa fa-check"></i> Setujui
+                                            </a>
                                         <?php endif; ?>
-                                    </td>
-                                    <td><strong><?= $member['nama'] ?></strong></td>
-                                    <td>
-                                        <span class="badge-gender badge-<?= strtolower($member['gender']) ?>">
-                                            <?= $member['gender'] == 'Putra' ? '👨' : '👩' ?> <?= $member['gender'] ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <?php 
-                                        if (!empty($member['tempat_lahir']) && !empty($member['tanggal_lahir'])) {
-                                            echo htmlspecialchars($member['tempat_lahir']) . ', ' . date('d-m-Y', strtotime($member['tanggal_lahir']));
-                                        } else {
-                                            echo '-';
-                                        }
-                                        ?>
-                                    </td>
-                                    <td><?= $member['umur'] ?> th</td>
-                                    <td><span style="background: #3498db; color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem;"><?= $member['posisi'] ?></span></td>
-                                    <td><?= $member['wa'] ?? '-' ?></td>
-                                    <td>
-                                        <div class="actions">
-                                            <a href="?edit=<?= $member['id'] ?>&gender=<?= $gender_filter ?>" class="btn btn-warning">✏️ Edit</a>
-                                            <a href="?delete=<?= $member['id'] ?>&gender=<?= $gender_filter ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus anggota ini?')">🗑️ Hapus</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
+                                        <a href="members.php?delete_id=<?= $member['id'] ?>" 
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Yakin ingin menghapus anggota ini?')">
+                                            <i class="fa fa-trash"></i> Hapus
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
             <?php else: ?>
-                <p style="text-align: center; padding: 2rem; color: #999;">Belum ada anggota approved. Approve anggota di menu Persetujuan!</p>
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <h3>Tidak ada anggota</h3>
+                    <p>Belum ada data anggota yang tercatat.</p>
+                    <a href="add_member.php" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fa fa-user-plus"></i> Tambah Anggota Pertama
+                    </a>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 
-    <!-- JavaScript untuk Auto Calculate Age -->
+    <!-- Notification Toast -->
+    <div id="notification" class="notification-toast"></div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tanggalLahirInput = document.getElementById('tanggal_lahir');
-            const umurInput = document.getElementById('umur');
-            
-            function calculateAge(birthDate) {
-                if (!birthDate) return '';
-                
-                const birth = new Date(birthDate);
-                const today = new Date();
-                
-                let age = today.getFullYear() - birth.getFullYear();
-                const monthDiff = today.getMonth() - birth.getMonth();
-                
-                // Jika bulan sekarang lebih kecil dari bulan lahir, 
-                // atau bulan sama tapi tanggal sekarang lebih kecil dari tanggal lahir
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-                    age--;
-                }
-                
-                return age;
-            }
-            
-            // Event listener untuk perubahan tanggal lahir
-            if (tanggalLahirInput && umurInput) {
-                tanggalLahirInput.addEventListener('change', function() {
-                    const age = calculateAge(this.value);
-                    umurInput.value = age;
-                });
-                
-                // Calculate age on page load if editing
-                if (tanggalLahirInput.value) {
-                    const age = calculateAge(tanggalLahirInput.value);
-                    umurInput.value = age;
-                }
-            }
-        });
+    function showNotification(message, type = 'success') {
+        const toast = document.getElementById('notification');
+        toast.textContent = message;
+        toast.className = `notification-toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Show success message from PHP session
+    <?php if (isset($_SESSION['success'])): ?>
+        showNotification('<?= $_SESSION['success'] ?>', 'success');
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+
+    // Auto refresh every 5 minutes
+    setInterval(() => {
+        window.location.reload();
+    }, 300000);
     </script>
 </body>
 </html>
