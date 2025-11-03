@@ -216,13 +216,7 @@ section {
 }
 
 /* ===== VISI MISI - LANDSCAPE LAPTOP (KIRI-KANAN) ===== */
-#visi-misi .row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
+
 
 .visi-misi-card {
     background: white;
@@ -284,14 +278,6 @@ section {
 }
 
 /* ===== FASILITAS - 2 BARIS x 3 KOTAK LAPTOP ===== */
-#fasilitas .row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
 .facility-card {
     background: white;
     padding: 2.5rem 2rem;
@@ -910,7 +896,7 @@ footer {
                             <img src="assets/img/pelatih/pelatih1.png" alt="Om Agus" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
-                            <h5>Om Agus</h5>
+                            <h5>Sapta Agus PH</h5>
                             <small class="text-light">Ketua & Pelatih</small>
                         </div>
                     </div>
@@ -922,7 +908,7 @@ footer {
                             <img src="assets/img/pelatih/pelatih2.png" alt="Om Nasir" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
-                            <h5>Om Nasir</h5>
+                            <h5>Moch Nasir</h5>
                             <small class="text-light">Pelatih</small>
                         </div>
                     </div>
@@ -934,7 +920,7 @@ footer {
                             <img src="assets/img/pelatih/pelatih3.png" alt="Anton" onerror="this.style.display='none'" />
                         </div>
                         <div class="card-body text-center py-3">
-                            <h5>Om Yit</h5>
+                            <h5>Taufik Efendi</h5>
                             <small class="text-light"> Pelatih</small>
                         </div>
                     </div>
