@@ -1,23 +1,12 @@
 <?php
-// config.php - Database Configuration
 session_start();
 
-// Auto-detect environment
-if (getenv('RAILWAY_ENVIRONMENT') || getenv('MYSQLHOST')) {
-    // Railway Environment
-    define('DB_HOST', getenv('MYSQLHOST') ?: 'mysql.railway.internal');
-    define('DB_USER', getenv('MYSQLUSER') ?: 'root');
-    define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
-    define('DB_NAME', getenv('MYSQLDATABASE') ?: 'railway');
-    define('DB_PORT', getenv('MYSQLPORT') ?: 3306);
-} else {
-    // Local XAMPP Environment
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'porppad');
-    define('DB_PORT', 3306);
-}
+// Railway Database Credentials
+define('DB_HOST', 'mysql.railway.internal');
+define('DB_USER', 'root');
+define('DB_PASS', 'AQFgOeKpTuHbcosZwOahQtihWPtMccoZ');
+define('DB_NAME', 'railway');
+define('DB_PORT', 3306);
 
 // Create connection
 $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
@@ -30,7 +19,7 @@ if (!$conn) {
 // Set charset to UTF8
 mysqli_set_charset($conn, "utf8mb4");
 
-// Base URL - otomatis detect Railway atau localhost
+// Base URL
 if (getenv('RAILWAY_PUBLIC_DOMAIN')) {
     define('BASE_URL', 'https://' . getenv('RAILWAY_PUBLIC_DOMAIN') . '/');
 } else {
