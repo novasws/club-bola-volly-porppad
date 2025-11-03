@@ -215,11 +215,13 @@ section {
     color: #6c757d;
 }
 
-/* ===== VISI MISI ===== */
+/* ===== VISI MISI - RAPI DI LAPTOP & MOBILE ===== */
 #visi-misi .row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .visi-misi-card {
@@ -250,6 +252,12 @@ section {
     margin-bottom: 1rem;
 }
 
+.visi-misi-card p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+}
+
 .vm-list {
     list-style: none;
     padding: 0;
@@ -274,12 +282,12 @@ section {
     font-size: 1.3rem;
 }
 
-/* ===== FASILITAS ===== */
+/* ===== FASILITAS - RAPI DI LAPTOP & MOBILE ===== */
 #fasilitas .row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    max-width: 1300px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -377,11 +385,7 @@ section {
     margin-bottom: 0.5rem;
 }
 
-/* ===== PELATIH SECTION - LAYOUT 1 ATAS 2 BAWAH RAPI ===== */
-#team {
-    background: #ffffff !important;
-}
-
+/* ===== PELATIH - LAYOUT LAPTOP: 1 ATAS 2 BAWAH ===== */
 #team .row {
     display: flex;
     flex-wrap: wrap;
@@ -391,7 +395,7 @@ section {
     margin: 0 auto;
 }
 
-/* BARIS 1: Om Agus - 1 kotak besar di tengah */
+/* LAPTOP: Baris 1 = 1 kotak, Baris 2 = 2 kotak */
 #team .row > div:nth-child(1) {
     flex: 0 0 100%;
     display: flex;
@@ -403,7 +407,6 @@ section {
     max-width: 400px;
 }
 
-/* BARIS 2: Om Nasir & Om Yit - 2 kotak berdampingan */
 #team .row > div:nth-child(2),
 #team .row > div:nth-child(3) {
     flex: 0 0 calc(50% - 1rem);
@@ -425,7 +428,7 @@ section {
 
 .team-photo {
     width: 100%;
-    height: 400px;
+    height: 450px;
     overflow: hidden;
     background: #f8f9fa;
 }
@@ -550,7 +553,7 @@ footer {
 .social-whatsapp:hover { background: #25D366; }
 .social-twitter:hover { background: #1DA1F2; }
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE TABLET ===== */
 @media (max-width: 991px) {
     #fasilitas .row {
         grid-template-columns: repeat(2, 1fr);
@@ -558,12 +561,15 @@ footer {
     }
 }
 
+/* ===== RESPONSIVE MOBILE ===== */
 @media (max-width: 768px) {
+    /* Visi Misi: 1 kolom di mobile */
     #visi-misi .row {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
     
+    /* Fasilitas: 2 kolom di mobile */
     #fasilitas .row {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
@@ -573,31 +579,28 @@ footer {
         font-size: 2.5rem;
     }
     
-    /* Mobile: semua pelatih jadi 1 kolom */
+    /* PELATIH MOBILE: Baris 1 = 2 foto, Baris 2 = 1 foto PORTRAIT */
+    #team .row {
+        gap: 1rem;
+    }
+    
+    /* Baris 1: Om Agus & Om Nasir - 2 foto berdampingan */
     #team .row > div:nth-child(1),
-    #team .row > div:nth-child(2),
+    #team .row > div:nth-child(2) {
+        flex: 0 0 calc(50% - 0.5rem);
+        max-width: calc(50% - 0.5rem);
+    }
+    
+    /* Baris 2: Om Yit - 1 foto centered */
     #team .row > div:nth-child(3) {
-        flex: 0 0 100%;
-        max-width: 100%;
+        flex: 0 0 calc(50% - 0.5rem);
+        max-width: calc(50% - 0.5rem);
+        margin: 0 auto;
     }
     
+    /* Foto PORTRAIT di mobile - tinggi lebih besar */
     .team-photo {
-        height: 250px;
-    }
-    
-    .team-card h5 {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
-    }
-    
-    .team-photo {
-        height: 200px;
+        height: 280px;
     }
     
     .team-card .card-body {
@@ -610,6 +613,26 @@ footer {
     
     .team-card small {
         font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    /* PELATIH SUPER MOBILE: tetap 2-1 layout */
+    .team-photo {
+        height: 250px;
+    }
+    
+    .team-card h5 {
+        font-size: 0.9rem;
+    }
+    
+    .team-card small {
+        font-size: 0.8rem;
     }
 }
 </style>
