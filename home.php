@@ -1050,7 +1050,7 @@ footer {
                     <h5 class="fw-bold">Volley Club PORPPAD</h5>
                     <p class="mb-2" style="font-size: 0.9rem; line-height: 1.6;">
                         GOR FASHA – Surabaya<br>
-                        📞 Telp: 0812-3456-7890<br>
+                        📞 Telp: 082141186468<br>
                         📧 Email: clubvolley@gmail.com
                     </p>
                 </div>
@@ -1099,7 +1099,7 @@ footer {
                     <div class="modal-body">
                         <div class="alert alert-info" style="font-size: 0.9rem;">
                             <i class="fa fa-info-circle me-2"></i>
-                            <strong>Informasi:</strong> Setelah submit, data Anda akan dikirim ke admin via Telegram untuk diverifikasi.
+                            <strong>Informasi:</strong> Setelah submit, data Anda diterima oleh admin dan anda akan dihubungi.
                         </div>
 
                         <div class="mb-4 text-center">
@@ -1407,5 +1407,49 @@ footer {
 
         document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
     </script>
+    <script>
+// Navbar active section highlight
+document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    function highlightNav() {
+        let current = '';
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                current = sectionId;
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', highlightNav);
+    window.addEventListener('load', highlightNav);
+});
+
+// Juga tambahkan ini untuk handle click manual
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+        // Hapus active dari semua menu
+        document.querySelectorAll('.nav-link').forEach(item => {
+            item.classList.remove('active');
+        });
+        // Tambah active ke menu yang diklik
+        this.classList.add('active');
+    });
+});
+</script>
 </body>
 </html>
