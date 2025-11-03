@@ -116,6 +116,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
     <title>Kelola Prestasi - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
+          <style>
         * {
             margin: 0;
             padding: 0;
@@ -125,29 +126,42 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
+            line-height: 1.6;
         }
         
+        /* NAVBAR IMPROVED */
         .navbar {
             background: #2c3e50;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .navbar h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+        
+        .navbar nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
         }
         
         .navbar nav a {
             color: white;
             text-decoration: none;
-            margin-left: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
             transition: background 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         .navbar nav a:hover {
@@ -189,8 +203,10 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         .card h3 {
             margin-bottom: 1.5rem;
             color: #2c3e50;
+            font-size: 1.4rem;
         }
         
+        /* FORM IMPROVED */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -200,17 +216,27 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
             margin-bottom: 0.5rem;
             color: #555;
             font-weight: 500;
+            font-size: 1rem;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
             font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
         
         .form-group textarea {
@@ -225,14 +251,15 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
+            font-weight: 500;
         }
         
         .btn-primary {
@@ -242,6 +269,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         
         .btn-primary:hover {
             background: #2980b9;
+            transform: translateY(-2px);
         }
         
         .btn-warning {
@@ -251,6 +279,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         
         .btn-warning:hover {
             background: #e67e22;
+            transform: translateY(-2px);
         }
         
         .btn-danger {
@@ -260,6 +289,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         
         .btn-danger:hover {
             background: #c0392b;
+            transform: translateY(-2px);
         }
         
         .btn-secondary {
@@ -269,11 +299,13 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         
         .btn-secondary:hover {
             background: #7f8c8d;
+            transform: translateY(-2px);
         }
         
+        /* TROPHY GRID IMPROVED */
         .trophy-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
@@ -314,7 +346,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         
         .trophy-badge {
             display: inline-block;
-            padding: 0.35rem 0.75rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 15px;
             font-size: 0.75rem;
             font-weight: 600;
@@ -348,6 +380,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
             font-weight: bold;
             color: #2c3e50;
             margin-bottom: 0.5rem;
+            line-height: 1.3;
         }
         
         .trophy-date {
@@ -370,7 +403,7 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
         .trophy-actions a {
             flex: 1;
             text-align: center;
-            padding: 0.5rem;
+            padding: 0.6rem;
             font-size: 0.875rem;
         }
         
@@ -385,26 +418,66 @@ $trophies = $conn->query("SELECT * FROM trophies ORDER BY tanggal DESC");
             margin-bottom: 1rem;
         }
         
+        /* RESPONSIVE IMPROVEMENTS */
         @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem 1rem;
+            }
+            
             .form-row {
                 grid-template-columns: 1fr;
             }
             
             .navbar {
                 flex-direction: column;
-                gap: 1rem;
+                text-align: center;
             }
             
             .navbar nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
+                width: 100%;
             }
             
             .trophy-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .trophy-image {
+                height: 180px;
+            }
+            
+            .trophy-content {
+                padding: 1.25rem;
+            }
+            
+            .trophy-actions {
+                flex-direction: column;
+            }
         }
+        
+        @media (max-width: 480px) {
+            .navbar nav a {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .trophy-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
     </style>
 </head>
 <body>

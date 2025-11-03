@@ -98,6 +98,7 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Galeri - Admin Panel</title>
     <style>
+        <style>
         * {
             margin: 0;
             padding: 0;
@@ -107,29 +108,42 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
+            line-height: 1.6;
         }
         
+        /* NAVBAR IMPROVED */
         .navbar {
             background: #2c3e50;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .navbar h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+        
+        .navbar nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
         }
         
         .navbar nav a {
             color: white;
             text-decoration: none;
-            margin-left: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
             transition: background 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         .navbar nav a:hover {
@@ -171,16 +185,23 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
         .card h3 {
             margin-bottom: 1.5rem;
             color: #2c3e50;
+            font-size: 1.4rem;
         }
         
+        /* GALLERY UPLOAD IMPROVED */
         .upload-area {
             border: 3px dashed #3498db;
             border-radius: 10px;
-            padding: 2rem;
+            padding: 2rem 1rem;
             text-align: center;
             background: #f8f9fa;
             cursor: pointer;
             transition: all 0.3s;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .upload-area:hover {
@@ -208,27 +229,37 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
             margin-bottom: 0.5rem;
             color: #555;
             font-weight: 500;
+            font-size: 1rem;
         }
         
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
             font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
+            font-weight: 500;
         }
         
         .btn-primary {
@@ -238,6 +269,7 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
         
         .btn-primary:hover {
             background: #2980b9;
+            transform: translateY(-2px);
         }
         
         .btn-danger {
@@ -247,8 +279,10 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
         
         .btn-danger:hover {
             background: #c0392b;
+            transform: translateY(-2px);
         }
         
+        /* GALLERY GRID IMPROVED */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -331,27 +365,34 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.8rem;
         }
         
         .stats {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
         
         .stat-card {
-            flex: 1;
             background: white;
             padding: 1.5rem;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
         }
         
         .stat-card .number {
             font-size: 2rem;
             font-weight: bold;
             color: #3498db;
+            margin-bottom: 0.5rem;
         }
         
         .empty-state {
@@ -360,26 +401,73 @@ $photos = $conn->query("SELECT * FROM gallery ORDER BY created_at DESC");
             color: #999;
         }
         
+        /* RESPONSIVE IMPROVEMENTS */
         @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .upload-area {
+                padding: 1.5rem 1rem;
+                min-height: 120px;
+            }
+            
+            .upload-icon {
+                font-size: 2.5rem;
+            }
+            
             .navbar {
                 flex-direction: column;
-                gap: 1rem;
+                text-align: center;
             }
             
             .navbar nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
+                width: 100%;
             }
             
             .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
             }
             
             .stats {
-                flex-direction: column;
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-container {
+                justify-content: center;
             }
         }
+        
+        @media (max-width: 480px) {
+            .navbar nav a {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 0.75rem;
+            }
+            
+            .stat-card .number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
     </style>
 </head>
 <body>

@@ -134,6 +134,8 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
     <title>Kelola Anggota - Admin Panel</title>
     <link rel="stylesheet" href="../assets/css/admin.css">
     <style>
+   <style>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -143,29 +145,42 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
+            line-height: 1.6;
         }
         
+        /* NAVBAR IMPROVED */
         .navbar {
             background: #2c3e50;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .navbar h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+        
+        .navbar nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
         }
         
         .navbar nav a {
             color: white;
             text-decoration: none;
-            margin-left: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
             transition: background 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         .navbar nav a:hover {
@@ -196,15 +211,16 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
             border: 1px solid #f5c6cb;
         }
         
+        /* GENDER FILTER IMPROVED */
         .gender-filter {
-            display: flex;
-            gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
             margin-bottom: 2rem;
         }
         
         .gender-tab {
-            flex: 1;
-            padding: 1rem;
+            padding: 1rem 0.5rem;
             background: white;
             border: 2px solid #ddd;
             border-radius: 10px;
@@ -212,6 +228,10 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
             text-decoration: none;
             color: #555;
             transition: all 0.3s;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .gender-tab:hover {
@@ -246,8 +266,10 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         .card h3 {
             margin-bottom: 1.5rem;
             color: #2c3e50;
+            font-size: 1.4rem;
         }
         
+        /* FORM IMPROVED */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -257,17 +279,27 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
             margin-bottom: 0.5rem;
             color: #555;
             font-weight: 500;
+            font-size: 1rem;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
             font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
         
         .form-row {
@@ -283,14 +315,15 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
+            font-weight: 500;
         }
         
         .btn-primary {
@@ -300,6 +333,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         
         .btn-primary:hover {
             background: #2980b9;
+            transform: translateY(-2px);
         }
         
         .btn-warning {
@@ -309,6 +343,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         
         .btn-warning:hover {
             background: #e67e22;
+            transform: translateY(-2px);
         }
         
         .btn-danger {
@@ -318,6 +353,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         
         .btn-danger:hover {
             background: #c0392b;
+            transform: translateY(-2px);
         }
         
         .btn-secondary {
@@ -327,6 +363,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         
         .btn-secondary:hover {
             background: #7f8c8d;
+            transform: translateY(-2px);
         }
         
         table {
@@ -356,6 +393,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid #ddd;
         }
         
         .actions {
@@ -370,7 +408,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
         }
         
         .badge-gender {
-            padding: 0.25rem 0.75rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 15px;
             font-size: 0.85rem;
             font-weight: 500;
@@ -386,34 +424,84 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
             color: #c2185b;
         }
         
+        /* RESPONSIVE IMPROVEMENTS */
         @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem 1rem;
+            }
+            
             .form-row, .form-row-3 {
                 grid-template-columns: 1fr;
             }
             
             .navbar {
                 flex-direction: column;
-                gap: 1rem;
+                text-align: center;
             }
             
             .navbar nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
+                width: 100%;
             }
             
             table {
-                font-size: 0.75rem;
+                font-size: 0.8rem;
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .member-photo {
+                width: 40px;
+                height: 40px;
             }
             
             .actions {
                 flex-direction: column;
             }
             
+            .actions a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            
             .gender-filter {
-                flex-direction: column;
+                grid-template-columns: 1fr;
+            }
+            
+            .gender-tab {
+                min-height: 70px;
+            }
+            
+            .gender-tab .icon {
+                font-size: 1.5rem;
+            }
+            
+            .gender-tab .count {
+                font-size: 1.25rem;
             }
         }
+        
+        @media (max-width: 480px) {
+            .navbar nav a {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .card h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</style>
     </style>
 </head>
 <body>

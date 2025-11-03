@@ -61,34 +61,52 @@ $rejected = $conn->query("SELECT m.*, u.username
    <meta name="viewport" content="width=1200">
     <title>Persetujuan Anggota - Admin Panel</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+          <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
+            line-height: 1.6;
         }
         
+        /* NAVBAR IMPROVED */
         .navbar {
             background: #2c3e50;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .navbar h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+        
+        .navbar nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
         }
         
         .navbar nav a {
             color: white;
             text-decoration: none;
-            margin-left: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
             transition: background 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         .navbar nav a:hover {
@@ -134,8 +152,10 @@ $rejected = $conn->query("SELECT m.*, u.username
         .card h3 {
             margin-bottom: 1.5rem;
             color: #2c3e50;
+            font-size: 1.4rem;
         }
         
+        /* APPROVAL CARD IMPROVED */
         .member-card {
             background: white;
             border-radius: 10px;
@@ -143,6 +163,11 @@ $rejected = $conn->query("SELECT m.*, u.username
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 1.5rem;
             border-left: 4px solid #ffc107;
+            transition: transform 0.3s;
+        }
+        
+        .member-card:hover {
+            transform: translateY(-3px);
         }
         
         .member-card.approved {
@@ -156,11 +181,12 @@ $rejected = $conn->query("SELECT m.*, u.username
         .member-card h4 {
             color: #2c3e50;
             margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
         
         .badge {
             display: inline-block;
-            padding: 0.35rem 0.75rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 15px;
             font-size: 0.875rem;
             font-weight: 500;
@@ -188,8 +214,9 @@ $rejected = $conn->query("SELECT m.*, u.username
         }
         
         table td {
-            padding: 0.5rem;
+            padding: 0.75rem;
             border-bottom: 1px solid #eee;
+            vertical-align: top;
         }
         
         table td:first-child {
@@ -199,15 +226,15 @@ $rejected = $conn->query("SELECT m.*, u.username
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
-            text-align: center;
+            font-weight: 500;
         }
         
         .btn-approve {
@@ -217,6 +244,7 @@ $rejected = $conn->query("SELECT m.*, u.username
         
         .btn-approve:hover {
             background: #218838;
+            transform: translateY(-2px);
         }
         
         .btn-reject {
@@ -226,11 +254,12 @@ $rejected = $conn->query("SELECT m.*, u.username
         
         .btn-reject:hover {
             background: #c82333;
+            transform: translateY(-2px);
         }
         
         .actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
             margin-top: 1rem;
         }
         
@@ -241,14 +270,14 @@ $rejected = $conn->query("SELECT m.*, u.username
         }
         
         .tabs {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-bottom: 2rem;
         }
         
         .tab {
-            flex: 1;
-            padding: 1rem;
+            padding: 1.5rem 1rem;
             background: white;
             border-radius: 10px;
             text-align: center;
@@ -261,32 +290,83 @@ $rejected = $conn->query("SELECT m.*, u.username
             transform: translateY(-3px);
         }
         
-        .tab.active {
-            background: #e74c3c;
-            color: white;
-        }
-        
         .tab .count {
             font-size: 2rem;
             font-weight: bold;
+            margin-bottom: 0.5rem;
         }
         
+        /* RESPONSIVE IMPROVEMENTS */
         @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .member-card {
+                padding: 1rem;
+            }
+            
             .navbar {
                 flex-direction: column;
-                gap: 1rem;
+                text-align: center;
             }
             
             .navbar nav {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
+                width: 100%;
+            }
+            
+            table td {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.85rem;
+                display: block;
+                width: 100%;
+            }
+            
+            table td:first-child {
+                width: 100%;
+                font-size: 0.8rem;
+                padding-bottom: 0.25rem;
+                border-bottom: none;
             }
             
             .actions {
                 flex-direction: column;
             }
+            
+            .btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            .tabs {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab .count {
+                font-size: 1.5rem;
+            }
         }
+        
+        @media (max-width: 480px) {
+            .navbar nav a {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+            }
+            
+            .member-card h4 {
+                font-size: 1.1rem;
+            }
+            
+            .card h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
     </style>
 </head>
 <body>
