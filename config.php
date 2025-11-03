@@ -24,14 +24,7 @@ $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 // Check connection
 if (!$conn) {
-    // Fallback untuk local development
-    if (!getenv('RAILWAY_ENVIRONMENT')) {
-        $conn = mysqli_connect('localhost', 'root', '', 'porppad');
-    }
-    
-    if (!$conn) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 // Set charset to UTF8
@@ -55,7 +48,7 @@ function isLoggedIn() {
 }
 
 function isAdmin() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 }
 
 function requireLogin() {
