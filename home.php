@@ -20,237 +20,357 @@ if (isLoggedIn()) {
 <html lang="id">
 <head>
     <meta charset="utf-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Volley Club – PORPPAD Surabaya</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     
     <style>
-/* ===== IMPORT FONTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
-
-html {
-    touch-action: manipulation;
-    -webkit-text-size-adjust: 100%;
+/* ===== MODERN VARIABLES ===== */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-dark: #5a67d8;
+    --primary-light: #7c3aed;
+    --gold: #fbbf24;
+    --gold-light: #fcd34d;
+    --text-dark: #1a202c;
+    --text-light: #718096;
+    --bg-light: #f7fafc;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+    --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
 }
 
 * {
     -webkit-tap-highlight-color: transparent;
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-:root {
-    --primary: #2c5282;
-    --primary-dark: #1e3a5f;
-    --primary-light: #4a7ba7;
-    --gold: #c9a961;
-    --gold-light: #e0c488;
+html {
+    scroll-behavior: smooth;
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
 }
 
-body { 
-    font-family: 'Inter', sans-serif; 
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     padding-top: 80px;
     overflow-x: hidden;
+    background: #ffffff;
+    color: var(--text-dark);
+    line-height: 1.7;
 }
 
-/* ===== NAVBAR ===== */
+/* ===== MODERN NAVBAR ===== */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
     z-index: 1000;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.logo-img { 
-    width: 50px; 
-    height: 50px; 
-    border-radius: 8px;
+.navbar.scrolled {
+    padding: 0.5rem 0;
+    box-shadow: var(--shadow-md);
+}
+
+.logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
-.brand-title { 
-    font-weight: 700; 
-    font-size: 1.3rem; 
-    color: var(--primary-dark); 
+.navbar-brand:hover .logo-img {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.brand-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     line-height: 1.2;
 }
 
-.brand-sub { 
-    font-size: 0.85rem; 
-    color: #6c757d; 
+.brand-sub {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .nav-link {
-    font-size: 1.05rem;
-    padding: 0.75rem 1rem !important;
-    color: #333;
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem !important;
+    color: var(--text-dark);
     font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-sm);
+    position: relative;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: transform 0.3s ease;
 }
 
 .nav-link:hover {
-    color: var(--primary);
-    background: linear-gradient(135deg, rgba(44, 82, 130, 0.1), rgba(74, 123, 167, 0.15));
-    transform: translateY(-2px);
+    color: var(--primary-dark);
+    background: rgba(102, 126, 234, 0.05);
 }
 
-.nav-link.active { 
+.nav-link:hover::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.nav-link.active {
     color: white !important;
-    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
-    box-shadow: 0 3px 10px rgba(44, 82, 130, 0.3);
+    background: var(--primary-gradient);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
-.btn-rounded { 
-    border-radius: 20px; 
-    padding: 0.5rem 1.2rem; 
-    font-size: 0.95rem;
-    font-weight: 500;
+.nav-link.active::before {
+    display: none;
 }
 
-.btn-gold { 
-    background: linear-gradient(90deg, var(--gold), var(--gold-light)); 
-    color: #111; 
+.btn-rounded {
+    border-radius: 100px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
 }
 
-/* ===== HERO SECTION ===== */
+.btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--text-dark);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(251, 191, 36, 0.4);
+    color: var(--text-dark);
+}
+
+/* ===== MODERN HERO ===== */
 .hero-section {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 35%, #4a7ba7 70%, #5a8bb8 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     position: relative;
-    padding: 2rem 1rem;
+    padding: 4rem 1rem;
     overflow: hidden;
 }
 
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
 .hero-section h1:first-of-type {
-    font-family: 'Inter', sans-serif !important;
-    font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.05em !important;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
 }
 
 .orbitron-title {
-    font-family: 'Playfair Display', serif !important;
-    font-size: clamp(3rem, 10vw, 7rem) !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.08em !important;
-    background: linear-gradient(135deg, #c9a961 0%, #e0c488 50%, #d4af37 100%);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3rem, 12vw, 8rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #fbbf24 50%, #ffffff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.9; }
 }
 
 .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    margin-top: 2rem;
-    max-width: 100%;
-    padding: 0 1rem;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-stats .stat {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
-    padding: 1.25rem 0.75rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.25);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 2rem 1rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     text-align: center;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-stats .stat:hover {
+    transform: translateY(-10px) scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .hero-stats .stat h3 {
-    font-size: clamp(1.75rem, 5vw, 3rem);
-    margin: 0 0 0.25rem 0;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin: 0 0 0.5rem 0;
     color: #fff;
     font-weight: 900;
-    text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hero-stats small {
-    font-size: clamp(0.85rem, 2vw, 1rem);
-    color: #fff;
-    font-weight: 500;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
-/* ===== SECTIONS ===== */
-section { 
-    padding: clamp(3rem, 6vw, 5rem) 0; 
+/* ===== MODERN SECTIONS ===== */
+section {
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    position: relative;
 }
 
 .section-title {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 
 .section-title h3 {
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
-    color: var(--primary-dark);
-    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
 }
 
 .section-title p {
-    font-size: clamp(0.95rem, 2vw, 1.1rem);
-    color: #6c757d;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-/* ===== VISI MISI - LANDSCAPE LAPTOP (KIRI-KANAN) ===== */
-
-
+/* ===== VISI MISI CARDS ===== */
 .visi-misi-card {
     background: white;
-    padding: 2.5rem;
-    border-radius: 15px;
-    border: 1px solid #e8eef5;
-    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.06);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
     height: 100%;
-    border-left: 5px solid var(--primary);
-    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.visi-misi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--primary-gradient);
 }
 
 .visi-misi-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(30, 58, 95, 0.15);
-    border-left-width: 8px;
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
 }
 
 .vm-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(102, 126, 234, 0.3));
 }
 
 .visi-misi-card h4 {
-    color: var(--primary-dark);
-    font-size: 1.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text-dark);
+    font-size: 1.75rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .visi-misi-card p {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--text-light);
 }
 
 .vm-list {
@@ -260,92 +380,144 @@ section {
 }
 
 .vm-list li {
-    padding: 0.75rem 0;
-    padding-left: 2rem;
+    padding: 1rem 0;
+    padding-left: 2.5rem;
     position: relative;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-light);
+    transition: all 0.3s ease;
 }
 
-.vm-list li:before {
+.vm-list li:hover {
+    color: var(--text-dark);
+    transform: translateX(5px);
+}
+
+.vm-list li::before {
     content: "✓";
     position: absolute;
     left: 0;
-    color: var(--primary);
+    width: 32px;
+    height: 32px;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-/* ===== FASILITAS - 2 BARIS x 3 KOTAK LAPTOP ===== */
-
+/* ===== FACILITY CARDS ===== */
 .facility-card {
     background: white;
     padding: 2.5rem 2rem;
-    border-radius: 15px;
-    border: 1px solid #e8eef5;
-    box-shadow: 0 3px 15px rgba(30, 58, 95, 0.05);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
     text-align: center;
     height: 100%;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.facility-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.facility-card:hover::before {
+    opacity: 0.05;
 }
 
 .facility-card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 15px 45px rgba(30, 58, 95, 0.2);
-    border-color: var(--primary-light);
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: var(--shadow-xl);
 }
 
 .facility-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    color: var(--primary-light);
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     transition: all 0.4s ease;
+    filter: drop-shadow(0 4px 10px rgba(102, 126, 234, 0.2));
 }
 
 .facility-card:hover .facility-icon {
-    transform: scale(1.2) rotate(5deg);
-    color: var(--primary);
+    transform: scale(1.2) rotate(-5deg);
 }
 
 .facility-card h5 {
-    color: var(--primary-dark);
-    font-size: 1.25rem;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text-dark);
+    font-size: 1.35rem;
     font-weight: 600;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .facility-card p {
     font-size: 1rem;
-    color: #666;
-    line-height: 1.6;
+    color: var(--text-light);
+    line-height: 1.7;
 }
 
 /* ===== TROPHY CARDS ===== */
 .trophy-card {
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    background: #fff;
-    border: 1px solid #e8eef5;
-    box-shadow: 0 2px 12px rgba(30, 58, 95, 0.06);
-    transition: all 0.3s;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
 }
 
 .trophy-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 35px rgba(30, 58, 95, 0.18);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: var(--shadow-xl);
 }
 
 .trophy-img {
     width: 100%;
-    height: 220px;
+    height: 240px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
+    font-size: 5rem;
     color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.trophy-img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
 .trophy-img img {
@@ -355,38 +527,41 @@ section {
 }
 
 .trophy-content {
-    padding: 1.5rem;
+    padding: 1.75rem;
 }
 
 .trophy-badge {
     display: inline-block;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
 }
 
-.badge-prestasi { background: #ffeaa7; color: #d63031; }
-.badge-turnamen { background: #74b9ff; color: #0984e3; }
-.badge-kejuaraan { background: #a29bfe; color: #6c5ce7; }
-.badge-penghargaan { background: #fd79a8; color: #e84393; }
+.badge-prestasi { background: #fef3c7; color: #92400e; }
+.badge-turnamen { background: #dbeafe; color: #1e40af; }
+.badge-kejuaraan { background: #ede9fe; color: #5b21b6; }
+.badge-penghargaan { background: #fce7f3; color: #9f1239; }
 
 .trophy-title {
-    font-size: 1.05rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
     font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
 }
 
-/* ===== PELATIH - LAYOUT LAPTOP: 1 ATAS 2 BAWAH ===== */
+/* ===== TEAM CARDS ===== */
 #team .row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 2rem;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -398,118 +573,179 @@ section {
 
 #team .row > div:nth-child(1) .team-card {
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
 }
 
 #team .row > div:nth-child(2),
 #team .row > div:nth-child(3) {
     flex: 0 0 calc(50% - 1rem);
-    max-width: 400px;
+    max-width: 450px;
 }
 
 .team-card {
-    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
-    border-radius: 15px;
+    background: white;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.15);
-    transition: all 0.3s;
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .team-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 15px 45px rgba(30, 58, 95, 0.3);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: var(--shadow-xl);
 }
 
 .team-photo {
     width: 100%;
-    height: 450px;
+    height: 500px;
     overflow: hidden;
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    position: relative;
 }
 
-.team-photo img { 
+.team-photo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.2));
+    z-index: 1;
+}
+
+.team-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center top;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.team-card:hover .team-photo img {
+    transform: scale(1.08);
 }
 
 .team-card .card-body {
-    padding: 1.5rem;
+    padding: 2rem;
     text-align: center;
-    color: white;
+    background: var(--primary-gradient);
 }
 
-.team-card h5 { 
-    font-size: 1.3rem;
-    font-weight: 600;
+.team-card h5 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin-bottom: 0.5rem;
     color: white;
 }
 
 .team-card small {
     font-size: 1rem;
-    opacity: 0.95;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.team-card h3 {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    margin-top: 0.75rem;
 }
 
 /* ===== GALLERY ===== */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 .gallery-item {
-    border-radius: 10px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    border: 1px solid #e8eef5;
-    box-shadow: 0 2px 12px rgba(30, 58, 95, 0.06);
-    transition: all 0.3s;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     aspect-ratio: 1;
     cursor: pointer;
+    position: relative;
+}
+
+.gallery-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.3));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+
+.gallery-item:hover::before {
+    opacity: 1;
 }
 
 .gallery-item:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.15);
+    box-shadow: var(--shadow-xl);
 }
 
-.gallery-item img { 
-    width: 100%; 
+.gallery-item img {
+    width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
 }
 
 /* ===== SCHEDULE TABLE ===== */
-.schedule-table { 
-    font-size: 0.95rem;
-    border: 1px solid #e8eef5;
-    box-shadow: 0 4px 20px rgba(30, 58, 95, 0.08);
-    border-radius: 10px;
+.schedule-table {
+    font-size: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
-.schedule-table th, 
-.schedule-table td { 
-    padding: 1rem;
+.schedule-table th,
+.schedule-table td {
+    padding: 1.25rem;
     vertical-align: middle;
 }
 
 .schedule-table thead {
-    background: linear-gradient(135deg, #2c5282 0%, #4a7ba7 100%);
+    background: var(--primary-gradient);
     color: white;
 }
 
+.schedule-table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.9rem;
+}
+
+.schedule-table tbody tr {
+    transition: all 0.3s ease;
+}
+
 .schedule-table tbody tr:hover {
-    background: #f8fafc;
+    background: rgba(102, 126, 234, 0.05);
+    transform: scale(1.01);
 }
 
 /* ===== FOOTER ===== */
-footer { 
-    background: #1a1a2e;
-    color: #cfe0ff; 
-    padding: 3rem 0;
+footer {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    color: #cbd5e0;
+    padding: 4rem 0 2rem 0;
     font-size: 0.95rem;
 }
 
@@ -527,55 +763,54 @@ footer {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: #34495e;
+    background: rgba(255, 255, 255, 0.1);
     color: white;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 1.3rem;
+    backdrop-filter: blur(10px);
 }
 
 .social-media a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.social-instagram:hover { 
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); 
+.social-instagram:hover {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 .social-youtube:hover { background: #FF0000; }
 .social-tiktok:hover { background: #000000; }
 .social-whatsapp:hover { background: #25D366; }
 .social-twitter:hover { background: #1DA1F2; }
 
-/* ===== RESPONSIVE TABLET ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 991px) {
-    #fasilitas .row {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
+    .hero-stats {
+        gap: 1rem;
+    }
+    
+    .hero-stats .stat {
+        padding: 1.5rem 0.75rem;
     }
 }
 
-/* ===== RESPONSIVE MOBILE ===== */
 @media (max-width: 768px) {
-    /* Visi Misi: 1 kolom di mobile */
-    #visi-misi .row {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+    body {
+        padding-top: 70px;
     }
     
-    /* Fasilitas: 2 kolom di mobile */
-    #fasilitas .row {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+    .navbar {
+        padding: 0.5rem 0;
     }
     
-    .facility-icon {
-        font-size: 2.5rem;
+    .hero-section {
+        padding: 3rem 1rem;
     }
     
-    /* PELATIH MOBILE: 2-1 layout */
-    #team .row {
-        gap: 1rem;
+    .visi-misi-card,
+    .facility-card {
+        margin-bottom: 1.5rem;
     }
     
     #team .row > div:nth-child(1),
@@ -587,15 +822,33 @@ footer {
     #team .row > div:nth-child(3) {
         flex: 0 0 calc(50% - 0.5rem);
         max-width: calc(50% - 0.5rem);
-        margin: 0 auto;
+    }
+    
+    .team-photo {
+        height: 320px;
+    }
+    
+    .team-card .card-body {
+        padding: 1.25rem;
+    }
+    
+    .team-card h5 {
+        font-size: 1.1rem;
+    }
+    
+    .team-card small {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
     
     .team-photo {
         height: 280px;
-    }
-    
-    .team-card .card-body {
-        padding: 1rem;
     }
     
     .team-card h5 {
@@ -603,29 +856,142 @@ footer {
     }
     
     .team-card small {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
+    }
+    
+    .team-card h3 {
+        font-size: 0.9rem;
     }
 }
 
-@media (max-width: 576px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-    
-    .team-photo {
-        height: 250px;
-    }
-    
-    .team-card h5 {
-        font-size: 0.9rem;
-    }
-    
-    .team-card small {
-        font-size: 0.8rem;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
-</style>
+
+/* ===== MODAL MODERN ===== */
+.modal-content {
+    border-radius: var(--radius-lg);
+    border: none;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 1.5rem 2rem;
+    border: none;
+}
+
+.modal-header .modal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.alert {
+    border-radius: var(--radius-sm);
+    border: none;
+    padding: 1rem 1.25rem;
+}
+
+.alert-info {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-dark);
+}
+
+/* ===== BUTTONS ENHANCED ===== */
+.btn {
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-light {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.btn-outline-light:hover {
+    background: white;
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-outline-danger {
+    border: 2px solid #ef4444;
+    color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===== LOADING SPINNER ===== */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* ===== CTA SECTION ===== */
+.bg-primary {
+    background: var(--primary-gradient) !important;
+}
+    </style>
 </head>
 <body>
     <!-- NAVBAR -->
@@ -679,32 +1045,31 @@ footer {
 
     <!-- HERO -->
     <header id="home" class="hero-section text-center text-light">
-        <div class="hero-overlay"></div>
         <div class="container" data-aos="fade-up">
             <h1>CLUB BOLA VOLLY SURABAYA</h1>
             <h1 class="orbitron-title">PORPPAD</h1>
             
             <?php if (isLoggedIn()): ?>
-                <p class="lead">Selamat datang, <strong><?= htmlspecialchars($_SESSION['nama'] ?? $_SESSION['username']) ?></strong>! 🎉</p>
+                <p class="lead" style="font-size: 1.25rem; color: rgba(255,255,255,0.95);">Selamat datang, <strong><?= htmlspecialchars($_SESSION['nama'] ?? $_SESSION['username']) ?></strong>! 🎉</p>
             <?php else: ?>
-                <p class="lead">Bergabunglah dengan klub voli terbaik di Surabaya</p>
+                <p class="lead" style="font-size: 1.25rem; color: rgba(255,255,255,0.95);">Bergabunglah dengan klub voli terbaik di Surabaya</p>
             <?php endif; ?>
             
-            <div class="d-flex justify-content-center gap-2 mb-3 flex-wrap">
-                <a href="#about" class="btn btn-outline-light btn-rounded">Pelajari Lebih</a>
+            <div class="d-flex justify-content-center gap-3 mb-3 flex-wrap">
+                <a href="#about" class="btn btn-outline-light btn-rounded" style="padding: 0.875rem 2rem;">Pelajari Lebih</a>
                 
                 <?php if (isLoggedIn()): ?>
                     <?php if ($is_member): ?>
-                        <a href="timpa.php" class="btn btn-gold btn-rounded">
+                        <a href="timpa.php" class="btn btn-gold btn-rounded" style="padding: 0.875rem 2rem;">
                             <i class="fa fa-users me-1"></i> Lihat Tim
                         </a>
                     <?php else: ?>
-                        <button class="btn btn-gold btn-rounded" data-bs-toggle="modal" data-bs-target="#daftarModal">
+                        <button class="btn btn-gold btn-rounded" style="padding: 0.875rem 2rem;" data-bs-toggle="modal" data-bs-target="#daftarModal">
                             <i class="fa fa-user-plus me-1"></i> Daftar Anggota
                         </button>
                     <?php endif; ?>
                 <?php else: ?>
-                    <a href="login.php" class="btn btn-gold btn-rounded">Login / Gabung</a>
+                    <a href="login.php" class="btn btn-gold btn-rounded" style="padding: 0.875rem 2rem;">Login / Gabung</a>
                 <?php endif; ?>
             </div>
             
@@ -726,19 +1091,28 @@ footer {
     </header>
 
     <!-- ABOUT -->
-    <section id="about" style="background: linear-gradient(135deg, rgba(240, 248, 255, 0.8) 0%, rgba(230, 240, 250, 0.9) 100%);">
+    <section id="about" style="background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);">
         <div class="container" data-aos="fade-up">
-            <div class="row align-items-center g-4">
+            <div class="row align-items-center g-5">
                 <div class="col-lg-6">
-                    <img src="assets/img/logo/logo.png" class="img-fluid rounded shadow" alt="latihan" style="max-width: 300px; display: block; margin: 0 auto;" />
+                    <img src="assets/img/logo/logo.png" class="img-fluid rounded shadow-lg" alt="latihan" style="max-width: 400px; display: block; margin: 0 auto; border-radius: var(--radius-lg) !important;" />
                 </div>
                 <div class="col-lg-6">
-                    <h2 class="mb-3">Tentang Klub</h2>
-                    <p class="text-muted" style="font-size: 1.05rem; line-height: 1.8;">Wadah pengembangan bakat voli dengan fokus pelatihan berkala, turnamen, dan pembentukan karakter atlet muda.</p>
-                    <ul class="list-unstyled mt-3" style="font-size: 1rem;">
-                        <li class="mb-2"><i class="fa fa-check-circle text-primary me-2"></i>Latihan 5x/minggu dengan pelatih bersertifikat</li>
-                        <li class="mb-2"><i class="fa fa-check-circle text-primary me-2"></i>Pendaftaran & manajemen digital</li>
-                        <li><i class="fa fa-check-circle text-primary me-2"></i>Program pembinaan usia junior</li>
+                    <h2 class="mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700;">Tentang Klub</h2>
+                    <p class="text-muted" style="font-size: 1.15rem; line-height: 1.9;">Wadah pengembangan bakat voli dengan fokus pelatihan berkala, turnamen, dan pembentukan karakter atlet muda.</p>
+                    <ul class="list-unstyled mt-4" style="font-size: 1.05rem;">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fa fa-check-circle me-3" style="color: var(--primary-dark); font-size: 1.5rem;"></i>
+                            <span>Latihan 5x/minggu dengan pelatih bersertifikat</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="fa fa-check-circle me-3" style="color: var(--primary-dark); font-size: 1.5rem;"></i>
+                            <span>Pendaftaran & manajemen digital</span>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <i class="fa fa-check-circle me-3" style="color: var(--primary-dark); font-size: 1.5rem;"></i>
+                            <span>Program pembinaan usia junior</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -780,7 +1154,7 @@ footer {
     </section>
 
     <!-- FASILITAS -->
-    <section id="fasilitas" style="background: linear-gradient(to bottom, #f8f9fa 0%, #e3f2fd 100%);">
+    <section id="fasilitas" style="background: linear-gradient(to bottom, #f8fafc 0%, #e3f2fd 100%);">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <h3>⚡ Fasilitas & Program</h3>
@@ -840,7 +1214,7 @@ footer {
     </section>
 
     <!-- PRESTASI -->
-    <section id="prestasi" class="bg-light">
+    <section id="prestasi" style="background: white;">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <h3>🏆 Prestasi & Turnamen</h3>
@@ -865,8 +1239,8 @@ footer {
                                         <?= htmlspecialchars($trophy['badge']) ?>
                                     </span>
                                     <div class="trophy-title"><?= htmlspecialchars($trophy['judul']) ?></div>
-                                    <div class="trophy-desc"><?= htmlspecialchars(substr($trophy['deskripsi'], 0, 60)) . '...' ?></div>
-                                    <div class="trophy-date">📅 <?= htmlspecialchars($trophy['tanggal']) ?></div>
+                                    <div class="trophy-desc" style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.5rem;"><?= htmlspecialchars(substr($trophy['deskripsi'], 0, 60)) . '...' ?></div>
+                                    <div class="trophy-date" style="font-size: 0.85rem; color: var(--text-light);">📅 <?= htmlspecialchars($trophy['tanggal']) ?></div>
                                 </div>
                             </div>
                         </div>
@@ -874,8 +1248,8 @@ footer {
                         $delay += 50;
                     endwhile;
                 else: ?>
-                    <div class="col-12 text-center py-4">
-                        <p class="text-muted">Belum ada prestasi yang ditambahkan</p>
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted" style="font-size: 1.1rem;">Belum ada prestasi yang ditambahkan</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -883,7 +1257,7 @@ footer {
     </section>
 
     <!-- PELATIH -->
-    <section id="team">
+    <section id="team" style="background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <h3>👨‍🏫 Pelatih PORPPAD</h3>
@@ -896,9 +1270,10 @@ footer {
                         <div class="team-photo">
                             <img src="assets/img/pelatih/pelatih1.png" alt="Om Agus" onerror="this.style.display='none'" />
                         </div>
-                        <div class="card-body text-center py-3">
+                        <div class="card-body text-center py-4">
                             <h5>Sapta Agus PH</h5>
-                            <small class="text-light">Ketua & Pelatih</small>
+                            <small>Ketua & Pelatih</small>
+                            <h3>📞 +62 877-8816-3653</h3>
                         </div>
                     </div>
                 </div>
@@ -908,9 +1283,10 @@ footer {
                         <div class="team-photo">
                             <img src="assets/img/pelatih/pelatih2.png" alt="Om Nasir" onerror="this.style.display='none'" />
                         </div>
-                        <div class="card-body text-center py-3">
+                        <div class="card-body text-center py-4">
                             <h5>Moch Nasir</h5>
-                            <small class="text-light">Pelatih</small>
+                            <small>Pelatih</small>
+                            <h3>📞 +62 856-5534-6527</h3>
                         </div>
                     </div>
                 </div>
@@ -920,9 +1296,9 @@ footer {
                         <div class="team-photo">
                             <img src="assets/img/pelatih/pelatih3.png" alt="Anton" onerror="this.style.display='none'" />
                         </div>
-                        <div class="card-body text-center py-3">
+                        <div class="card-body text-center py-4">
                             <h5>Taufik Efendi</h5>
-                            <small class="text-light"> Pelatih</small>
+                            <small>Pelatih</small>
                         </div>
                     </div>
                 </div>
@@ -931,7 +1307,7 @@ footer {
     </section>
 
     <!-- GALLERY -->
-    <section id="galeri" class="bg-light">
+    <section id="galeri" style="background: white;">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <h3>📸 Galeri</h3>
@@ -940,13 +1316,13 @@ footer {
             
             <div class="gallery-grid" data-aos="fade-up" id="galleryGrid"></div>
             
-            <div class="text-center mt-4" id="loadMoreContainer" style="display: none;">
-                <button class="btn btn-primary btn-rounded" id="loadMoreBtn" onclick="loadMorePhotos()">
+            <div class="text-center mt-5" id="loadMoreContainer" style="display: none;">
+                <button class="btn btn-primary btn-rounded" id="loadMoreBtn" onclick="loadMorePhotos()" style="padding: 0.875rem 2.5rem; font-size: 1rem;">
                     <i class="fa fa-images me-2"></i>Lihat Lebih Banyak
                 </button>
             </div>
             
-            <div class="text-center mt-4" id="loadingIndicator" style="display: none;">
+            <div class="text-center mt-5" id="loadingIndicator" style="display: none;">
                 <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
@@ -955,7 +1331,7 @@ footer {
     </section>
 
     <!-- JADWAL -->
-    <section id="jadwal">
+    <section id="jadwal" style="background: linear-gradient(to bottom, #f8fafc 0%, #e3f2fd 100%);">
         <div class="container">
             <div class="section-title" data-aos="fade-up">
                 <h3>📅 Jadwal Latihan</h3>
@@ -1020,20 +1396,20 @@ footer {
     </section>
 
     <!-- CTA -->
-    <section class="py-5 bg-primary text-light">
+    <section class="py-5 bg-primary text-light" style="background: var(--primary-gradient) !important;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-8 text-center text-md-start" data-aos="fade-right">
-                    <h4 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Gabung dengan kami!</h4>
-                    <p class="mb-0" style="font-size: 1rem;">Hubungi admin untuk info latihan dan event</p>
+                    <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 0.75rem; font-weight: 700;">Gabung dengan kami!</h4>
+                    <p class="mb-0" style="font-size: 1.15rem;">Hubungi admin untuk info latihan dan event</p>
                 </div>
-                <div class="col-md-4 text-center text-md-end mt-3 mt-md-0" data-aos="fade-left">
+                <div class="col-md-4 text-center text-md-end mt-4 mt-md-0" data-aos="fade-left">
                     <?php if (isLoggedIn() && !$is_member): ?>
-                        <button class="btn btn-outline-light btn-rounded" data-bs-toggle="modal" data-bs-target="#daftarModal">
+                        <button class="btn btn-outline-light btn-rounded" style="padding: 0.875rem 2rem;" data-bs-toggle="modal" data-bs-target="#daftarModal">
                             <i class="fa fa-user-plus me-1"></i> Daftar Anggota
                         </button>
                     <?php else: ?>
-                        <a href="<?= isLoggedIn() ? 'timpa.php' : 'login.php' ?>" class="btn btn-outline-light btn-rounded">
+                        <a href="<?= isLoggedIn() ? 'timpa.php' : 'login.php' ?>" class="btn btn-outline-light btn-rounded" style="padding: 0.875rem 2rem;">
                             <i class="fa fa-<?= isLoggedIn() ? 'users' : 'user-plus' ?> me-1"></i> <?= isLoggedIn() ? 'Lihat Tim' : 'Login / Gabung' ?>
                         </a>
                     <?php endif; ?>
@@ -1044,13 +1420,13 @@ footer {
 
     <!-- FOOTER -->
     <footer>
-        <div class="container"> 
+        <div class="container">
             <div class="row">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <h5 class="fw-bold">Volley Club PORPPAD</h5>
-                    <p class="mb-2" style="font-size: 0.9rem; line-height: 1.6;">
-                        GOR FASHA – Surabaya<br>
-                        📞 Telp: 082141186468<br>
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3" style="font-family: 'Space Grotesk', sans-serif;">Volley Club PORPPAD</h5>
+                    <p class="mb-2" style="font-size: 0.95rem; line-height: 1.8; color: #cbd5e0;">
+                        GOR FASHA • Surabaya<br>
+                        📞 Telp Cs: 082141186468<br>
                         📧 Email: clubvolley@gmail.com
                     </p>
                 </div>
@@ -1075,9 +1451,9 @@ footer {
                     </div>
                 </div>
             </div>
-            <hr class="my-3" style="border-color: rgba(255,255,255,0.1);">
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
             <div class="text-center">
-                <small style="font-size: 0.85rem; color: #95a5a6;">
+                <small style="font-size: 0.9rem; color: #a0aec0;">
                     © 2025 Volley Club PORPPAD. All rights reserved.
                 </small>
             </div>
@@ -1097,19 +1473,19 @@ footer {
                 
                 <form id="formDaftar" action="proses_daftar.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <div class="alert alert-info" style="font-size: 0.9rem;">
+                        <div class="alert alert-info">
                             <i class="fa fa-info-circle me-2"></i>
                             <strong>Informasi:</strong> Setelah submit, data Anda diterima oleh admin dan anda akan dihubungi.
                         </div>
 
                         <div class="mb-4 text-center">
                             <label class="form-label fw-bold">Foto Profil <span class="text-danger">*</span></label>
-                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border: 2px dashed #dee2e6;">
+                            <div style="background: #f8f9fa; padding: 2rem; border-radius: var(--radius-md); border: 2px dashed #dee2e6;">
                                 <div class="mb-3">
                                     <img id="photoPreview" 
                                          src="assets/img/default-profile.jpg" 
                                          alt="Preview" 
-                                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;"
+                                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"
                                          onerror="this.src='https://via.placeholder.com/150'">
                                 </div>
                                 
@@ -1220,8 +1596,18 @@ footer {
         // Initialize AOS
         AOS.init({ 
             once: true, 
-            duration: 600,
-            easing: 'ease-out'
+            duration: 800,
+            easing: 'ease-out-cubic'
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
 
         // Smooth scroll
@@ -1350,7 +1736,7 @@ footer {
                     loadMoreBtn.style.display = 'inline-block';
                 } else {
                     document.getElementById('loadMoreContainer').innerHTML = 
-                        '<p class="text-muted">Semua foto sudah ditampilkan 🎉</p>';
+                        '<p class="text-muted" style="font-size: 1.1rem;">Semua foto sudah ditampilkan 🎉</p>';
                 }
                 
                 isLoading = false;
@@ -1377,22 +1763,23 @@ footer {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,0.9);
+                background: rgba(0,0,0,0.95);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 z-index: 9999;
                 padding: 2rem;
+                backdrop-filter: blur(10px);
             `;
             
             modal.innerHTML = `
                 <div style="max-width: 90%; max-height: 90%; text-align: center;">
                     <img src="uploads/gallery/${filename}" 
-                         style="max-width: 100%; max-height: 80vh; border-radius: 10px;" 
+                         style="max-width: 100%; max-height: 80vh; border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(0,0,0,0.5);" 
                          alt="${caption}" />
-                    ${caption ? `<p style="color: white; margin-top: 1rem; font-size: 1.1rem;">${caption}</p>` : ''}
+                    ${caption ? `<p style="color: white; margin-top: 1.5rem; font-size: 1.2rem; font-weight: 500;">${caption}</p>` : ''}
                     <button onclick="this.parentElement.parentElement.remove()" 
-                            style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                            style="margin-top: 1.5rem; padding: 0.875rem 2rem; background: white; border: none; border-radius: 100px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all 0.3s;">
                         Tutup
                     </button>
                 </div>
@@ -1405,51 +1792,49 @@ footer {
             document.body.appendChild(modal);
         }
 
-        document.addEventListener('DOMContentLoaded', fetchGalleryPhotos);
-    </script>
-    <script>
-// Navbar active section highlight
-document.addEventListener('DOMContentLoaded', function() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    function highlightNav() {
-        let current = '';
-        const scrollY = window.pageYOffset;
-        
-        sections.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 100;
-            const sectionId = section.getAttribute('id');
+        // Navbar active section highlight
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
             
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                current = sectionId;
+            function highlightNav() {
+                let current = '';
+                const scrollY = window.pageYOffset;
+                
+                sections.forEach(section => {
+                    const sectionHeight = section.offsetHeight;
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionId = section.getAttribute('id');
+                    
+                    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                        current = sectionId;
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
             }
+            
+            window.addEventListener('scroll', highlightNav);
+            window.addEventListener('load', highlightNav);
+            
+            // Initialize gallery
+            fetchGalleryPhotos();
         });
-        
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    }
-    
-    window.addEventListener('scroll', highlightNav);
-    window.addEventListener('load', highlightNav);
-});
 
-// Juga tambahkan ini untuk handle click manual
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function() {
-        // Hapus active dari semua menu
-        document.querySelectorAll('.nav-link').forEach(item => {
-            item.classList.remove('active');
+        // Handle click manual
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
         });
-        // Tambah active ke menu yang diklik
-        this.classList.add('active');
-    });
-});
-</script>
+    </script>
 </body>
 </html>
