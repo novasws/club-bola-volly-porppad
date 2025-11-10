@@ -5,7 +5,7 @@ require_once 'config.php';
 session_unset();
 session_destroy();
 
-// Redirect to login page
+// Redirect to landing page (bukan login lagi)
 header("Location: index.php");
 exit();
 ?>
