@@ -5,7 +5,7 @@ require_once 'config.php';
 $gender_filter = $_GET['gender'] ?? 'Putra';
 $search = $_GET['search'] ?? '';
 
-// Build query with filters - SORTED BY YOUNGEST (umur ASC)
+// Build query with filters
 $query = "SELECT * FROM members WHERE status='approved'";
 
 if (!empty($gender_filter)) {
@@ -17,8 +17,7 @@ if (!empty($search)) {
     $query .= " AND nama LIKE '%$search_clean%'";
 }
 
-// ORDER BY umur ASC (termuda di atas)
-$query .= " ORDER BY umur ASC, nama ASC";
+$query .= " ORDER BY created_at DESC";
 
 // Execute query
 $members_result = mysqli_query($conn, $query);
@@ -26,12 +25,23 @@ $members_result = mysqli_query($conn, $query);
 // Count members by gender
 $count_putra = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putra' AND status='approved'")->fetch_assoc()['total'] ?? 0;
 $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putri' AND status='approved'")->fetch_assoc()['total'] ?? 0;
+
+// Function to calculate age from birth date
+function calculateAge($birthDate) {
+    if (empty($birthDate)) return '-';
+    
+    $birth = new DateTime($birthDate);
+    $today = new DateTime();
+    $age = $today->diff($birth)->y;
+    
+    return $age;
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Tim Kami - Volley Club PORPPAD</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -47,11 +57,18 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             --text-light: #718096;
             --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
             --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+            --radius-sm: 12px;
+            --radius-md: 16px;
             --radius-lg: 24px;
         }
         
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
             color: var(--text-dark);
         }
@@ -59,7 +76,7 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
         /* NAVBAR */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px) saturate(180%);
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
             padding: 1rem 0;
         }
@@ -67,7 +84,12 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
         .logo-img {
             width: 45px;
             height: 45px;
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover .logo-img {
+            transform: scale(1.05) rotate(2deg);
         }
         
         .brand-title {
@@ -77,14 +99,21 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .brand-sub {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
         }
         
         .nav-link {
             font-weight: 500;
             color: var(--text-dark);
+            transition: all 0.3s ease;
             padding: 0.6rem 1rem !important;
-            border-radius: 12px;
-            transition: all 0.3s;
+            border-radius: var(--radius-sm);
         }
         
         .nav-link:hover {
@@ -102,11 +131,29 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             border-radius: 100px;
             padding: 0.6rem 1.5rem;
             font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .btn-admin {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-outline-danger {
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+        
+        .btn-outline-danger:hover {
+            background: #ef4444;
             color: white;
+            transform: translateY(-2px);
         }
         
         /* HEADER */
@@ -117,17 +164,32 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             overflow: hidden;
         }
         
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
         .page-header h1 {
             font-family: 'Space Grotesk', sans-serif;
             font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
-            color: white;
             margin-bottom: 1rem;
+            color: white;
+            position: relative;
+            z-index: 1;
         }
         
         .page-header p {
             font-size: clamp(1.1rem, 2vw, 1.4rem);
             color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            z-index: 1;
         }
         
         /* GENDER TABS */
@@ -143,7 +205,7 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             border-radius: var(--radius-lg);
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             color: var(--text-dark);
             border: 2px solid rgba(0, 0, 0, 0.08);
@@ -154,33 +216,102 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
         .gender-tab:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
+            color: var(--text-dark);
         }
         
         .gender-tab.active {
             background: var(--primary-gradient);
             color: white;
             border-color: transparent;
+            box-shadow: var(--shadow-xl);
             transform: translateY(-8px) scale(1.02);
         }
         
         .gender-tab .icon {
             font-size: 3rem;
             margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
         }
         
         .gender-tab .count {
             font-size: 3rem;
             font-weight: 800;
             font-family: 'Space Grotesk', sans-serif;
+            line-height: 1;
+            margin-bottom: 0.5rem;
         }
         
-        /* TABLE */
+        .gender-tab .label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* SEARCH BOX */
+        .search-box {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        
+        .search-box input {
+            padding-left: 3.5rem;
+            border-radius: var(--radius-md);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.25rem;
+        }
+        
+        .search-box .btn {
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+        }
+        
+        /* TABLE CONTAINER */
         .table-container {
             background: white;
             border-radius: var(--radius-lg);
             padding: 2rem;
             box-shadow: var(--shadow-md);
             margin-bottom: 3rem;
+        }
+        
+        .table-container h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+        
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        
+        .badge.bg-primary {
+            background: var(--primary-gradient) !important;
+        }
+        
+        /* DESKTOP TABLE */
+        .desktop-table {
+            display: block;
         }
         
         .table {
@@ -198,6 +329,7 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             border: none;
             text-transform: uppercase;
             font-size: 0.85rem;
+            letter-spacing: 0.05em;
         }
         
         .table tbody td {
@@ -206,16 +338,26 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
         
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
         .table tbody tr:hover {
             background: rgba(102, 126, 234, 0.03);
+            transform: scale(1.005);
         }
         
         .member-photo-sm {
             width: 65px;
             height: 65px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .member-photo-sm:hover {
+            transform: scale(1.1);
         }
         
         .badge-position {
@@ -227,23 +369,149 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
             color: white;
         }
         
+        .badge-info {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: white;
+        }
+        
+        /* MOBILE CARDS */
+        .mobile-cards {
+            display: none;
+        }
+        
+        .member-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-gradient);
+        }
+        
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .member-card-header {
+            display: flex;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .member-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .member-card-info {
+            flex: 1;
+        }
+        
+        .member-card-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-card-position {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .member-card-details {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        .member-card-details > div {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: start;
+        }
+        
+        .member-card-details i {
+            width: 24px;
+            margin-right: 0.75rem;
+            color: var(--primary-dark);
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #cbd5e0;
+            padding: 3rem 0 1.5rem 0;
+            margin-top: 5rem;
+        }
+        
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .table {
-                font-size: 0.9rem;
+            .gender-tabs {
+                gap: 1rem;
             }
             
-            .table thead th {
-                padding: 1rem 0.5rem;
-                font-size: 0.75rem;
+            .gender-tab {
+                padding: 1.5rem 1rem;
             }
             
-            .table tbody td {
-                padding: 1rem 0.5rem;
+            .gender-tab .icon {
+                font-size: 2.5rem;
             }
             
-            .member-photo-sm {
-                width: 50px;
-                height: 50px;
+            .gender-tab .count {
+                font-size: 2.5rem;
+            }
+            
+            .gender-tab .label {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .table-container {
+                padding: 1.25rem;
+            }
+            
+            .desktop-table {
+                display: none;
+            }
+            
+            .mobile-cards {
+                display: block;
+            }
+            
+            .search-box input {
+                padding-left: 3rem;
+                font-size: 1rem;
+            }
+            
+            .search-box .btn {
+                padding: 0.875rem 1.5rem;
             }
         }
     </style>
@@ -252,11 +520,11 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="index.php">
+            <a class="navbar-brand d-flex align-items-center" href="home.php">
                 <img src="assets/img/logo/logo.png" alt="logo" class="me-2 logo-img" onerror="this.style.display='none'" />
                 <div>
                     <div class="brand-title">Volley Club</div>
-                    <small style="font-size: 0.8rem; color: var(--text-light);">PORPPAD</small>
+                    <small class="brand-sub">PORPPAD</small>
                 </div>
             </a>
 
@@ -266,13 +534,22 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
 
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="index.php">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="home.php">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link active" href="timpa.php">Tim Kami</a></li>
-                    <li class="nav-item ms-2">
-                        <a href="login.php" class="btn btn-admin btn-rounded">
-                            <i class="fa fa-user-shield me-1"></i> Admin
-                        </a>
-                    </li>
+
+                    <?php if (isLoggedIn()): ?>
+                        <li class="nav-item ms-2">
+                            <a href="logout.php" class="btn btn-outline-danger btn-rounded">
+                                <i class="fa fa-sign-out me-1"></i> Logout
+                            </a>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item ms-2">
+                            <a href="login.php" class="btn btn-primary btn-rounded">
+                                <i class="fa fa-user-plus me-1"></i> Login
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -294,19 +571,20 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
                 <a href="?gender=Putra" class="gender-tab <?= $gender_filter === 'Putra' ? 'active' : '' ?>">
                     <div class="icon">👨</div>
                     <div class="count"><?= $count_putra ?></div>
-                    <div style="font-size: 1.1rem; font-weight: 600; text-transform: uppercase;">Tim Putra</div>
+                    <div class="label">Tim Putra</div>
                 </a>
                 <a href="?gender=Putri" class="gender-tab <?= $gender_filter === 'Putri' ? 'active' : '' ?>">
                     <div class="icon">👩</div>
                     <div class="count"><?= $count_putri ?></div>
-                    <div style="font-size: 1.1rem; font-weight: 600; text-transform: uppercase;">Tim Putri</div>
+                    <div class="label">Tim Putri</div>
                 </a>
             </div>
 
             <!-- Search Box -->
-            <div style="margin-bottom: 3rem;">
+            <div class="search-box">
                 <form method="GET" class="d-flex gap-2">
                     <div class="flex-grow-1 position-relative">
+                        <i class="fas fa-search"></i>
                         <input type="hidden" name="gender" value="<?= htmlspecialchars($gender_filter) ?>">
                         <input 
                             type="text" 
@@ -314,34 +592,33 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
                             class="form-control" 
                             placeholder="🔍 Cari nama anggota..." 
                             value="<?= htmlspecialchars($search) ?>"
-                            style="padding: 1rem; border-radius: 16px; border: 2px solid rgba(0,0,0,0.08);"
                         >
                     </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 1rem 2rem; border-radius: 16px;">Cari</button>
+                    <button type="submit" class="btn btn-primary">Cari</button>
                     <?php if ($search): ?>
-                        <a href="?gender=<?= $gender_filter ?>" class="btn btn-secondary" style="padding: 1rem 2rem; border-radius: 16px;">Reset</a>
+                        <a href="?gender=<?= $gender_filter ?>" class="btn btn-secondary">Reset</a>
                     <?php endif; ?>
                 </form>
             </div>
 
-            <!-- Members Table -->
+            <!-- Members Display -->
             <div class="table-container">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="mb-0" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.75rem;">
+                    <h4 class="mb-0">
                         <i class="fas fa-users me-2"></i>
-                        Tim <?= $gender_filter ?>
+                        Daftar Anggota Tim <?= $gender_filter ?>
                     </h4>
-                    <span class="badge" style="background: var(--primary-gradient); padding: 0.5rem 1rem; border-radius: 100px; font-size: 1.05rem;">
+                    <span class="badge bg-primary">
                         <?= mysqli_num_rows($members_result) ?> Anggota
                     </span>
                 </div>
 
                 <?php if (mysqli_num_rows($members_result) > 0): ?>
-                    <div class="table-responsive">
+                    <!-- Desktop Table View -->
+                    <div class="desktop-table table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th width="80">No</th>
                                     <th width="90">Foto</th>
                                     <th>Nama</th>
                                     <th>Tempat Lahir</th>
@@ -353,11 +630,11 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
                             </thead>
                             <tbody>
                                 <?php 
-                                $no = 1;
+                                mysqli_data_seek($members_result, 0);
                                 while ($member = mysqli_fetch_assoc($members_result)): 
+                                    $current_age = calculateAge($member['tanggal_lahir']);
                                 ?>
                                     <tr>
-                                        <td><strong><?= $no++ ?></strong></td>
                                         <td>
                                             <img 
                                                 src="<?= !empty($member['foto']) ? 'uploads/members/' . htmlspecialchars($member['foto']) : 'assets/img/default-profile.jpg' ?>" 
@@ -367,9 +644,7 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
                                             />
                                         </td>
                                         <td>
-                                            <strong style="font-weight: 600; font-size: 1.05rem;">
-                                                <?= htmlspecialchars($member['nama']) ?>
-                                            </strong>
+                                            <strong style="font-weight: 600; font-size: 1.05rem;"><?= htmlspecialchars($member['nama']) ?></strong>
                                         </td>
                                         <td>
                                             <?= !empty($member['tempat_lahir']) ? htmlspecialchars($member['tempat_lahir']) : '-' ?>
@@ -378,12 +653,10 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
                                             <?= !empty($member['tanggal_lahir']) ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-' ?>
                                         </td>
                                         <td>
-                                            <span style="display: inline-block; padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.85rem; font-weight: 600; background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); color: white;">
-                                                <?= $member['umur'] ?> th
-                                            </span>
+                                            <span class="badge badge-info"><?= $current_age ?> th</span>
                                         </td>
                                         <td>
-                                            <span class="badge-position">
+                                            <span class="badge badge-position">
                                                 <?= htmlspecialchars($member['posisi']) ?>
                                             </span>
                                         </td>
@@ -397,6 +670,47 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Mobile Card View -->
+                    <div class="mobile-cards">
+                        <?php 
+                        mysqli_data_seek($members_result, 0);
+                        while ($member = mysqli_fetch_assoc($members_result)): 
+                            $current_age = calculateAge($member['tanggal_lahir']);
+                        ?>
+                            <div class="member-card">
+                                <div class="member-card-header">
+                                    <img 
+                                        src="<?= !empty($member['foto']) ? 'uploads/members/' . htmlspecialchars($member['foto']) : 'assets/img/default-profile.jpg' ?>" 
+                                        alt="<?= htmlspecialchars($member['nama']) ?>"
+                                        onerror="this.src='assets/img/default-profile.jpg'"
+                                    />
+                                    <div class="member-card-info">
+                                        <div class="member-card-name"><?= htmlspecialchars($member['nama']) ?></div>
+                                        <span class="member-card-position"><?= htmlspecialchars($member['posisi']) ?></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="member-card-details">
+                                    <div>
+                                        <i class="fas fa-birthday-cake"></i>
+                                        <span>
+                                            <?= !empty($member['tempat_lahir']) ? htmlspecialchars($member['tempat_lahir']) : '-' ?>, 
+                                            <?= !empty($member['tanggal_lahir']) ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-' ?>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-user-clock"></i>
+                                        <span><?= $current_age ?> tahun</span>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span><?= !empty($member['alamat']) ? htmlspecialchars($member['alamat']) : '-' ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
                     </div>
                 <?php else: ?>
                     <div class="text-center py-5">
@@ -414,13 +728,13 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
     </section>
 
     <!-- FOOTER -->
-    <footer style="background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); color: #cbd5e0; padding: 3rem 0 1.5rem 0;">
+    <footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 mb-3 mb-md-0">
                     <h5 class="fw-bold mb-2" style="font-family: 'Space Grotesk', sans-serif;">Volley Club PORPPAD</h5>
                     <p class="small text-muted mb-0">
-                        GOR FASHA • Surabaya • Telp: 0812-3456-7890
+                        GOR FASHA • Surabaya • Telp: 0812-3456-7890 • Email: clubvolley@gmail.com
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
