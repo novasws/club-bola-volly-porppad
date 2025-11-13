@@ -1,6 +1,27 @@
 <?php
 require_once '../config.php';
 
+function calculateAge($birthDate) {
+    if (empty($birthDate) || $birthDate === '0000-00-00') return '-';
+    
+    try {
+        $birth = new DateTime($birthDate);
+        $today = new DateTime();
+        
+        
+        if ($birth > $today) {
+            return '-';
+        }
+        
+        $age = $today->diff($birth)->y;
+        
+        return $age;
+    } catch (Exception $e) {
+        return '-';
+    }
+}
+
+
 // Check if admin is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
@@ -746,7 +767,7 @@ $count_putri = $conn->query("SELECT COUNT(*) as total FROM members WHERE gender 
                                         }
                                         ?>
                                     </td>
-                                    <td><?= $member['umur'] ?> th</td>
+                                 <td><?= calculateAge($member['tanggal_lahir']) ?> th</td>
                                     <td><span style="background: #3498db; color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem;"><?= $member['posisi'] ?></span></td>
                                     <td><?= $member['wa'] ?? '-' ?></td>
                                     <td>
