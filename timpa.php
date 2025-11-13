@@ -17,7 +17,13 @@ if (!empty($search)) {
     $query .= " AND nama LIKE '%$search_clean%'";
 }
 
-$query .= " ORDER BY created_at DESC";
+// Sort by youngest first (DESC = newest birth date = youngest age)
+$query .= " ORDER BY 
+    CASE 
+        WHEN tanggal_lahir IS NULL OR tanggal_lahir = '0000-00-00' THEN 1 
+        ELSE 0 
+    END, 
+    tanggal_lahir DESC";
 
 // Execute query
 $members_result = mysqli_query($conn, $query);
@@ -26,19 +32,28 @@ $members_result = mysqli_query($conn, $query);
 $count_putra = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putra' AND status='approved'")->fetch_assoc()['total'] ?? 0;
 $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putri' AND status='approved'")->fetch_assoc()['total'] ?? 0;
 
-// Function to calculate age from birth date
+// Function to calculate age from birth date - ROBUST VERSION
 function calculateAge($birthDate) {
-    if (empty($birthDate) || $birthDate === '0000-00-00') return '-';
+    // Return '-' for empty or invalid dates
+    if (empty($birthDate) || $birthDate === '0000-00-00') {
+        return '-';
+    }
     
     try {
         $birth = new DateTime($birthDate);
         $today = new DateTime();
         
+        // Birth date cannot be in the future
         if ($birth > $today) {
             return '-';
         }
         
         $age = $today->diff($birth)->y;
+        
+        // Age must be reasonable (0-100 years)
+        if ($age < 0 || $age > 100) {
+            return '-';
+        }
         
         return $age;
     } catch (Exception $e) {
@@ -495,7 +510,7 @@ function calculateAge($birthDate) {
             
             .table {
                 font-size: 0.8rem;
-                min-width: 700px; /* Force horizontal scroll */
+                min-width: 700px;
             }
             
             .table thead th,
@@ -504,7 +519,7 @@ function calculateAge($birthDate) {
                 font-size: 0.8rem;
             }
             
-            /* Sembunyikan kolom Tempat Lahir di mobile untuk hemat space */
+            /* Hide Tempat Lahir column on mobile */
             .table th:nth-child(3),
             .table td:nth-child(3) {
                 display: none;
@@ -671,14 +686,22 @@ function calculateAge($birthDate) {
                             <tbody>
                                 <?php while ($member = mysqli_fetch_assoc($members_result)): 
                                     $current_age = calculateAge($member['tanggal_lahir']);
+                                    
+                                    // Generate photo URL with fallback
+                                    $photoUrl = 'https://ui-avatars.com/api/?name=' . urlencode($member['nama']) . '&background=667eea&color=fff&size=65';
+                                    
+                                    if (!empty($member['foto'])) {
+                                        // Try absolute path first
+                                        $photoUrl = '/uploads/members/' . htmlspecialchars($member['foto']);
+                                    }
                                 ?>
                                     <tr>
                                         <td>
                                             <img 
-                                                src="<?= !empty($member['foto']) ? 'uploads/members/' . htmlspecialchars($member['foto']) : 'assets/img/default-profile.jpg' ?>" 
+                                                src="<?= $photoUrl ?>" 
                                                 alt="<?= htmlspecialchars($member['nama']) ?>"
                                                 class="member-photo-sm"
-                                                onerror="this.src='assets/img/default-profile.jpg'"
+                                                onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($member['nama']) ?>&background=667eea&color=fff&size=65'"
                                             />
                                         </td>
                                         <td>
