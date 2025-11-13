@@ -22,7 +22,6 @@ if (mysqli_num_rows($check_existing) > 0) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Get form data
-    $username = $_SESSION['username'];
     $nama = clean($_POST['nama']);
     $tempat_lahir = clean($_POST['tempat_lahir']);
     $tanggal_lahir = clean($_POST['tanggal_lahir']);
@@ -35,36 +34,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pengalaman = clean($_POST['pengalaman'] ?? '');
     $riwayat_cedera = clean($_POST['riwayat_cedera'] ?? '');
     
-    // ========== HANDLE UPLOAD FOTO ==========
+    // ========== HANDLE UPLOAD FOTO - IMPROVED ==========
     $foto = null;
     $upload_success = false;
     
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
         $file = $_FILES['foto'];
-        $allowed_mime = ['image/jpeg', 'image/png', 'image/gif'];
-        $max_size = 2 * 1024 * 1024; // 2MB
-        
-        // Validasi tipe file
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
-        
-        if (!in_array($file_type, $allowed_mime)) {
-            alert('❌ Format foto tidak valid! Gunakan JPG, PNG, atau GIF', 'danger');
-            redirect('index.php');
-            exit();
-        }
+        $allowed_mime = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        $max_size = 5 * 1024 * 1024; // 5MB (dinaikkan dari 2MB)
         
         // Validasi ukuran
         if ($file['size'] > $max_size) {
-            alert('❌ Ukuran foto terlalu besar! Maksimal 2MB', 'danger');
-            redirect('index.php');
+            alert('❌ Ukuran foto terlalu besar! Maksimal 5MB', 'danger');
+            redirect('index.php#daftar');
+            exit();
+        }
+        
+        // Validasi tipe file menggunakan extension
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
+        
+        if (!in_array($extension, $allowed_ext)) {
+            alert('❌ Format foto tidak valid! Gunakan JPG, PNG, atau GIF', 'danger');
+            redirect('index.php#daftar');
             exit();
         }
         
         // Generate nama file unik
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $foto = 'member_' . $user_id . '_' . time() . '.' . strtolower($extension);
+        $foto = 'member_' . $user_id . '_' . time() . '.' . $extension;
         
         // Buat folder jika belum ada
         $upload_dir = __DIR__ . '/uploads/members/';
@@ -74,15 +71,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Upload file
         $destination = $upload_dir . $foto;
+        
+        // PENTING: Move langsung tanpa delay
         if (move_uploaded_file($file['tmp_name'], $destination)) {
             $upload_success = true;
+            
+            // Verify file exists
+            if (!file_exists($destination)) {
+                $upload_success = false;
+                $foto = null;
+            }
+        } else {
+            $foto = null;
         }
+    } elseif (isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE) {
+        // Ada error upload
+        $error_messages = [
+            UPLOAD_ERR_INI_SIZE => 'File terlalu besar (melebihi upload_max_filesize)',
+            UPLOAD_ERR_FORM_SIZE => 'File terlalu besar (melebihi MAX_FILE_SIZE)',
+            UPLOAD_ERR_PARTIAL => 'File hanya terupload sebagian',
+            UPLOAD_ERR_NO_TMP_DIR => 'Folder temporary tidak ditemukan',
+            UPLOAD_ERR_CANT_WRITE => 'Gagal menulis file ke disk',
+            UPLOAD_ERR_EXTENSION => 'Upload dihentikan oleh extension'
+        ];
+        
+        $error_code = $_FILES['foto']['error'];
+        $error_msg = $error_messages[$error_code] ?? 'Error tidak diketahui';
+        
+        alert('❌ Gagal upload foto: ' . $error_msg, 'danger');
+        redirect('index.php#daftar');
+        exit();
     }
     
     // Jika tidak ada foto atau upload gagal
     if (!$upload_success) {
-        alert('❌ Gagal mengupload foto. Pastikan foto valid dan ukuran < 2MB!', 'danger');
-        redirect('index.php');
+        alert('❌ Gagal mengupload foto. Pastikan foto valid dan ukuran < 5MB!', 'danger');
+        redirect('index.php#daftar');
         exit();
     }
     
@@ -122,8 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message .= "⚠️ <b>Riwayat Cedera:</b>\n$riwayat_cedera\n\n";
         }
         
-        $message .= "👨‍💻 <b>Username:</b> $username\n";
-        $message .= "🕐 <b>Waktu:</b> " . date('d M Y H:i:s') . "\n\n";
         $message .= "⏳ <b>Status:</b> Menunggu persetujuan\n\n";
         $message .= "✅ <i>Buka dashboard admin untuk approve/reject</i>";
         
@@ -144,8 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         
-        $response = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_exec($ch);
         curl_close($ch);
         
         // Kirim foto ke Telegram
@@ -181,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         alert('❌ Gagal menyimpan data. Silakan coba lagi! Error: ' . mysqli_error($conn), 'danger');
-        redirect('index.php');
+        redirect('index.php#daftar');
     }
     
 } else {

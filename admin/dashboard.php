@@ -696,9 +696,9 @@ $pending_count = $conn->query("SELECT COUNT(*) as total FROM members WHERE statu
         <div class="navbar-container">
             <h2>🏐 PORPPAD Admin</h2>
             <nav>
-                <a href="dashboard.php" class="active">
-                    <i class="fa fa-home"></i> Dashboard
-                </a>
+                <a href="<?= BASE_URL ?>" style="background: #27ae60;">
+    <i class="fa fa-home"></i> Beranda
+</a>
                 <a href="approval.php">
                     <i class="fa fa-clock"></i> Persetujuan
                     <?php if ($pending_count > 0): ?>
