@@ -1,12 +1,27 @@
 <?php
 require_once 'config.php';
 
-// Pastikan user sudah login
-requireLogin();
+// ========== CRITICAL: Pastikan user sudah login ==========
+if (!isLoggedIn()) {
+    alert('❌ Anda harus login terlebih dahulu untuk mendaftar!', 'danger');
+    redirect('login_user.php');
+    exit();
+}
 
+// ========== CEK: Apakah user sudah pernah daftar? ==========
+$user_id = $_SESSION['user_id'];
+$check_existing = mysqli_query($conn, "SELECT * FROM members WHERE user_id = '$user_id'");
+
+if (mysqli_num_rows($check_existing) > 0) {
+    alert('⚠️ Anda sudah terdaftar sebagai anggota!', 'warning');
+    redirect('index.php');
+    exit();
+}
+
+// ========== PROSES FORM ==========
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
     // Get form data
-    $user_id = $_SESSION['user_id'];
     $username = $_SESSION['username'];
     $nama = clean($_POST['nama']);
     $tempat_lahir = clean($_POST['tempat_lahir']);
@@ -26,11 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
         $file = $_FILES['foto'];
-        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         $allowed_mime = ['image/jpeg', 'image/png', 'image/gif'];
         $max_size = 2 * 1024 * 1024; // 2MB
         
-        // Validasi tipe file dengan mime_content_type
+        // Validasi tipe file
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $file_type = finfo_file($finfo, $file['tmp_name']);
         finfo_close($finfo);
@@ -62,9 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $destination = $upload_dir . $foto;
         if (move_uploaded_file($file['tmp_name'], $destination)) {
             $upload_success = true;
-            
-            // Optional: Resize foto jika terlalu besar
-            // resizeImage($destination, 800, 800);
         }
     }
     
@@ -84,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $catatan .= " | Riwayat Cedera: $riwayat_cedera";
     }
     
-    $query = "INSERT INTO members (user_id, nama, tempat_lahir, tanggal_lahir, umur, gender, posisi, wa, alamat, foto, catatan, status) 
-              VALUES ('$user_id', '$nama', '$tempat_lahir', '$tanggal_lahir', $umur, '$gender', '$posisi', '$wa', '$alamat', '$foto', '$catatan', 'pending')";
+    $query = "INSERT INTO members (user_id, nama, tempat_lahir, tanggal_lahir, umur, gender, posisi, wa, alamat, foto, catatan, status, created_at) 
+              VALUES ('$user_id', '$nama', '$tempat_lahir', '$tanggal_lahir', $umur, '$gender', '$posisi', '$wa', '$alamat', '$foto', '$catatan', 'pending', NOW())";
     
     if (mysqli_query($conn, $query)) {
         
@@ -131,6 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         
         $response = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -152,19 +164,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $photo_data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             
             curl_exec($ch);
             curl_close($ch);
         }
         
         // Success message
-        if ($httpcode == 200) {
-            alert('✅ Pendaftaran berhasil! Data dan foto Anda sedang menunggu persetujuan admin. Kami akan menghubungi Anda segera.', 'success');
-        } else {
-            alert('✅ Pendaftaran berhasil disimpan! Menunggu persetujuan admin.', 'success');
-        }
-        
-        redirect('home.php');
+        alert('✅ Pendaftaran berhasil! Data Anda sedang menunggu persetujuan admin. Kami akan menghubungi Anda segera via WhatsApp.', 'success');
+        redirect('index.php');
         
     } else {
         // Hapus foto jika database gagal
@@ -173,61 +181,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         alert('❌ Gagal menyimpan data. Silakan coba lagi! Error: ' . mysqli_error($conn), 'danger');
-        redirect('home.php');
+        redirect('index.php');
     }
+    
 } else {
-    redirect('home.php');
-}
-
-// ========== FUNGSI RESIZE IMAGE (OPTIONAL) ==========
-function resizeImage($file, $maxWidth, $maxHeight) {
-    list($width, $height, $type) = getimagesize($file);
-    
-    if ($width <= $maxWidth && $height <= $maxHeight) {
-        return; // No need to resize
-    }
-    
-    $ratio = min($maxWidth / $width, $maxHeight / $height);
-    $newWidth = round($width * $ratio);
-    $newHeight = round($height * $ratio);
-    
-    // Create new image
-    $newImage = imagecreatetruecolor($newWidth, $newHeight);
-    
-    // Load source image
-    switch ($type) {
-        case IMAGETYPE_JPEG:
-            $source = imagecreatefromjpeg($file);
-            break;
-        case IMAGETYPE_PNG:
-            $source = imagecreatefrompng($file);
-            imagealphablending($newImage, false);
-            imagesavealpha($newImage, true);
-            break;
-        case IMAGETYPE_GIF:
-            $source = imagecreatefromgif($file);
-            break;
-        default:
-            return;
-    }
-    
-    // Resize
-    imagecopyresampled($newImage, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-    
-    // Save
-    switch ($type) {
-        case IMAGETYPE_JPEG:
-            imagejpeg($newImage, $file, 85);
-            break;
-        case IMAGETYPE_PNG:
-            imagepng($newImage, $file, 8);
-            break;
-        case IMAGETYPE_GIF:
-            imagegif($newImage, $file);
-            break;
-    }
-    
-    imagedestroy($source);
-    imagedestroy($newImage);
+    // Jika bukan POST request
+    redirect('index.php');
 }
 ?>
