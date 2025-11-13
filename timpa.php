@@ -28,13 +28,22 @@ $count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE 
 
 // Function to calculate age from birth date
 function calculateAge($birthDate) {
-    if (empty($birthDate)) return '-';
+    if (empty($birthDate) || $birthDate === '0000-00-00') return '-';
     
-    $birth = new DateTime($birthDate);
-    $today = new DateTime();
-    $age = $today->diff($birth)->y;
-    
-    return $age;
+    try {
+        $birth = new DateTime($birthDate);
+        $today = new DateTime();
+        
+        if ($birth > $today) {
+            return '-';
+        }
+        
+        $age = $today->diff($birth)->y;
+        
+        return $age;
+    } catch (Exception $e) {
+        return '-';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -309,13 +318,10 @@ function calculateAge($birthDate) {
             background: var(--primary-gradient) !important;
         }
         
-        /* DESKTOP TABLE */
-        .desktop-table {
-            display: block;
-        }
-        
+        /* TABLE STYLING */
         .table {
             font-size: 1rem;
+            margin-bottom: 0;
         }
         
         .table thead {
@@ -330,6 +336,7 @@ function calculateAge($birthDate) {
             text-transform: uppercase;
             font-size: 0.85rem;
             letter-spacing: 0.05em;
+            white-space: nowrap;
         }
         
         .table tbody td {
@@ -344,7 +351,7 @@ function calculateAge($birthDate) {
         
         .table tbody tr:hover {
             background: rgba(102, 126, 234, 0.03);
-            transform: scale(1.005);
+            transform: scale(1.002);
         }
         
         .member-photo-sm {
@@ -357,7 +364,8 @@ function calculateAge($birthDate) {
         }
         
         .member-photo-sm:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
+            cursor: pointer;
         }
         
         .badge-position {
@@ -374,93 +382,6 @@ function calculateAge($birthDate) {
             color: white;
         }
         
-        /* MOBILE CARDS */
-        .mobile-cards {
-            display: none;
-        }
-        
-        .member-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .member-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: var(--primary-gradient);
-        }
-        
-        .member-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .member-card-header {
-            display: flex;
-            gap: 1.25rem;
-            margin-bottom: 1.25rem;
-        }
-        
-        .member-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius-md);
-            object-fit: cover;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .member-card-info {
-            flex: 1;
-        }
-        
-        .member-card-name {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-        
-        .member-card-position {
-            display: inline-block;
-            background: var(--primary-gradient);
-            color: white;
-            padding: 0.35rem 1rem;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        
-        .member-card-details {
-            font-size: 0.95rem;
-            color: var(--text-light);
-        }
-        
-        .member-card-details > div {
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: start;
-        }
-        
-        .member-card-details i {
-            width: 24px;
-            margin-right: 0.75rem;
-            color: var(--primary-dark);
-            flex-shrink: 0;
-            font-size: 1.1rem;
-        }
-        
         /* FOOTER */
         footer {
             background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
@@ -469,7 +390,7 @@ function calculateAge($birthDate) {
             margin-top: 5rem;
         }
         
-        /* RESPONSIVE */
+        /* RESPONSIVE - TABLET */
         @media (max-width: 768px) {
             .gender-tabs {
                 gap: 1rem;
@@ -490,28 +411,148 @@ function calculateAge($birthDate) {
             .gender-tab .label {
                 font-size: 1rem;
             }
+            
+            .table-container {
+                padding: 1.5rem;
+            }
+            
+            .table {
+                font-size: 0.9rem;
+            }
+            
+            .table thead th,
+            .table tbody td {
+                padding: 1rem 0.75rem;
+            }
+            
+            .member-photo-sm {
+                width: 55px;
+                height: 55px;
+            }
         }
         
+        /* RESPONSIVE - MOBILE */
         @media (max-width: 576px) {
-            .table-container {
+            .page-header {
+                padding: 4rem 0 3rem 0;
+            }
+            
+            .gender-tabs {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .gender-tab {
                 padding: 1.25rem;
             }
             
-            .desktop-table {
-                display: none;
+            .gender-tab .icon {
+                font-size: 2rem;
             }
             
-            .mobile-cards {
-                display: block;
+            .gender-tab .count {
+                font-size: 2rem;
             }
             
             .search-box input {
                 padding-left: 3rem;
                 font-size: 1rem;
+                padding-top: 0.875rem;
+                padding-bottom: 0.875rem;
+            }
+            
+            .search-box i {
+                font-size: 1.1rem;
+                left: 1rem;
             }
             
             .search-box .btn {
                 padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .table-container {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            .table-container h4 {
+                font-size: 1.25rem;
+            }
+            
+            .badge.bg-primary {
+                font-size: 0.9rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            /* Table scrollable horizontal */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 -1rem;
+                padding: 0 1rem;
+            }
+            
+            .table {
+                font-size: 0.8rem;
+                min-width: 700px; /* Force horizontal scroll */
+            }
+            
+            .table thead th,
+            .table tbody td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            /* Sembunyikan kolom Tempat Lahir di mobile untuk hemat space */
+            .table th:nth-child(3),
+            .table td:nth-child(3) {
+                display: none;
+            }
+            
+            .member-photo-sm {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .badge-position {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.7rem;
+            }
+            
+            .badge-info {
+                font-size: 0.75rem;
+                padding: 0.35rem 0.7rem;
+            }
+        }
+        
+        /* EXTRA SMALL DEVICES */
+        @media (max-width: 400px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-header p {
+                font-size: 1rem;
+            }
+            
+            .table-container h4 {
+                font-size: 1.1rem;
+            }
+            
+            .table {
+                font-size: 0.75rem;
+                min-width: 650px;
+            }
+            
+            .table thead th,
+            .table tbody td {
+                padding: 0.6rem 0.4rem;
+            }
+            
+            .member-photo-sm {
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
@@ -520,7 +561,7 @@ function calculateAge($birthDate) {
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="home.php">
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
                 <img src="assets/img/logo/logo.png" alt="logo" class="me-2 logo-img" onerror="this.style.display='none'" />
                 <div>
                     <div class="brand-title">Volley Club</div>
@@ -534,7 +575,7 @@ function calculateAge($birthDate) {
 
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="home.php">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php">Beranda</a></li>
                     <li class="nav-item"><a class="nav-link active" href="timpa.php">Tim Kami</a></li>
 
                     <?php if (isLoggedIn()): ?>
@@ -545,7 +586,7 @@ function calculateAge($birthDate) {
                         </li>
                     <?php else: ?>
                         <li class="nav-item ms-2">
-                            <a href="login.php" class="btn btn-primary btn-rounded">
+                            <a href="login_user.php" class="btn btn-primary btn-rounded">
                                 <i class="fa fa-user-plus me-1"></i> Login
                             </a>
                         </li>
@@ -601,9 +642,9 @@ function calculateAge($birthDate) {
                 </form>
             </div>
 
-            <!-- Members Display -->
+            <!-- Members Table -->
             <div class="table-container">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                     <h4 class="mb-0">
                         <i class="fas fa-users me-2"></i>
                         Daftar Anggota Tim <?= $gender_filter ?>
@@ -614,24 +655,21 @@ function calculateAge($birthDate) {
                 </div>
 
                 <?php if (mysqli_num_rows($members_result) > 0): ?>
-                    <!-- Desktop Table View -->
-                    <div class="desktop-table table-responsive">
+                    <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th width="90">Foto</th>
+                                    <th width="80">Foto</th>
                                     <th>Nama</th>
                                     <th>Tempat Lahir</th>
                                     <th>Tanggal Lahir</th>
-                                    <th width="90">Umur</th>
+                                    <th width="80">Umur</th>
                                     <th>Posisi</th>
                                     <th>Alamat</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
-                                mysqli_data_seek($members_result, 0);
-                                while ($member = mysqli_fetch_assoc($members_result)): 
+                                <?php while ($member = mysqli_fetch_assoc($members_result)): 
                                     $current_age = calculateAge($member['tanggal_lahir']);
                                 ?>
                                     <tr>
@@ -644,13 +682,13 @@ function calculateAge($birthDate) {
                                             />
                                         </td>
                                         <td>
-                                            <strong style="font-weight: 600; font-size: 1.05rem;"><?= htmlspecialchars($member['nama']) ?></strong>
+                                            <strong style="font-weight: 600; font-size: 1rem;"><?= htmlspecialchars($member['nama']) ?></strong>
                                         </td>
                                         <td>
                                             <?= !empty($member['tempat_lahir']) ? htmlspecialchars($member['tempat_lahir']) : '-' ?>
                                         </td>
                                         <td>
-                                            <?= !empty($member['tanggal_lahir']) ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-' ?>
+                                            <?= !empty($member['tanggal_lahir']) && $member['tanggal_lahir'] !== '0000-00-00' ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-' ?>
                                         </td>
                                         <td>
                                             <span class="badge badge-info"><?= $current_age ?> th</span>
@@ -670,47 +708,6 @@ function calculateAge($birthDate) {
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
-                    </div>
-
-                    <!-- Mobile Card View -->
-                    <div class="mobile-cards">
-                        <?php 
-                        mysqli_data_seek($members_result, 0);
-                        while ($member = mysqli_fetch_assoc($members_result)): 
-                            $current_age = calculateAge($member['tanggal_lahir']);
-                        ?>
-                            <div class="member-card">
-                                <div class="member-card-header">
-                                    <img 
-                                        src="<?= !empty($member['foto']) ? 'uploads/members/' . htmlspecialchars($member['foto']) : 'assets/img/default-profile.jpg' ?>" 
-                                        alt="<?= htmlspecialchars($member['nama']) ?>"
-                                        onerror="this.src='assets/img/default-profile.jpg'"
-                                    />
-                                    <div class="member-card-info">
-                                        <div class="member-card-name"><?= htmlspecialchars($member['nama']) ?></div>
-                                        <span class="member-card-position"><?= htmlspecialchars($member['posisi']) ?></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="member-card-details">
-                                    <div>
-                                        <i class="fas fa-birthday-cake"></i>
-                                        <span>
-                                            <?= !empty($member['tempat_lahir']) ? htmlspecialchars($member['tempat_lahir']) : '-' ?>, 
-                                            <?= !empty($member['tanggal_lahir']) ? date('d-m-Y', strtotime($member['tanggal_lahir'])) : '-' ?>
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <i class="fas fa-user-clock"></i>
-                                        <span><?= $current_age ?> tahun</span>
-                                    </div>
-                                    <div>
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span><?= !empty($member['alamat']) ? htmlspecialchars($member['alamat']) : '-' ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endwhile; ?>
                     </div>
                 <?php else: ?>
                     <div class="text-center py-5">
