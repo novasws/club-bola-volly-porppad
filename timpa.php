@@ -5,7 +5,7 @@ require_once 'config.php';
 $gender_filter = $_GET['gender'] ?? 'Putra';
 $search = $_GET['search'] ?? '';
 
-// Build query with filters
+// Build query with filters - SAFE VERSION
 $query = "SELECT * FROM members WHERE status='approved'";
 
 if (!empty($gender_filter)) {
@@ -17,25 +17,41 @@ if (!empty($search)) {
     $query .= " AND nama LIKE '%$search_clean%'";
 }
 
-// Sort by youngest first (DESC = newest birth date = youngest age)
+// Sort by youngest first - FIXED untuk handle 0000-00-00
 $query .= " ORDER BY 
     CASE 
-        WHEN tanggal_lahir IS NULL OR tanggal_lahir = '0000-00-00' THEN 1 
+        WHEN tanggal_lahir IS NULL THEN 1
+        WHEN tanggal_lahir = '' THEN 1
+        WHEN YEAR(tanggal_lahir) = 0 THEN 1
         ELSE 0 
     END, 
     tanggal_lahir DESC";
 
-// Execute query
+// Execute query dengan error handling
 $members_result = mysqli_query($conn, $query);
 
-// Count members by gender
-$count_putra = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putra' AND status='approved'")->fetch_assoc()['total'] ?? 0;
-$count_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putri' AND status='approved'")->fetch_assoc()['total'] ?? 0;
+if (!$members_result) {
+    die("Database Error: " . mysqli_error($conn));
+}
+
+// Count members by gender - dengan error handling
+$count_putra = 0;
+$count_putri = 0;
+
+$query_putra = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putra' AND status='approved'");
+if ($query_putra) {
+    $count_putra = $query_putra->fetch_assoc()['total'];
+}
+
+$query_putri = mysqli_query($conn, "SELECT COUNT(*) as total FROM members WHERE gender = 'Putri' AND status='approved'");
+if ($query_putri) {
+    $count_putri = $query_putri->fetch_assoc()['total'];
+}
 
 // Function to calculate age from birth date - ROBUST VERSION
 function calculateAge($birthDate) {
     // Return '-' for empty or invalid dates
-    if (empty($birthDate) || $birthDate === '0000-00-00') {
+    if (empty($birthDate) || $birthDate === '0000-00-00' || $birthDate === '0000-00-00 00:00:00') {
         return '-';
     }
     
