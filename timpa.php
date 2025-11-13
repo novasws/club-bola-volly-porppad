@@ -5,7 +5,7 @@ require_once 'config.php';
 $gender_filter = $_GET['gender'] ?? 'Putra';
 $search = $_GET['search'] ?? '';
 
-// Build query with filters - SAFE VERSION
+// Build query with filters - SIMPLE & SAFE
 $query = "SELECT * FROM members WHERE status='approved'";
 
 if (!empty($gender_filter)) {
@@ -17,24 +17,64 @@ if (!empty($search)) {
     $query .= " AND nama LIKE '%$search_clean%'";
 }
 
-// Sort by youngest first - FIXED untuk handle 0000-00-00
-$query .= " ORDER BY 
-    CASE 
-        WHEN tanggal_lahir IS NULL THEN 1
-        WHEN tanggal_lahir = '' THEN 1
-        WHEN YEAR(tanggal_lahir) = 0 THEN 1
-        ELSE 0 
-    END, 
-    tanggal_lahir DESC";
+// Default sort by ID
+$query .= " ORDER BY id DESC";
 
-// Execute query dengan error handling
-$members_result = mysqli_query($conn, $query);
+// Execute query
+$temp_result = mysqli_query($conn, $query);
 
-if (!$members_result) {
+if (!$temp_result) {
     die("Database Error: " . mysqli_error($conn));
 }
 
-// Count members by gender - dengan error handling
+// Ambil semua data ke array
+$all_members = [];
+while ($row = mysqli_fetch_assoc($temp_result)) {
+    $all_members[] = $row;
+}
+
+// Sort di PHP berdasarkan umur (termuda dulu)
+usort($all_members, function($a, $b) {
+    $a_date = $a['tanggal_lahir'];
+    $b_date = $b['tanggal_lahir'];
+    
+    // Validasi tanggal A
+    $a_valid = !empty($a_date) && $a_date !== '0000-00-00' && $a_date !== '';
+    
+    // Validasi tanggal B
+    $b_valid = !empty($b_date) && $b_date !== '0000-00-00' && $b_date !== '';
+    
+    // Yang ga valid taruh di bawah
+    if (!$a_valid && $b_valid) return 1;
+    if ($a_valid && !$b_valid) return -1;
+    if (!$a_valid && !$b_valid) return 0;
+    
+    // Keduanya valid: sort DESC (termuda = tanggal lahir paling baru)
+    return strcmp($b_date, $a_date);
+});
+
+// Convert array back to mysqli_result style
+class ArrayResultWrapper {
+    private $data;
+    private $pointer = 0;
+    public $num_rows;
+    
+    public function __construct($array) {
+        $this->data = $array;
+        $this->num_rows = count($array);
+    }
+    
+    public function fetch_assoc() {
+        if ($this->pointer < $this->num_rows) {
+            return $this->data[$this->pointer++];
+        }
+        return null;
+    }
+}
+
+$members_result = new ArrayResultWrapper($all_members);
+
+// Count members by gender
 $count_putra = 0;
 $count_putri = 0;
 
@@ -48,9 +88,8 @@ if ($query_putri) {
     $count_putri = $query_putri->fetch_assoc()['total'];
 }
 
-// Function to calculate age from birth date - ROBUST VERSION
+// Function to calculate age from birth date
 function calculateAge($birthDate) {
-    // Return '-' for empty or invalid dates
     if (empty($birthDate) || $birthDate === '0000-00-00' || $birthDate === '0000-00-00 00:00:00') {
         return '-';
     }
@@ -59,14 +98,12 @@ function calculateAge($birthDate) {
         $birth = new DateTime($birthDate);
         $today = new DateTime();
         
-        // Birth date cannot be in the future
         if ($birth > $today) {
             return '-';
         }
         
         $age = $today->diff($birth)->y;
         
-        // Age must be reasonable (0-100 years)
         if ($age < 0 || $age > 100) {
             return '-';
         }
@@ -681,11 +718,11 @@ function calculateAge($birthDate) {
                         Daftar Anggota Tim <?= $gender_filter ?>
                     </h4>
                     <span class="badge bg-primary">
-                        <?= mysqli_num_rows($members_result) ?> Anggota
+                        <?= $members_result->num_rows ?> Anggota
                     </span>
                 </div>
 
-                <?php if (mysqli_num_rows($members_result) > 0): ?>
+                <?php if ($members_result->num_rows > 0): ?>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
@@ -700,7 +737,7 @@ function calculateAge($birthDate) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($member = mysqli_fetch_assoc($members_result)): 
+                                <?php while ($member = $members_result->fetch_assoc()): 
                                     $current_age = calculateAge($member['tanggal_lahir']);
                                     
                                     // Generate photo URL with fallback
@@ -708,7 +745,7 @@ function calculateAge($birthDate) {
                                     
                                     if (!empty($member['foto'])) {
                                         // Try absolute path first
-                                        $photoUrl = '/uploads/members/' . htmlspecialchars($member['foto']);
+                                        $photoUrl = 'uploads/members/' . htmlspecialchars($member['foto']);
                                     }
                                 ?>
                                     <tr>
